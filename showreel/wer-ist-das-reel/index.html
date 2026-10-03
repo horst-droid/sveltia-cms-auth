@@ -53,7 +53,7 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
 </style>
 
 <div class="layout">
-  <div class="stage" id="stage" role="img" aria-label="Instagram-Teaser: das HORST-Monster zeigt sich Detail für Detail">
+  <div class="stage" id="stage" role="img" aria-label="Instagram-Teaser: das HORST-Monster setzt sich Stück für Stück zusammen">
     <canvas id="cv" width="1080" height="1920"></canvas>
   </div>
 
@@ -61,7 +61,7 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
     <header>
       <p class="eyebrow">Instagram Reel · 1080 × 1920 · 15,5 Sekunden</p>
       <h1>Wer ist das<span>?</span></h1>
-      <p class="lede">HORST stellt sich langsam vor: Durchs Guckloch sieht man erst Fell, dann Kette, Ohr, Hörner, Schnauzer und Augen, dann geht das Guckloch auf und das ganze Monster macht seine Ansage.</p>
+      <p class="lede">HORST setzt sich auf einem Bild Stück für Stück zusammen: Fell, Kette, Ohren, Hörner, Schnauzer, Augen. Erst wenn er ganz da ist, kommt der Text.</p>
     </header>
 
     <div class="bar">
@@ -93,8 +93,8 @@ const F = (w, s) => `${w} ${s}px Inter, system-ui, sans-serif`;
 const DISP = s => `700 ${s}px HorstRansom, "Arial Black", sans-serif`;
 const LAB = s => `600 ${s}px Montserrat, Inter, sans-serif`;
 const SCENES = [
-  { name:'Hinweise', t:0    },
-  { name:'Horst',    t:10.0 },
+  { name:'Aufbau',   t:0    },
+  { name:'Horst',    t:10.5 },
   { name:'Kontakt',  t:13.5 },
 ];
 const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
@@ -214,80 +214,76 @@ function shoot(cam){
   ctx.save(); ctx.translate(cam.sx - cam.cx*cam.k, cam.sy - cam.cy*cam.k); ctx.scale(cam.k/u, cam.k/u); ctx.drawImage(plate, 0, 0); ctx.restore();
 }
 
-const PEEP = { x:540, y:880, r:400 };
-const SHOTS = [
-  { t:1.0, w:'FELL.',      cx:690, cy:650, s:150 },
-  { t:2.5, w:'KETTE.',     cx:545, cy:440, s:190 },
-  { t:4.0, w:'OHR.',       cx:812, cy:205, s:170 },
-  { t:5.5, w:'HÖRNER.',    cx:745, cy:112, s:175 },
-  { t:7.0, w:'SCHNAUZER.', cx:640, cy:290, s:190 },
-  { t:8.5, w:'AUGEN.',     cx:652, cy:208, s:240 },
-];
+// one fixed shot of HORST; pieces of him appear as soft spots and stay until he is complete
 const FULL = { cx:640, cy:360, sx:540, sy:900, k:1.23 };
-function camFor(sh, lt){ const s = sh.s*(1 - 0.12*lt/1.5); return { cx:sh.cx, cy:sh.cy, sx:PEEP.x, sy:PEEP.y, k:(PEEP.r*2)/s }; }
-function mixCam(a, b, p){ return { cx:lerp(a.cx, b.cx, p), cy:lerp(a.cy, b.cy, p), sx:lerp(a.sx, b.sx, p), sy:lerp(a.sy, b.sy, p), k:Math.exp(lerp(Math.log(a.k), Math.log(b.k), p)) }; }
+const PIECES = [  // video coords (1280×720), screen radius, start time
+  { cx:975, cy:615, r:125, t:0.4 },   // Fell (Arm)
+  { cx:505, cy:405, r:130, t:1.9 },   // Kette
+  { cx:820, cy:205, r:105, t:3.4 },   // Ohr rechts
+  { cx:462, cy:215, r:105, t:4.1 },   // Ohr links
+  { cx:756, cy:105, r:105, t:5.2 },   // Horn rechts
+  { cx:522, cy:110, r:105, t:5.7 },   // Horn links
+  { cx:640, cy:292, r:150, t:6.9 },   // Schnauzer
+  { cx:604, cy:207, r:70,  t:8.3 },   // Auge links
+  { cx:700, cy:203, r:70,  t:8.55 },  // Auge rechts
+];
+const REVEAL = 9.6, DONE = 10.5;
+const comp = document.createElement('canvas'); comp.width = W; comp.height = H; const cctx = comp.getContext('2d');
+const mask = document.createElement('canvas'); mask.width = W; mask.height = H; const mctx = mask.getContext('2d');
+const scr = (vx, vy, cam) => [cam.sx + (vx - cam.cx)*cam.k, cam.sy + (vy - cam.cy)*cam.k];
+function camNow(){ const z = 1 + 0.05*seg(T, 0, DONE); return { ...FULL, k:FULL.k*z, sy:FULL.sy + 10*seg(T, 0, DONE) }; }
+function shootTo(c, cam){ const v = M.v, u = v.videoWidth/1280; c.save(); c.translate(cam.sx - cam.cx*cam.k, cam.sy - cam.cy*cam.k); c.scale(cam.k/u, cam.k/u); c.drawImage(plate, 0, 0); c.restore(); }
 function darkness(){ ctx.fillStyle = '#0d0907'; ctx.fillRect(0, 0, W, H); }
 function vignette(a){
   const g = ctx.createRadialGradient(W/2, H/2, 300, W/2, H/2, 1150);
   g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, `rgba(0,0,0,${a})`); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
 }
-
-// ---------- scene 1 · the clues ----------
 function s1(){
   darkness();
-  const size = fitDisp('WER IST DAS?', 900, 130);
-  ctx.save(); ctx.globalAlpha = 1; slamWord('WER IST DAS?', size, 'center', 330, C.white, 0.15, 0.05, 9, C.red); ctx.restore();
-  if (T < 1.0) return;
-  const i = clamp(Math.floor((T - 1.0)/1.5), 0, SHOTS.length - 1), sh = SHOTS[i], lt = T - sh.t;
-  const open = eo(seg(lt, 0, 0.35)), close = i < SHOTS.length - 1 ? ein(seg(lt, 1.32, 1.5)) : 0;
-  const r = PEEP.r*open*(1 - close);
-  if (r > 1 && buildPlate(0)){
-    ctx.save(); ctx.beginPath(); ctx.arc(PEEP.x, PEEP.y, r, 0, TAU); ctx.clip();
-    drawStage(); shoot(camFor(sh, lt));
-    const g = ctx.createRadialGradient(PEEP.x, PEEP.y, r*0.55, PEEP.x, PEEP.y, r);
-    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.65)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-    ctx.restore();
-  }
-  ctx.save(); ctx.strokeStyle = C.red; ctx.lineWidth = 8; ctx.globalAlpha = open*(1 - close);
-  ctx.beginPath(); ctx.arc(PEEP.x, PEEP.y, PEEP.r + 22, -Math.PI/2, -Math.PI/2 + TAU*eio(seg(lt, 0, 1.4))); ctx.stroke(); ctx.restore();
-  // clue label
-  const la = eo(seg(lt, 0.25, 0.5))*(1 - close);
-  ctx.save(); ls(ctx, 5); text(`HINWEIS 0${i+1} / 06`, W/2, 1440, LAB(28), C.red, 'center', la, 5); ctx.restore();
-  const ws = fitDisp(sh.w, 900, 150);
-  ctx.save(); ctx.beginPath(); ctx.rect(0, 1470, W, ws*0.95); ctx.clip();
-  ctx.font = DISP(ws); ctx.fillStyle = C.white; ctx.textAlign = 'center';
-  ctx.fillText(sh.w, W/2, 1470 + ws*0.8 + (1 - eo(seg(lt, 0.3, 0.6)))*ws + ein(seg(lt, 1.3, 1.5))*ws); ctx.restore();
+  const full = eio(seg(T, REVEAL, DONE));
+  if (!buildPlate(full)) return;
+  const cam = camNow();
+  // the full picture, off screen
+  cctx.globalCompositeOperation = 'source-over';
+  const g = cctx.createRadialGradient(540, 860, 60, 540, 860, 1150);
+  g.addColorStop(0, '#45351f'); g.addColorStop(0.45, '#22190f'); g.addColorStop(1, '#0c0805');
+  cctx.fillStyle = g; cctx.fillRect(0, 0, W, H); shootTo(cctx, cam);
+  // the mask: one soft spot per piece, then everything
+  mctx.globalCompositeOperation = 'source-over'; mctx.clearRect(0, 0, W, H);
+  mctx.globalCompositeOperation = 'lighter';
+  PIECES.forEach(p => {
+    const grow = eo(seg(T, p.t, p.t + 1.1)); if (grow <= 0) return;
+    const [x, y] = scr(p.cx, p.cy, cam), r = p.r*(0.25 + 0.75*grow)*(1 + 0.12*seg(T, p.t + 1.1, REVEAL))*(1 + 6*full);
+    const rg = mctx.createRadialGradient(x, y, r*0.45, x, y, r);
+    rg.addColorStop(0, `rgba(0,0,0,${grow})`); rg.addColorStop(1, 'rgba(0,0,0,0)');
+    mctx.fillStyle = rg; mctx.fillRect(x - r, y - r, r*2, r*2);
+  });
+  if (full > 0){ mctx.fillStyle = `rgba(0,0,0,${full})`; mctx.fillRect(0, 0, W, H); }
+  cctx.globalCompositeOperation = 'destination-in'; cctx.drawImage(mask, 0, 0);
+  ctx.drawImage(comp, 0, 0);
+  // a thin red ring marks each new piece for a moment
+  PIECES.forEach(p => {
+    const a = seg(T, p.t, p.t + 0.25)*(1 - seg(T, p.t + 0.7, p.t + 1.3)); if (a <= 0) return;
+    const [x, y] = scr(p.cx, p.cy, cam), r = p.r*(0.25 + 0.75*eo(seg(T, p.t, p.t + 1.1)));
+    ctx.save(); ctx.globalAlpha = a*0.9; ctx.strokeStyle = C.red; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(x, y, r*0.92, 0, TAU); ctx.stroke(); ctx.restore();
+  });
+  vignette(0.35*full);
 }
-
-// ---------- scene 2 · reveal + announcement ----------
 function s2(){
-  drawStage();
-  const p = eio(seg(T, 10.0, 11.0));
-  const eyes = camFor(SHOTS[5], 1.5);
-  if (buildPlate(p)){
-    if (p < 1){
-      ctx.save(); ctx.beginPath(); ctx.arc(PEEP.x, PEEP.y, lerp(PEEP.r, 1500, p), 0, TAU); ctx.clip();
-      shoot(mixCam(eyes, FULL, p)); ctx.restore();
-      ctx.save(); ctx.fillStyle = '#0d0907'; ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.arc(PEEP.x, PEEP.y, lerp(PEEP.r, 1500, p), 0, TAU, true); ctx.fill('evenodd'); ctx.restore();
-    } else shoot(FULL);
-  }
-  vignette(0.35);
-  const fl = 1 - seg(T, 11.0, 11.2);
-  if (T >= 11.0 && fl > 0){ ctx.fillStyle = `rgba(255,66,85,${0.5*fl})`; ctx.fillRect(0, 0, W, H); }
-  if (T >= 11.0){
-    const size = fitDisp('DAS IST HORST.', 960, 140);
-    slamWord('DAS IST HORST.', size, 'center', 330, C.white, 11.0, 0.045, 4, C.red);
-    // the announcement
-    const msg = 'Salli! Ich bin das Monster hinter euren Monsterideen®.';
-    const pp = seg(T, 11.9, 12.25); if (pp > 0){
-      const sc = clamp(eback(pp), 0, 1.2), f = F(800, 62), lines = wrapLines(msg, f, 820);
-      const bw = 920, bh = 70 + lines.length*74, bx = (W - bw)/2, by = 1440;
-      ctx.save(); ctx.translate(W/2, by); ctx.scale(sc, sc); ctx.translate(-W/2, -by);
-      ctx.fillStyle = C.white; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, bw, bh, 36) : ctx.rect(bx, by, bw, bh); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(W/2 - 40, by + 2); ctx.lineTo(W/2 + 10, by - 70); ctx.lineTo(W/2 + 40, by + 2); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = C.dark; ctx.font = f; ls(ctx, -1.5); ctx.textAlign = 'center';
-      lines.forEach((l, i) => ctx.fillText(l, W/2, by + 90 + i*74)); ctx.restore();
-    }
+  s1();
+  const fl = 1 - seg(T, DONE, DONE + 0.2);
+  if (fl > 0){ ctx.fillStyle = `rgba(255,66,85,${0.45*fl})`; ctx.fillRect(0, 0, W, H); }
+  const size = fitDisp('DAS IST HORST.', 960, 140);
+  slamWord('DAS IST HORST.', size, 'center', 330, C.white, DONE, 0.045, 4, C.red);
+  const msg = 'Salli! Ich bin das Monster hinter euren Monsterideen®.';
+  const pp = seg(T, DONE + 0.9, DONE + 1.25); if (pp > 0){
+    const sc = clamp(eback(pp), 0, 1.2), f = F(800, 62), lines = wrapLines(msg, f, 820);
+    const bw = 920, bh = 70 + lines.length*74, bx = (W - bw)/2, by = 1440;
+    ctx.save(); ctx.translate(W/2, by); ctx.scale(sc, sc); ctx.translate(-W/2, -by);
+    ctx.fillStyle = C.white; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, bw, bh, 36) : ctx.rect(bx, by, bw, bh); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(W/2 - 40, by + 2); ctx.lineTo(W/2 + 10, by - 70); ctx.lineTo(W/2 + 40, by + 2); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = C.dark; ctx.font = f; ls(ctx, -1.5); ctx.textAlign = 'center';
+    lines.forEach((l, i) => ctx.fillText(l, W/2, by + 90 + i*74)); ctx.restore();
   }
   const r = eio(seg(T, 13.25, 13.55));
   if (r > 0){ ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(W/2, 1500, r*2200, 0, TAU); ctx.fill(); }
@@ -326,7 +322,7 @@ function render(t){
   ctx.textBaseline = 'alphabetic';
   FN[idx]();
   ctx.save(); ctx.fillStyle = C.white; ctx.font = LAB(24); ls(ctx, 5);
-  ctx.textAlign = 'left'; ctx.fillText('STUDIO HORST', 62, 130); ctx.textAlign = 'right'; ctx.fillText('MONSTERIDEEN®', W - 62, 130);
+  if (T >= DONE){ ctx.globalAlpha = seg(T, DONE, DONE + 0.3); ctx.textAlign = 'left'; ctx.fillText('STUDIO HORST', 62, 130); ctx.textAlign = 'right'; ctx.fillText('MONSTERIDEEN®', W - 62, 130); ctx.globalAlpha = 1; }
   ctx.globalAlpha = .3; ctx.fillRect(62, H - 86, W - 124, 3); ctx.globalAlpha = 1; ctx.fillRect(62, H - 86, (W - 124)*(T/DUR), 3);
   ctx.restore();
   return idx;
@@ -374,28 +370,24 @@ function tone(d, w, type, f, g, dec, att = 0.004, lp = null){
 const EVENTS = [];
 (function build(){
   const add = (t, fn) => EVENTS.push({ t, fn });
-  // low drone under the clues
+  // low drone while he assembles
   for (let i = 0; i < 5; i++) add(i*2, (d,w) => tone(d, w, 'sawtooth', 41.2, 0.16, 2.1, 0.4, 180));
-  for (let i = 0; i < 11; i++) add(0.15 + i*0.05, (d,w) => noise(d, w, 'bandpass', 2400 + i*120, 1.2, 0.18, 0.05));
-  // heartbeat on every clue, getting louder
-  SHOTS.forEach((s, i) => {
-    const g = 0.45 + i*0.12;
-    add(s.t, (d,w) => kick(d, w, g)); add(s.t + 0.2, (d,w) => kick(d, w, g*0.7));
-    add(s.t + 0.75, (d,w) => kick(d, w, g*0.8)); add(s.t + 0.95, (d,w) => kick(d, w, g*0.55));
-    add(s.t + 0.3, (d,w) => tone(d, w, 'sine', 880 + i*110, 0.08, 0.25, 0.005));
-    add(s.t + 1.32, (d,w) => noise(d, w, 'highpass', 2500, 0.6, 0.12, 0.12));
+  // each piece: a soft heartbeat and a chime, rising
+  PIECES.forEach((p, i) => {
+    const g = 0.4 + i*0.07;
+    add(p.t, (d,w) => kick(d, w, g)); add(p.t + 0.2, (d,w) => kick(d, w, g*0.65));
+    add(p.t + 0.05, (d,w) => tone(d, w, 'sine', 440*Math.pow(1.122, i), 0.07, 0.6, 0.01));
   });
-  add(9.0,  (d,w) => riser(d, w, 1.0, 0.32));
-  add(11.0, (d,w) => kick(d, w, 1.3)); add(11.0, (d,w) => crash(d, w));
-  for (let i = 0; i < 14; i++) add(11.0 + i*0.045, (d,w) => noise(d, w, 'bandpass', 2400 + i*120, 1.2, 0.2, 0.05));
+  add(REVEAL - 0.9, (d,w) => riser(d, w, 1.8, 0.32));
+  add(DONE, (d,w) => kick(d, w, 1.3)); add(DONE, (d,w) => crash(d, w));
+  for (let i = 0; i < 14; i++) add(DONE + i*0.045, (d,w) => noise(d, w, 'bandpass', 2400 + i*120, 1.2, 0.2, 0.05));
   const roots = [55, 43.65, 65.41, 49];
-  for (let k = 23; k < 27; k++){
+  for (let k = 22; k < 27; k++){
     const tb = k*0.5;
     add(tb, (d,w) => kick(d, w)); add(tb + 0.25, (d,w) => hat(d, w)); if (k % 2) add(tb, (d,w) => clap(d, w));
     add(tb + 0.25, (d,w) => tone(d, w, 'sawtooth', roots[k % 4]*2, 0.24, 0.2, 0.004, 650));
   }
-  // monster chatter for the announcement
-  for (let i = 0; i < 12; i++) add(11.95 + i*0.075, (d,w) => tone(d, w, 'square', 260 + rnd(i*17)*260, 0.05, 0.06, 0.004, 1600));
+  for (let i = 0; i < 12; i++) add(DONE + 0.95 + i*0.075, (d,w) => tone(d, w, 'square', 260 + rnd(i*17)*260, 0.05, 0.06, 0.004, 1600));
   add(13.0, (d,w) => riser(d, w, 0.5, 0.26));
   add(13.5, (d,w) => kick(d, w, 1.2)); add(13.5, (d,w) => crash(d, w));
   add(13.5, (d,w) => tone(d, w, 'sawtooth', 55, 0.3, 1.9, 0.01, 300));
