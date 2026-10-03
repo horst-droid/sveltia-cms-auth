@@ -3,6 +3,7 @@
 Stand 2026-10-03. Ziel: echtes Showreel für Studio HORST, zuerst 9:16 für Instagram (1080 × 1920, ca. 15 s), danach optional 16:9.
 
 ## Bisher gebaut
+- **`horst-reel-2026/`**: aktuelles Reel mit echter Marke, live als Artifact: https://claude.ai/artifact/AThPAEWv9VrRHEsVs2KtuE (Medien liegen in `media/`, beim Publish als Dateien mitgeben).
 - `studio-horst-reel-9x16.html`, live als Artifact: https://claude.ai/artifact/Wyts464KW48V5isM1k7gH1
   Canvas-Engine mit `render(t)`, Web-Audio-Beat, vier Medien-Slots, Export per MediaRecorder und `downloads`-Capability.
   **Achtung:** Farben und Schrift kommen dort aus einer alten Dither-Demo (Grün-Grau, Bricolage) und sind NICHT die echte Marke. Auf das Branding unten umstellen.
