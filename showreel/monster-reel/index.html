@@ -1,4 +1,4 @@
-<title>HORST Showreel 2026</title>
+<title>HORST Monster Reel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Montserrat:wght@600&display=swap">
@@ -36,7 +36,7 @@ button:disabled{opacity:.45;cursor:default}
 .tc span{color:var(--muted)}
 .scrub{flex:1 1 160px;min-width:0;display:flex}
 #scrub{width:100%;accent-color:#FF4255;cursor:pointer}
-.scenes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.scenes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 @media (max-width:520px){.scenes{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .scenes button{flex-direction:column;align-items:flex-start;gap:2px;border-radius:10px;padding:8px 10px;min-width:0}
 .scenes b{font:600 11px var(--label);letter-spacing:.08em;text-transform:uppercase}
@@ -53,21 +53,21 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
 </style>
 
 <div class="layout">
-  <div class="stage" id="stage" role="img" aria-label="Instagram-Showreel von Studio HORST, 9:16, fünf Szenen">
+  <div class="stage" id="stage" role="img" aria-label="Instagram-Reel: das HORST-Monster stellt sich vor, 9:16">
     <canvas id="cv" width="1080" height="1920"></canvas>
   </div>
 
   <div class="side">
     <header>
-      <p class="eyebrow">Instagram Reel · 1080 × 1920 · 15 Sekunden · 120 BPM</p>
-      <h1>Monsterideen<span>®</span> in 15&nbsp;Sekunden.</h1>
-      <p class="lede">Das Showreel von Studio HORST mit Arbeiten, Farben, Schrift und Texten von studio-horst.de. Jedes Bild wird live gerechnet, der Beat wird dazu synthetisiert.</p>
+      <p class="eyebrow">Instagram Reel · 1080 × 1920 · 12 Sekunden · 120 BPM</p>
+      <h1>Darf ich vorstellen: Horst<span>.</span></h1>
+      <p class="lede">Das Monster aus dem Website-Video stellt sich vor, in Sprechblasen und mit Monster-Gebrabbel. Farben, Schrift und Logo von studio-horst.de.</p>
     </header>
 
     <div class="bar">
       <button id="play" type="button" aria-label="Abspielen">▶ Play</button>
-      <div class="tc" id="tc">00.0 <span>/ 15.0</span></div>
-      <div class="scrub"><input id="scrub" type="range" min="0" max="15000" step="1" value="0" aria-label="Zeitleiste"></div>
+      <div class="tc" id="tc">00.0 <span>/ 12.0</span></div>
+      <div class="scrub"><input id="scrub" type="range" min="0" max="12000" step="1" value="0" aria-label="Zeitleiste"></div>
       <button id="sound" type="button" aria-pressed="false">♪ Ton</button>
       <button id="loop" type="button" aria-pressed="true">↻ Loop</button>
     </div>
@@ -81,23 +81,21 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
       <p id="status" aria-live="polite"></p>
     </section>
 
-    <p class="note">Projektbilder und Videos stammen von studio-horst.de. <kbd>Leertaste</kbd> Play/Pause · <kbd>←</kbd> <kbd>→</kbd> ±1 s · Klick aufs Reel pausiert.</p>
+    <p class="note">Das Monster-Video stammt von studio-horst.de. <kbd>Leertaste</kbd> Play/Pause · <kbd>←</kbd> <kbd>→</kbd> ±1 s · Klick aufs Reel pausiert.</p>
   </div>
 </div>
 
 <script>
 (() => {
-const W = 1080, H = 1920, DUR = 15;
+const W = 1080, H = 1920, DUR = 12;
 const C = { red:'#FF4255', dark:'#201C25', black:'#000000', white:'#FFFFFF', light:'#F8F7F8' };
 const F = (w, s) => `${w} ${s}px Inter, system-ui, sans-serif`;
 const DISP = s => `700 ${s}px HorstRansom, "Arial Black", sans-serif`;
 const LAB = s => `600 ${s}px Montserrat, Inter, sans-serif`;
 const SCENES = [
-  { name:'Monsterideen', t:0   },
-  { name:'Haltung',      t:2.5 },
-  { name:'Arbeiten',     t:4.5 },
-  { name:'Erfahrung',    t:11.5 },
-  { name:'Kontakt',      t:13  },
+  { name:'Salli',   t:0    },
+  { name:'Horst',   t:2    },
+  { name:'Kontakt', t:10.2 },
 ];
 const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
 let T = 0, recording = false;
@@ -147,212 +145,156 @@ function wrap(s, font, maxW){
 }
 function rrect(c, x, y, w, h, r){ c.beginPath(); c.roundRect ? c.roundRect(x, y, w, h, r) : c.rect(x, y, w, h); }
 
-// ---------- media from studio-horst.de ----------
-const CUTS = [
-  { k:'v-gh',     cap:'LOGOENTWICKLUNG' },
-  { k:'p-FF2',    cap:'PACKAGING' },
-  { k:'v-evo',    cap:'MARKENZEICHEN' },
-  { k:'p-ganter', cap:'KAMPAGNE' },
-  { k:'p-jm',     cap:'MARKENAUFTRITT' },
-  { k:'v-w',      cap:'VISUELLES SYSTEM' },
-  { k:'p-v',      cap:'KAMPAGNE' },
-];
-const CUT_T0 = 4.5, CUT_D = 1.0;
+// ---------- the monster (HORST, from the studio-horst.de hero video) ----------
 const M = {};
 function loadOne(k){
   return new Promise(res => {
     const done = () => res();
-    if (k.startsWith('v-')){
+    if (/\.(mp4|webm)$/.test(k)){
       const v = document.createElement('video');
-      v.muted = true; v.playsInline = true; v.preload = 'auto';
+      v.muted = true; v.playsInline = true; v.loop = true; v.preload = 'auto';
       v.addEventListener('loadeddata', done, { once:true }); v.addEventListener('error', done, { once:true });
-      v.src = `media/${k}.mp4`; M[k] = v;
-    } else {
-      const i = new Image(); i.onload = done; i.onerror = done;
-      i.src = `media/${k}`; M[k] = i;
-    }
+      v.src = `media/${k}`; M[k] = v;
+    } else { const i = new Image(); i.onload = done; i.onerror = done; i.src = `media/${k}`; M[k] = i; }
   });
 }
-const LOGO = 'horst-rz-white-scaled-1.png', STAMP = 'horst-rz-stempel-1.png';
-const mediaP = Promise.race([
-  Promise.all([...CUTS.map(c => c.k.startsWith('v-') ? c.k : c.k + '.jpg'), LOGO, STAMP].map(k => loadOne(k))),
-  new Promise(r => setTimeout(r, 8000)),
-]).then(() => { dirty = true; });
-const media = k => M[k] || M[k + '.jpg'];
+const VID = 'horst-monster.mp4', LOGO = 'horst-rz-white-scaled-1.png', V_T0 = 1.4;
+const mediaP = Promise.race([Promise.all([VID, LOGO].map(loadOne)), new Promise(r => setTimeout(r, 8000))]).then(() => { dirty = true; });
 const ready = el => el && (el.tagName === 'VIDEO' ? el.videoWidth > 0 && el.readyState >= 1 : el.complete && el.naturalWidth > 0);
-function drawCover(el, x, y, w, h, zoom){
-  const iw = el.videoWidth || el.naturalWidth, ih = el.videoHeight || el.naturalHeight;
-  if (!iw || !ih) return;
-  const s = Math.max(w/iw, h/ih)*zoom, dw = iw*s, dh = ih*s;
-  ctx.drawImage(el, x + (w-dw)/2, y + (h-dh)/2, dw, dh);
-}
 function syncVideos(){
-  const active = T >= CUT_T0 && T < CUT_T0 + CUTS.length*CUT_D ? Math.floor((T - CUT_T0)/CUT_D) : -1;
-  CUTS.forEach((c, i) => {
-    const v = M[c.k]; if (!v || v.tagName !== 'VIDEO') return;
-    if (i !== active){ if (!v.paused) v.pause(); return; }
-    const want = Math.min(0.1 + T - CUT_T0 - i*CUT_D, Math.max(0, (v.duration || 1) - 0.05));
-    if (playing){ if (v.paused) v.play().catch(() => {}); if (Math.abs(v.currentTime - want) > 0.25) v.currentTime = want; }
-    else { if (!v.paused) v.pause(); if (Math.abs(v.currentTime - want) > 0.04) v.currentTime = want; }
-  });
+  const v = M[VID]; if (!v) return;
+  const d = v.duration || 7.13, want = Math.max(0, T - V_T0) % d;
+  if (playing && T >= V_T0){ if (v.paused) v.play().catch(() => {}); if (Math.abs(v.currentTime - want) > 0.3 && Math.abs(v.currentTime - want) < d - 0.3) v.currentTime = want; }
+  else { if (!v.paused) v.pause(); if (Math.abs(v.currentTime - want) > 0.04) v.currentTime = want; }
+}
+// feathered video plate, so the monster melts into the warm dark stage
+const plate = document.createElement('canvas'); plate.width = 1500; plate.height = 844;
+const pctx = plate.getContext('2d');
+function drawStage(){
+  const g = ctx.createRadialGradient(540, 860, 60, 540, 860, 1150);
+  g.addColorStop(0, '#45351f'); g.addColorStop(0.45, '#22190f'); g.addColorStop(1, '#0c0805');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+function drawMonster(x, y, scale){
+  const v = M[VID]; if (!ready(v)) return;
+  pctx.globalCompositeOperation = 'source-over'; pctx.clearRect(0, 0, 1500, 844);
+  pctx.drawImage(v, 0, 0, 1500, 844);
+  pctx.globalCompositeOperation = 'destination-in';
+  const gv = pctx.createLinearGradient(0, 0, 0, 844);
+  gv.addColorStop(0, 'rgba(0,0,0,0)'); gv.addColorStop(.16, 'rgba(0,0,0,1)'); gv.addColorStop(.8, 'rgba(0,0,0,1)'); gv.addColorStop(1, 'rgba(0,0,0,0)');
+  pctx.fillStyle = gv; pctx.fillRect(0, 0, 1500, 844);
+  const gh = pctx.createLinearGradient(0, 0, 1500, 0);
+  gh.addColorStop(0, 'rgba(0,0,0,0)'); gh.addColorStop(.22, 'rgba(0,0,0,1)'); gh.addColorStop(.78, 'rgba(0,0,0,1)'); gh.addColorStop(1, 'rgba(0,0,0,0)');
+  pctx.fillStyle = gh; pctx.fillRect(0, 0, 1500, 844);
+  const w = 1500*scale, h = 844*scale;
+  ctx.drawImage(plate, x - w/2, y - h/2, w, h);
 }
 
 // ---------- type helpers ----------
 const rnd = i => { const x = Math.sin(i*91.7 + 13.3)*43758.5453; return x - Math.floor(x); };
 function fitDisp(word, maxW, maxS){ ctx.save(); ctx.font = DISP(100); const w = ctx.measureText(word).width; ctx.restore(); return Math.min(maxS, 100*maxW/w); }
-// letters slam in one by one: big, tilted, then settle (ransom-note energy)
-function slamWord(word, size, x, y, color, tIn, step, seed){
-  ctx.save(); ctx.font = DISP(size); ctx.textAlign = 'left'; ctx.fillStyle = color;
-  const total = ctx.measureText(word).width;
+function slamWord(word, size, x, y, color, tIn, step, seed, lastColor){
+  ctx.save(); ctx.font = DISP(size); ctx.textAlign = 'left';
+  const total = ctx.measureText(word).width, x0 = x === 'center' ? (W - total)/2 : x;
   for (let i = 0; i < word.length; i++){
     const ch = word[i]; if (ch === ' ') continue;
     const st = tIn + i*step, p = seg(T, st, st + 0.22); if (p <= 0) continue;
-    const e = eo(p), px = x + ctx.measureText(word.slice(0, i)).width, gw = ctx.measureText(ch).width;
-    const rot = (rnd(seed + i) - .5)*0.7*(1 - e) + (rnd(seed + i + 50) - .5)*0.05;
-    ctx.save(); ctx.globalAlpha = Math.min(1, p*5);
+    const e = eo(p), px = x0 + ctx.measureText(word.slice(0, i)).width, gw = ctx.measureText(ch).width;
+    const rot = (rnd(seed + i) - .5)*0.7*(1 - e) + (rnd(seed + i + 50) - .5)*0.06;
+    ctx.save(); ctx.globalAlpha = Math.min(1, p*5); ctx.fillStyle = (lastColor && i === word.length - 1) ? lastColor : color;
     ctx.translate(px + gw/2, y - size*0.36); ctx.rotate(rot); ctx.scale(lerp(1.9, 1, e), lerp(1.9, 1, e));
     ctx.fillText(ch, -gw/2, size*0.36); ctx.restore();
   }
   ctx.restore(); return total;
 }
-function layoutWords(str, font, maxW, lineH, x0, y0){
-  ctx.save(); ctx.font = font;
-  const sp = ctx.measureText(' ').width, out = []; let x = x0, y = y0;
-  for (const w of str.split(' ')){
-    const ww = ctx.measureText(w).width;
-    if (x > x0 && x + ww > x0 + maxW){ x = x0; y += lineH; }
-    out.push({ w, x, y }); x += ww + sp;
-  }
-  ctx.restore(); return out;
-}
-function wordsIn(list, font, color, tIn, step){
-  ctx.save(); ctx.font = font; ctx.fillStyle = color; ctx.textAlign = 'left'; ls(ctx, -2);
-  list.forEach((o, j) => {
-    const p = eo(seg(T, tIn + j*step, tIn + j*step + 0.25)); if (p <= 0) return;
-    ctx.globalAlpha = p; ctx.fillText(o.w, o.x, o.y + (1 - p)*36);
-  });
-  ctx.restore();
+function wrapLines(s, font, maxW){
+  ctx.save(); ctx.font = font; const out = []; let cur = '';
+  for (const w of s.split(' ')){ const t2 = cur ? cur + ' ' + w : w; if (ctx.measureText(t2).width > maxW && cur){ out.push(cur); cur = w; } else cur = t2; }
+  if (cur) out.push(cur); ctx.restore(); return out;
 }
 
-// ---------- scene 1 · Monsterideen ----------
+// ---------- scene 1 · Salli! ----------
 function s1(){
   ctx.fillStyle = T < 0.1 ? C.red : C.dark; ctx.fillRect(0, 0, W, H);
-  const size = fitDisp('MONSTER-', 960, 250), y1 = 800, y2 = y1 + size*1.02;
-  slamWord('MONSTER-', size, 60, y1, C.white, 0.12, 0.07, 1);
-  const w2 = slamWord('IDEEN', size, 60, y2, C.white, 0.12 + 8*0.07, 0.07, 20);
-  const ra = eo(seg(T, 1.0, 1.2));
-  if (ra > 0){ ctx.save(); ctx.globalAlpha = ra; ctx.fillStyle = C.red; ctx.font = F(800, size*0.42); ctx.fillText('®', 60 + w2 + 12, y2 - size*0.5); ctx.restore(); }
-  const a = eo(seg(T, 1.2, 1.55));
-  ctx.save(); ls(ctx, -1.5);
-  text('für mutige Marken.', 64, y2 + 150 + (1-a)*30, F(600, 72), C.white, 'left', a, -1.5);
-  ctx.restore();
-  // beat square
-  const lt = T % 0.5, bs = lerp(44, 22, eo(seg(lt, 0, 0.4)));
-  ctx.globalAlpha = a; ctx.fillStyle = C.red; ctx.fillRect(64, y2 + 230, bs, bs); ctx.globalAlpha = 1;
-  for (let i = 0; i < 4; i++){
-    const st = 2.2 + i*0.04, h = H*eio(seg(T, st, st + 0.22));
-    if (h > 0){ ctx.fillStyle = C.red; ctx.fillRect(Math.floor(i*W/4), H - h, Math.ceil(W/4) + 1, h); }
+  if (T >= V_T0){
+    const r = eio(seg(T, V_T0, 1.9))*1250;
+    ctx.save(); ctx.beginPath(); ctx.arc(W/2, 880, r, 0, TAU); ctx.clip(); drawStage(); drawMonster(W/2, 900, 1.05); ctx.restore();
+    ctx.save(); ctx.strokeStyle = C.red; ctx.lineWidth = 14; ctx.beginPath(); ctx.arc(W/2, 880, r, 0, TAU); ctx.stroke(); ctx.restore();
   }
+  const up = eio(seg(T, 1.2, 1.6)), size = lerp(fitDisp('SALLI!', 900, 300), 150, up);
+  slamWord('SALLI!', size, 'center', lerp(1040, 330, up), C.white, 0.1, 0.09, 3, C.red);
 }
 
-// ---------- scene 2 · Haltung ----------
-const L1 = 'Viele Marken sehen ordentlich aus.';
-const L2 = 'Aber fühlen sich nicht wirklich nach etwas an.';
-const KEY = [['THE IDEA', 3.9, C.white], ['IS THE', 4.05, C.white], ['KEY.', 4.2, C.red]];
+// ---------- scene 2 · HORST talks ----------
+const BUBBLES = [
+  { t:2.5, s:'Salli! Ich bin Horst.' },
+  { t:4.5, s:'Ich wohne in Kirchzarten im Schwarzwald.' },
+  { t:6.5, s:'Und ich fresse langweilige Marken.' },
+  { t:8.5, s:'Lust auf eine Monsteridee?' },
+];
+function bubble(b, next){
+  const p = seg(T, b.t, b.t + 0.35); if (p <= 0) return;
+  const out = next != null ? seg(T, next - 0.12, next) : 0; if (out >= 1) return;
+  const sc = clamp(eback(p), 0, 1.2)*(1 - out*0.3), a = 1 - out;
+  const f = F(800, 64), lines = wrapLines(b.s, f, 820);
+  const bw = 920, bh = 70 + lines.length*76, bx = (W - bw)/2, by = 1430;
+  ctx.save(); ctx.globalAlpha = a;
+  ctx.translate(W/2, by); ctx.scale(sc, sc); ctx.translate(-W/2, -by);
+  ctx.fillStyle = C.white; ctx.beginPath();
+  ctx.roundRect ? ctx.roundRect(bx, by, bw, bh, 36) : ctx.rect(bx, by, bw, bh); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(W/2 - 40, by + 2); ctx.lineTo(W/2 + 10, by - 70); ctx.lineTo(W/2 + 40, by + 2); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = C.dark; ctx.font = f; ls(ctx, -1.5); ctx.textAlign = 'center';
+  lines.forEach((l, i) => ctx.fillText(l, W/2, by + 92 + i*76));
+  ctx.restore();
+}
 function s2(){
-  if (T < 3.9){
-    ctx.fillStyle = C.red; ctx.fillRect(0, 0, W, H);
-    const f = F(800, 96), b1 = layoutWords(L1, f, 940, 108, 62, 640);
-    wordsIn(b1, f, C.white, 2.55, 0.11);
-    const b2 = layoutWords(L2, f, 940, 108, 62, b1[b1.length-1].y + 170);
-    wordsIn(b2, f, C.dark, 3.15, 0.08);
-    return;
+  drawStage();
+  const lt = (T - 2) % 0.5, punch = 1 + 0.025*(1 - eo(seg(lt, 0, 0.3)));
+  drawMonster(W/2, 900, 1.05*punch);
+  // headline
+  const hs = 150;
+  slamWord('SALLI!', hs, 'center', 330, C.white, -10, 0, 3, C.red);
+  // red sticker on the "boring brands" line
+  const sp = seg(T, 6.85, 7.1);
+  if (sp > 0 && T < 8.4){
+    ctx.save(); ctx.translate(820, 560); ctx.rotate(0.18); const sc = lerp(1.8, 1, eo(sp)); ctx.scale(sc, sc);
+    ctx.fillStyle = C.red; ctx.fillRect(-170, -70, 340, 110);
+    ctx.font = DISP(80); ctx.fillStyle = C.white; ctx.textAlign = 'center'; ctx.fillText('MAMPF!', 0, 10); ctx.restore();
   }
-  ctx.fillStyle = C.black; ctx.fillRect(0, 0, W, H);
-  const size = fitDisp('THE IDEA', 960, 240);
-  KEY.forEach(([s, t0, col], i) => {
-    if (T < t0) return;
-    const sc = lerp(1.18, 1, eo(seg(T, t0, t0 + 0.12)));
-    ctx.save(); ctx.translate(60, 760 + i*size*1.08); ctx.scale(sc, sc);
-    ctx.font = DISP(size); ctx.fillStyle = col; ctx.fillText(s, 0, 0); ctx.restore();
-  });
+  BUBBLES.forEach((b, i) => bubble(b, BUBBLES[i+1] ? BUBBLES[i+1].t : null));
+  const r = eio(seg(T, 9.95, 10.25));
+  if (r > 0){ ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(W/2, 1500, r*2200, 0, TAU); ctx.fill(); }
 }
 
-// ---------- scene 3 · Arbeiten ----------
+// ---------- scene 3 · Kontakt ----------
 function s3(){
-  const c = clamp(Math.floor((T - CUT_T0)/CUT_D), 0, CUTS.length - 1), lt = T - CUT_T0 - c*CUT_D, cut = CUTS[c];
-  ctx.fillStyle = C.dark; ctx.fillRect(0, 0, W, H);
-  const MY = 430, MS = W;
-  ctx.save(); ls(ctx, 5);
-  text(`PROJEKT 0${c+1} / 0${CUTS.length}`, 62, 380, LAB(30), C.red, 'left', 1, 5);
-  ctx.restore();
-  const el = media(cut.k), rv = eo(seg(lt, 0.04, 0.3));
-  const zoom = lerp(1.14, 1, eo(seg(lt, 0, 0.45)))*(1 + 0.035*lt);
-  const half = MS/2*rv;
-  ctx.save(); ctx.beginPath(); ctx.rect(W/2 - half, MY, half*2, MS); ctx.clip();
-  if (ready(el)) drawCover(el, 0, MY, W, MS, zoom); else { ctx.fillStyle = '#2B2631'; ctx.fillRect(0, MY, W, MS); }
-  ctx.restore();
-  // red wiper on the cut
-  const sw = seg(lt, 0, 0.2);
-  if (sw < 1){ ctx.fillStyle = C.red; ctx.fillRect(lerp(-W*0.2, W, eio(sw)), MY, W*0.2, MS); }
-  // caption rises out of a mask under the picture
-  const size = fitDisp(cut.cap, 960, 110), cy = MY + MS + 40 + size*0.75, ca = eo(seg(lt, 0.12, 0.38));
-  ctx.save(); ctx.beginPath(); ctx.rect(0, cy - size*0.8, W, size*0.95); ctx.clip();
-  ctx.font = DISP(size); ctx.fillStyle = C.white; ctx.fillText(cut.cap, 60, cy + (1 - ca)*size); ctx.restore();
-  // progress ticks
-  for (let i = 0; i < CUTS.length; i++){ ctx.fillStyle = i <= c ? C.red : 'rgba(248,247,248,.25)'; ctx.fillRect(62 + i*44, 300, 34, 8); }
-}
-
-// ---------- scene 4 · Erfahrung ----------
-function s4(){
-  ctx.fillStyle = C.light; ctx.fillRect(0, 0, W, H);
-  const st = media(STAMP), p = clamp(eback(seg(T, 11.52, 12.05)), 0, 1.2);
-  if (ready(st) && p > 0){
-    const rot = -(1 - eo(seg(T, 11.52, 12.3)))*Math.PI + (T - 11.5)*0.3, s = 760*p;
-    ctx.save(); ctx.translate(W/2, 840); ctx.rotate(rot); ctx.drawImage(st, -s/2, -s/2*(st.naturalHeight/st.naturalWidth), s, s*(st.naturalHeight/st.naturalWidth)); ctx.restore();
-  }
-  const a = eo(seg(T, 11.9, 12.25));
-  text('Über 20 Jahre', 62, 1420 + (1-a)*30, F(800, 92), C.dark, 'left', a, -2.5);
-  text('Design und Agentur.', 62, 1524 + (1-a)*30, F(800, 92), C.dark, 'left', eo(seg(T, 12.0, 12.35)), -2.5);
-  ctx.save(); ls(ctx, 5); text('KIRCHZARTEN · SCHWARZWALD', 64, 1620, LAB(28), C.red, 'left', eo(seg(T, 12.15, 12.5)), 5); ctx.restore();
-  const r = eio(seg(T, 12.75, 13.0));
-  if (r > 0){ ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(W/2, 840, r*2200, 0, TAU); ctx.fill(); }
-}
-
-// ---------- scene 5 · Kontakt ----------
-function s5(){
   ctx.fillStyle = C.red; ctx.fillRect(0, 0, W, H);
-  const lg = media(LOGO);
-  let lh = 150;
+  const lg = M[LOGO]; let lh = 150;
   if (ready(lg)){
     const lw = 940; lh = lw*lg.naturalHeight/lg.naturalWidth;
-    const rv = eio(seg(T, 13.05, 13.45));
-    ctx.save(); ctx.beginPath(); ctx.rect(70, 760 - lh/2, lw*rv, lh); ctx.clip();
-    ctx.drawImage(lg, 70, 760 - lh/2, lw, lh); ctx.restore();
+    const rv = eio(seg(T, 10.3, 10.7));
+    ctx.save(); ctx.beginPath(); ctx.rect(70, 760 - lh/2, lw*rv, lh); ctx.clip(); ctx.drawImage(lg, 70, 760 - lh/2, lw, lh); ctx.restore();
   }
-  const a = eo(seg(T, 13.4, 13.75)), y = 760 + lh/2 + 140;
+  const a = eo(seg(T, 10.6, 10.95)), y = 760 + lh/2 + 140;
   text('Monsterideen® für', 70, y + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
   text('mutige Marken.', 70, y + 92 + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
-  const pa = eo(seg(T, 13.75, 14.1));
+  const pa = eo(seg(T, 10.95, 11.3));
   if (pa > 0){
     ctx.save(); ctx.font = F(700, 58); const tw = ctx.measureText('studio-horst.de').width; ctx.restore();
     const pw = tw + 110, px = 70, py = 1420 + (1-pa)*30;
     ctx.save(); ctx.globalAlpha = pa; ctx.fillStyle = C.dark; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, py, pw, 124, 62) : ctx.rect(px, py, pw, 124); ctx.fill(); ctx.restore();
     text('studio-horst.de', px + 55, py + 82, F(700, 58), C.white, 'left', pa, -1);
   }
-  ctx.save(); ls(ctx, 4); text('SALLI@STUDIO-HORST.DE', 72, 1640, LAB(30), C.white, 'left', eo(seg(T, 14.0, 14.3))*0.9, 4); ctx.restore();
+  ctx.save(); ls(ctx, 4); text('SALLI@STUDIO-HORST.DE', 72, 1640, LAB(30), C.white, 'left', eo(seg(T, 11.2, 11.5))*0.9, 4); ctx.restore();
 }
 
 // ---------- HUD ----------
-const FN = [s1, s2, s3, s4, s5];
+const FN = [s1, s2, s3];
 const sceneIdx = t => { let i = 0; SCENES.forEach((s, k) => { if (t >= s.t) i = k; }); return i; };
 function hud(idx){
-  const c = idx === 3 && T < 12.85 ? C.dark : C.white;
-  ctx.save(); ctx.fillStyle = c; ctx.font = LAB(24); ls(ctx, 5);
+  ctx.save(); ctx.fillStyle = C.white; ctx.font = LAB(24); ls(ctx, 5);
   ctx.textAlign = 'left';  ctx.fillText('STUDIO HORST', 62, 130);
-  ctx.textAlign = 'right'; ctx.fillText('SHOWREEL 2026', W - 62, 130);
-  ctx.textAlign = 'left';  ctx.fillText(SCENES[idx].name.toUpperCase(), 62, H - 112);
-  ctx.textAlign = 'right'; ctx.fillText(`00:${String(Math.floor(T)).padStart(2,'0')}`, W - 62, H - 112);
+  ctx.textAlign = 'right'; ctx.fillText('MONSTERIDEEN®', W - 62, 130);
   ctx.globalAlpha = .3; ctx.fillRect(62, H - 86, W - 124, 3);
   ctx.globalAlpha = 1;  ctx.fillRect(62, H - 86, (W - 124)*(T/DUR), 3);
   ctx.restore();
@@ -409,40 +351,33 @@ function tone(d, w, type, f, g, dec, att = 0.004, lp = null){
 const EVENTS = [];
 (function build(){
   const add = (t, fn) => EVENTS.push({ t, fn });
-  const roots = [55, 43.65, 65.41, 49];
-  for (let k = 0; k < 30; k++){
+  const roots = [55, 49, 43.65, 49];
+  for (let i = 0; i < 6; i++) add(0.1 + i*0.09, (d,w) => noise(d, w, 'bandpass', 2400 + i*200, 1.2, 0.24, 0.05));
+  add(0, (d,w) => kick(d, w, 1.1));
+  add(0.9, (d,w) => riser(d, w, 0.5, 0.22));
+  add(1.4, (d,w) => kick(d, w, 1.2)); add(1.4, (d,w) => crash(d, w));
+  for (let k = 4; k < 20; k++){
     const tb = k*0.5;
-    if (tb < 2.5){ add(tb, (d,w) => kick(d, w, tb === 0 ? 1.2 : 0.9)); continue; }
-    if (tb < 3.9){ add(tb, (d,w) => kick(d, w, 0.8)); add(tb + 0.25, (d,w) => hat(d, w)); continue; }
-    if (tb < 4.5) continue;
-    if (tb < 11.5){
-      add(tb, (d,w) => kick(d, w));
-      add(tb + 0.25, (d,w) => hat(d, w));
-      if (k % 2) add(tb, (d,w) => clap(d, w));
-      const f = roots[Math.floor((tb - 4.5)/2) % 4]*2;
-      add(tb + 0.25, (d,w) => tone(d, w, 'sawtooth', f, 0.26, 0.2, 0.004, 650));
-      continue;
-    }
-    if (tb === 11.5){
-      add(tb, (d,w) => kick(d, w, 1.2)); add(tb, (d,w) => crash(d, w));
-      [220, 261.63, 329.63].forEach(f => add(tb, (d,w) => tone(d, w, 'triangle', f, 0.06, 1.4, 0.04)));
-      continue;
-    }
-    if (tb === 13){
-      add(tb, (d,w) => kick(d, w, 1.2)); add(tb, (d,w) => crash(d, w));
-      add(tb, (d,w) => tone(d, w, 'sawtooth', 55, 0.33, 2.2, 0.01, 300));
-      [220, 261.63, 329.63, 493.88].forEach(f => add(tb, (d,w) => tone(d, w, 'triangle', f, 0.07, 2.2, 0.06)));
-      continue;
-    }
-    add(tb + 0.25, (d,w) => hat(d, w, 0.07));
-    if (tb % 1 === 0) add(tb, (d,w) => kick(d, w, 0.45));
+    add(tb, (d,w) => kick(d, w, 0.9));
+    add(tb + 0.25, (d,w) => hat(d, w));
+    if (k % 2) add(tb, (d,w) => clap(d, w));
+    const f = roots[Math.floor((tb - 2)/2) % 4]*2;
+    add(tb + 0.25, (d,w) => tone(d, w, 'sawtooth', f, 0.24, 0.2, 0.004, 600));
   }
-  for (let i = 0; i < 13; i++) add(0.12 + i*0.07, (d,w) => noise(d, w, 'bandpass', 2400 + i*120, 1.2, 0.22, 0.05));
-  [3.9, 4.05, 4.2].forEach(t => { add(t, (d,w) => kick(d, w, 1.1)); add(t, (d,w) => clap(d, w)); });
-  for (let i = 0; i < CUTS.length; i++) add(CUT_T0 + i*CUT_D, (d,w) => noise(d, w, 'highpass', 3000, 0.6, 0.28, 0.1));
-  add(2.0,  (d,w) => riser(d, w, 0.48, 0.24));
-  add(11.0, (d,w) => riser(d, w, 0.48, 0.3));
-  add(12.55,(d,w) => riser(d, w, 0.43, 0.24));
+  // monster chatter: one blip per syllable
+  BUBBLES.forEach((b, j) => {
+    const n = Math.min(10, Math.round(b.s.length/4));
+    for (let i = 0; i < n; i++){
+      const f = 260 + rnd(j*31 + i)*260;
+      add(b.t + 0.05 + i*0.075, (d,w) => tone(d, w, 'square', f, 0.05, 0.06, 0.004, 1600));
+    }
+  });
+  add(6.85, (d,w) => noise(d, w, 'lowpass', 900, 0.8, 0.5, 0.18));
+  add(9.7,  (d,w) => riser(d, w, 0.5, 0.3));
+  add(10.2, (d,w) => kick(d, w, 1.2)); add(10.2, (d,w) => crash(d, w));
+  add(10.2, (d,w) => tone(d, w, 'sawtooth', 55, 0.3, 1.8, 0.01, 300));
+  [220, 261.63, 329.63, 493.88].forEach(f => add(10.2, (d,w) => tone(d, w, 'triangle', f, 0.07, 1.8, 0.06)));
+  add(11, (d,w) => kick(d, w, 0.4));
   EVENTS.sort((a,b) => a.t - b.t);
 })();
 function schedule(){
@@ -528,7 +463,7 @@ exportBtn.addEventListener('click', async () => {
     const ext = MIME.includes('mp4') ? 'mp4' : 'webm';
     const blob = new Blob(chunks, { type:MIME.split(';')[0] });
     statusEl.textContent = `Aufnahme fertig (${(blob.size/1048576).toFixed(1)} MB). Bitte das Speichern bestätigen.`;
-    try { await dl.save({ filename:`studio-horst-reel.${ext}`, data:blob });
+    try { await dl.save({ filename:`studio-horst-monster.${ext}`, data:blob });
       statusEl.textContent = ext === 'mp4' ? 'Gespeichert. Die MP4 kann direkt zu Instagram.' : 'Gespeichert als WebM. Für Instagram vorher in MP4 umwandeln, oder in Safari bzw. aktuellem Chrome erneut aufnehmen.';
     } catch(e){ statusEl.textContent = e && e.code === 'declined' ? 'Speichern abgebrochen.' : `Speichern hat nicht geklappt (${e && e.code || 'unbekannt'}).`; }
   };
@@ -554,16 +489,16 @@ function frame(now){
     const idx = render(t); dirty = false;
     if (idx !== lastIdx){ chips.forEach((c, i) => c.classList.toggle('on', i === idx)); lastIdx = idx; }
     scrub.value = Math.round(t*1000);
-    tc.innerHTML = `${t.toFixed(1).padStart(4,'0')} <span>/ 15.0</span>`;
-    if (recording) statusEl.textContent = `Aufnahme läuft … ${Math.min(t, DUR).toFixed(1)} von 15 s`;
+    tc.innerHTML = `${t.toFixed(1).padStart(4,'0')} <span>/ 12.0</span>`;
+    if (recording) statusEl.textContent = `Aufnahme läuft … ${Math.min(t, DUR).toFixed(1)} von 12 s`;
   }
   requestAnimationFrame(frame);
 }
 const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (reduce) t = 13.8;
+if (reduce) t = 11.6;
 render(t);
 requestAnimationFrame(frame);
-const fontsP = document.fonts ? Promise.all([document.fonts.load(DISP(100), 'HORST'), document.fonts.load(F(800, 100), 'Marken'), document.fonts.load(LAB(30), 'A')]).catch(() => {}) : Promise.resolve();
+const fontsP = document.fonts ? Promise.all([document.fonts.load(DISP(100), 'SALLI'), document.fonts.load(F(800, 100), 'Marken'), document.fonts.load(LAB(30), 'A')]).catch(() => {}) : Promise.resolve();
 Promise.all([fontsP, mediaP]).then(() => { dirty = true; if (!reduce){ t = 0; play(); } });
 })();
 </script>

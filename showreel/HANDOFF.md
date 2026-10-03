@@ -3,6 +3,9 @@
 Stand 2026-10-03. Ziel: echtes Showreel für Studio HORST, zuerst 9:16 für Instagram (1080 × 1920, ca. 15 s), danach optional 16:9.
 
 ## Bisher gebaut
+- **`claim-reel/`**: Typo-Reel mit Claim und Versprechen, Signet baut sich auf: https://claude.ai/artifact/BcbxvXYo3LotABEsURVVLM
+- **`referenzen-reel/`**: Logo fest in der Mitte, darunter 15 Kundenlogos im Takt: https://claude.ai/artifact/EtaTQa1e4KBB9iHNkX1u1i
+- **`monster-reel/`**: Das HORST-Monster stellt sich vor (Video von der Website, Boomerang-Loop): https://claude.ai/artifact/AX6MGsa4jgF16Y86eBdibA
 - **`horst-reel-2026/`**: aktuelles Reel mit echter Marke, live als Artifact: https://claude.ai/artifact/AThPAEWv9VrRHEsVs2KtuE (Medien liegen in `media/`, beim Publish als Dateien mitgeben).
 - `studio-horst-reel-9x16.html`, live als Artifact: https://claude.ai/artifact/Wyts464KW48V5isM1k7gH1
   Canvas-Engine mit `render(t)`, Web-Audio-Beat, vier Medien-Slots, Export per MediaRecorder und `downloads`-Capability.
@@ -20,6 +23,8 @@ Stand 2026-10-03. Ziel: echtes Showreel für Studio HORST, zuerst 9:16 für Inst
 - Leistungen: Monsteridee entwickeln · Branding & Markenauftritt · Logo & Markenzeichen · Visuelle Systeme · Kampagnen · Print & digitale Medien · Marken-Check · Kreative Sparringsrunden · Langfristige Markenbegleitung
 
 ## Material in `assets/`
+Logo und Signet als SVG (von Felix): `assets/logo/horst-rz-02.svg`, `assets/logo/horst-rz-solo.svg`. Kundenlogos (weiß, transparent) von der Website: `assets/referenzen/`.
+
 Projekte (1080 × 1080 JPG, aus der Website-Galerie):
 | Datei | Motiv |
 | --- | --- |

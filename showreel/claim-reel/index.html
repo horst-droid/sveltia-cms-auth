@@ -1,4 +1,4 @@
-<title>HORST Showreel 2026</title>
+<title>HORST Claim Reel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Montserrat:wght@600&display=swap">
@@ -53,15 +53,15 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
 </style>
 
 <div class="layout">
-  <div class="stage" id="stage" role="img" aria-label="Instagram-Showreel von Studio HORST, 9:16, fünf Szenen">
+  <div class="stage" id="stage" role="img" aria-label="Instagram-Typo-Reel mit dem Claim von Studio HORST">
     <canvas id="cv" width="1080" height="1920"></canvas>
   </div>
 
   <div class="side">
     <header>
       <p class="eyebrow">Instagram Reel · 1080 × 1920 · 15 Sekunden · 120 BPM</p>
-      <h1>Monsterideen<span>®</span> in 15&nbsp;Sekunden.</h1>
-      <p class="lede">Das Showreel von Studio HORST mit Arbeiten, Farben, Schrift und Texten von studio-horst.de. Jedes Bild wird live gerechnet, der Beat wird dazu synthetisiert.</p>
+      <h1>Monsterideen<span>®</span> für mutige Marken.</h1>
+      <p class="lede">Euer Claim und euer Versprechen als Typo-Reel: Das Signet baut sich auf, dann folgen „Ich entwickle kraftvolle Ideen für Marken, Produkte und Kampagnen – und übersetze sie gemeinsam mit meinen Kunden in sichtbare Auftritte.“</p>
     </header>
 
     <div class="bar">
@@ -81,7 +81,7 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
       <p id="status" aria-live="polite"></p>
     </section>
 
-    <p class="note">Projektbilder und Videos stammen von studio-horst.de. <kbd>Leertaste</kbd> Play/Pause · <kbd>←</kbd> <kbd>→</kbd> ±1 s · Klick aufs Reel pausiert.</p>
+    <p class="note"><kbd>Leertaste</kbd> Play/Pause · <kbd>←</kbd> <kbd>→</kbd> ±1 s · Klick aufs Reel pausiert.</p>
   </div>
 </div>
 
@@ -93,11 +93,11 @@ const F = (w, s) => `${w} ${s}px Inter, system-ui, sans-serif`;
 const DISP = s => `700 ${s}px HorstRansom, "Arial Black", sans-serif`;
 const LAB = s => `600 ${s}px Montserrat, Inter, sans-serif`;
 const SCENES = [
-  { name:'Monsterideen', t:0   },
-  { name:'Haltung',      t:2.5 },
-  { name:'Arbeiten',     t:4.5 },
-  { name:'Erfahrung',    t:11.5 },
-  { name:'Kontakt',      t:13  },
+  { name:'Signet',     t:0   },
+  { name:'Claim',      t:2.5 },
+  { name:'Ideen',      t:5   },
+  { name:'Gemeinsam',  t:9   },
+  { name:'Kontakt',    t:13  },
 ];
 const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
 let T = 0, recording = false;
@@ -147,69 +147,25 @@ function wrap(s, font, maxW){
 }
 function rrect(c, x, y, w, h, r){ c.beginPath(); c.roundRect ? c.roundRect(x, y, w, h, r) : c.rect(x, y, w, h); }
 
-// ---------- media from studio-horst.de ----------
-const CUTS = [
-  { k:'v-gh',     cap:'LOGOENTWICKLUNG' },
-  { k:'p-FF2',    cap:'PACKAGING' },
-  { k:'v-evo',    cap:'MARKENZEICHEN' },
-  { k:'p-ganter', cap:'KAMPAGNE' },
-  { k:'p-jm',     cap:'MARKENAUFTRITT' },
-  { k:'v-w',      cap:'VISUELLES SYSTEM' },
-  { k:'p-v',      cap:'KAMPAGNE' },
-];
-const CUT_T0 = 4.5, CUT_D = 1.0;
+const SVG_LOGO_W = "<svg width=\"804.52\" height=\"266.11\" id=\"Ebene_1\" data-name=\"Ebene 1\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 804.52 266.11\"> <defs> <style> .cls-1 { fill: #FFFFFF; } </style> </defs> <g> <g> <path class=\"cls-1\" d=\"M67.74,244.68c3.31,0,5.86.82,7.65,2.47,1.79,1.64,2.68,4.15,2.68,7.52,0,1.76-.2,3.32-.6,4.68-.4,1.36-1.02,2.51-1.87,3.44-.84.93-1.92,1.64-3.22,2.13-1.31.49-2.85.73-4.64.73h-7.38v-20.96h7.38ZM67.98,263.29c.32,0,.72-.02,1.2-.07.48-.05.99-.17,1.54-.35.54-.19,1.08-.46,1.61-.81.53-.35,1.01-.83,1.43-1.44.42-.61.77-1.37,1.04-2.28.27-.91.41-2.01.41-3.3s-.13-2.37-.38-3.36c-.25-.99-.66-1.83-1.23-2.52-.57-.69-1.31-1.22-2.21-1.59-.9-.36-2.02-.54-3.34-.54h-4.82v16.26h4.76Z\"/> <path class=\"cls-1\" d=\"M107.89,244.68v2.35h-11.99v6.66h11.17v2.35h-11.17v7.25h12.08v2.35h-14.94v-20.96h14.85Z\"/> <path class=\"cls-1\" d=\"M133.69,247.54c-.95-.68-2.17-1.01-3.66-1.01-.6,0-1.19.06-1.78.18-.58.12-1.1.31-1.55.59s-.81.64-1.08,1.1c-.27.46-.41,1.03-.41,1.72,0,.65.2,1.17.59,1.57.39.4.91.73,1.57.98.65.25,1.39.46,2.21.63.82.17,1.66.35,2.52.54.85.2,1.69.43,2.52.69.82.26,1.56.62,2.21,1.07.65.45,1.17,1.02,1.57,1.7.39.69.59,1.55.59,2.58,0,1.12-.26,2.07-.77,2.86-.51.79-1.17,1.44-1.97,1.94-.8.5-1.7.86-2.7,1.09s-1.98.34-2.97.34c-1.2,0-2.34-.15-3.42-.44-1.07-.29-2.02-.74-2.83-1.34s-1.46-1.36-1.93-2.29c-.47-.93-.71-2.03-.71-3.3h2.71c0,.88.18,1.64.53,2.28.35.64.81,1.16,1.39,1.57.57.41,1.24.71,2,.91.76.2,1.55.29,2.35.29.64,0,1.29-.06,1.94-.18.65-.12,1.24-.32,1.76-.6.52-.28.94-.67,1.27-1.16.32-.49.48-1.12.48-1.88,0-.72-.2-1.31-.59-1.76s-.91-.82-1.57-1.1c-.65-.28-1.39-.51-2.21-.69-.82-.18-1.66-.36-2.52-.54-.85-.19-1.69-.4-2.52-.65-.82-.24-1.56-.57-2.21-.97-.65-.4-1.17-.92-1.57-1.56-.39-.64-.59-1.43-.59-2.39,0-1.06.22-1.97.66-2.74.44-.77,1.03-1.41,1.76-1.91.73-.5,1.57-.87,2.5-1.12.93-.24,1.89-.37,2.88-.37,1.1,0,2.13.13,3.07.38.94.25,1.77.66,2.48,1.2.71.55,1.27,1.24,1.69,2.07.41.83.64,1.83.68,2.98h-2.71c-.16-1.51-.72-2.6-1.67-3.27Z\"/> <path class=\"cls-1\" d=\"M156.9,244.68v20.96h-2.86v-20.96h2.86Z\"/> <path class=\"cls-1\" d=\"M186.14,265.39c-1.25.48-2.5.72-3.77.72-1.61,0-3.04-.29-4.31-.87s-2.34-1.36-3.22-2.33c-.88-.98-1.56-2.1-2.02-3.38-.46-1.27-.69-2.59-.69-3.96,0-1.53.22-2.98.65-4.36.43-1.38,1.07-2.59,1.93-3.63.85-1.04,1.92-1.86,3.19-2.48,1.27-.62,2.77-.92,4.47-.92,1.16,0,2.26.13,3.3.4,1.03.26,1.96.68,2.77,1.25.81.57,1.5,1.29,2.05,2.16.55.87.93,1.92,1.13,3.16h-2.86c-.14-.8-.4-1.49-.78-2.07-.38-.58-.85-1.05-1.42-1.42-.56-.37-1.2-.65-1.91-.84-.71-.19-1.47-.28-2.27-.28-1.31,0-2.42.25-3.36.76-.93.51-1.7,1.18-2.29,2.01-.59.83-1.03,1.78-1.31,2.85-.28,1.07-.42,2.16-.42,3.27s.16,2.15.48,3.16c.32,1.01.79,1.9,1.42,2.67.62.77,1.39,1.39,2.3,1.85.91.46,1.97.69,3.18.69,1.12,0,2.12-.18,2.98-.53.86-.35,1.59-.84,2.18-1.45.59-.62,1.04-1.34,1.34-2.17.3-.83.43-1.73.39-2.69h-6.87v-2.35h9.43v11.04h-1.81l-.75-2.61c-.84,1.1-1.89,1.88-3.13,2.36Z\"/> <path class=\"cls-1\" d=\"M210.54,244.68l11.33,17h.06v-17h2.71v20.96h-3.13l-11.24-16.82h-.06v16.82h-2.71v-20.96h3.04Z\"/> </g> <g> <path class=\"cls-1\" d=\"M275.25,264.07c-1.47,1.34-3.55,2.01-6.27,2.01s-4.94-.64-6.49-1.92c-1.56-1.28-2.33-3.32-2.33-6.12v-13.39h2.86v13.39c0,1.88.51,3.3,1.54,4.27,1.02.97,2.5,1.45,4.43,1.45,1.83,0,3.22-.48,4.17-1.45.95-.97,1.43-2.39,1.43-4.27v-13.39h2.86v13.39c0,2.68-.73,4.69-2.2,6.03Z\"/> <path class=\"cls-1\" d=\"M296.51,244.65l11.33,17h.06v-17h2.71v20.96h-3.13l-11.24-16.82h-.06v16.82h-2.71v-20.96h3.04Z\"/> <path class=\"cls-1\" d=\"M334.1,244.65c3.31,0,5.86.82,7.65,2.47,1.79,1.64,2.68,4.15,2.68,7.52,0,1.76-.2,3.32-.6,4.68-.4,1.36-1.02,2.51-1.87,3.44-.84.93-1.92,1.64-3.22,2.13-1.31.49-2.85.73-4.64.73h-7.38v-20.96h7.38ZM334.34,263.27c.32,0,.72-.02,1.2-.07.48-.05.99-.17,1.54-.35.54-.19,1.08-.46,1.61-.81.53-.35,1.01-.83,1.43-1.44.42-.61.77-1.37,1.04-2.28.27-.91.41-2.01.41-3.3s-.13-2.37-.38-3.36c-.25-.99-.66-1.83-1.24-2.52-.57-.69-1.31-1.22-2.21-1.59-.9-.36-2.02-.54-3.34-.54h-4.82v16.26h4.76Z\"/> </g> <g> <path class=\"cls-1\" d=\"M382.98,244.68v10.45l10.9-10.45h3.7l-9.07,8.46,9.43,12.51h-3.61l-7.77-10.6-3.58,3.26v7.34h-2.86v-20.96h2.86Z\"/> <path class=\"cls-1\" d=\"M421.8,244.68c2.05,0,3.65.49,4.8,1.47,1.15.98,1.73,2.32,1.73,4.02,0,1.27-.3,2.39-.89,3.35-.59.96-1.54,1.61-2.85,1.97v.06c.62.12,1.13.31,1.52.59s.7.6.93.98c.23.38.4.81.51,1.28.11.47.2.96.26,1.47.04.51.07,1.03.09,1.56.02.53.07,1.05.15,1.56.08.51.2.99.35,1.45.15.46.38.87.68,1.22h-3.19c-.2-.22-.34-.51-.41-.88-.07-.37-.12-.79-.14-1.25-.02-.46-.04-.95-.06-1.48-.02-.53-.08-1.05-.18-1.56-.08-.51-.18-.99-.3-1.45-.12-.46-.31-.86-.57-1.2-.26-.34-.6-.62-1.02-.82-.42-.21-.98-.31-1.69-.31h-6.99v8.95h-2.86v-20.96h10.12ZM422.41,254.19c.6-.1,1.13-.29,1.58-.57s.81-.66,1.08-1.14c.27-.48.41-1.1.41-1.86,0-1.06-.3-1.92-.9-2.58s-1.58-1-2.92-1h-7.11v7.31h5.96c.66,0,1.3-.05,1.9-.15Z\"/> <path class=\"cls-1\" d=\"M458.64,244.68v2.35h-11.99v6.66h11.17v2.35h-11.17v7.25h12.08v2.35h-14.94v-20.96h14.85Z\"/> <path class=\"cls-1\" d=\"M482.68,244.68l8.4,20.96h-3.16l-2.35-6.31h-9.1l-2.41,6.31h-2.92l8.37-20.96h3.16ZM484.67,256.98l-3.58-9.78h-.06l-3.64,9.78h7.29Z\"/> <path class=\"cls-1\" d=\"M499.61,247.03v-2.35h17.2v2.35h-7.17v18.61h-2.86v-18.61h-7.17Z\"/> <path class=\"cls-1\" d=\"M533.64,244.68v20.96h-2.86v-20.96h2.86Z\"/> <path class=\"cls-1\" d=\"M555.15,265.64l-7.56-20.96h3.07l6.14,18.17h.06l6.2-18.17h2.98l-7.65,20.96h-3.25Z\"/> <path class=\"cls-1\" d=\"M590.59,247.54c-.95-.68-2.17-1.01-3.66-1.01-.6,0-1.19.06-1.78.18-.58.12-1.1.31-1.55.59-.45.27-.81.64-1.08,1.1-.27.46-.41,1.03-.41,1.72,0,.65.2,1.17.59,1.57.39.4.91.73,1.57.98.65.25,1.39.47,2.21.63.82.17,1.66.35,2.52.54.85.2,1.69.43,2.52.69.82.26,1.56.62,2.21,1.07.65.45,1.17,1.02,1.57,1.7.39.69.59,1.55.59,2.58,0,1.12-.26,2.07-.77,2.86-.51.79-1.17,1.44-1.97,1.94-.8.5-1.7.86-2.7,1.09-.99.22-1.98.34-2.97.34-1.2,0-2.34-.15-3.42-.44-1.07-.29-2.02-.74-2.83-1.34-.81-.6-1.46-1.36-1.93-2.29-.47-.93-.71-2.03-.71-3.3h2.71c0,.88.18,1.64.53,2.28.35.64.81,1.16,1.39,1.57s1.24.71,2,.91c.76.2,1.55.29,2.35.29.64,0,1.29-.06,1.94-.18.65-.12,1.24-.32,1.76-.6.52-.28.94-.67,1.27-1.16.32-.49.48-1.12.48-1.88,0-.72-.2-1.31-.59-1.76-.39-.45-.91-.82-1.57-1.1-.65-.28-1.39-.51-2.21-.69-.82-.18-1.66-.36-2.52-.54-.85-.19-1.69-.4-2.52-.65-.82-.24-1.56-.57-2.21-.97-.65-.4-1.17-.92-1.57-1.56-.39-.64-.59-1.43-.59-2.39,0-1.06.22-1.97.66-2.74.44-.77,1.03-1.41,1.76-1.91.73-.5,1.57-.87,2.5-1.12.93-.24,1.89-.37,2.88-.37,1.1,0,2.13.13,3.07.38.94.25,1.77.66,2.48,1.2.71.55,1.27,1.24,1.69,2.07.41.83.64,1.82.68,2.98h-2.71c-.16-1.51-.72-2.6-1.67-3.27Z\"/> <path class=\"cls-1\" d=\"M608.52,247.03v-2.35h17.2v2.35h-7.17v18.61h-2.86v-18.61h-7.17Z\"/> <path class=\"cls-1\" d=\"M654.55,264.1c-1.47,1.34-3.55,2.01-6.27,2.01s-4.94-.64-6.49-1.92c-1.56-1.28-2.33-3.32-2.33-6.12v-13.39h2.86v13.39c0,1.88.51,3.3,1.54,4.27,1.02.97,2.5,1.45,4.43,1.45,1.83,0,3.22-.48,4.17-1.45.95-.97,1.43-2.39,1.43-4.27v-13.39h2.86v13.39c0,2.68-.73,4.69-2.2,6.03Z\"/> <path class=\"cls-1\" d=\"M680.18,244.68c3.31,0,5.86.82,7.65,2.47,1.79,1.64,2.68,4.15,2.68,7.52,0,1.76-.2,3.32-.6,4.68-.4,1.36-1.02,2.51-1.87,3.44-.84.93-1.92,1.64-3.22,2.13-1.31.49-2.85.73-4.64.73h-7.38v-20.96h7.38ZM680.42,263.29c.32,0,.72-.02,1.2-.07.48-.05.99-.17,1.54-.35.54-.19,1.08-.45,1.61-.81.53-.35,1.01-.83,1.43-1.44.42-.61.77-1.37,1.04-2.28s.41-2.01.41-3.3-.13-2.37-.38-3.36c-.25-.99-.66-1.83-1.24-2.53-.57-.69-1.31-1.22-2.21-1.58-.9-.36-2.02-.54-3.34-.54h-4.82v16.26h4.76Z\"/> <path class=\"cls-1\" d=\"M708.46,244.68v20.96h-2.86v-20.96h2.86Z\"/> <path class=\"cls-1\" d=\"M724.2,251.04c.43-1.32,1.08-2.49,1.94-3.51.86-1.02,1.94-1.83,3.22-2.44,1.28-.61,2.78-.91,4.49-.91s3.2.3,4.49.91c1.28.61,2.36,1.42,3.22,2.44.86,1.02,1.51,2.19,1.94,3.51.43,1.32.65,2.7.65,4.13s-.22,2.8-.65,4.12c-.43,1.32-1.08,2.49-1.94,3.51-.86,1.02-1.94,1.82-3.22,2.42-1.29.6-2.78.89-4.49.89s-3.2-.3-4.49-.89c-1.29-.6-2.36-1.4-3.22-2.42-.86-1.02-1.51-2.19-1.94-3.51-.43-1.32-.65-2.7-.65-4.12s.22-2.8.65-4.13ZM726.84,258.29c.28,1.03.72,1.95,1.33,2.77.6.82,1.38,1.48,2.32,1.98.94.5,2.07.75,3.37.75s2.43-.25,3.37-.75c.94-.5,1.72-1.16,2.32-1.98.6-.82,1.04-1.75,1.33-2.77.28-1.03.42-2.07.42-3.13s-.14-2.1-.42-3.13c-.28-1.03-.72-1.95-1.33-2.77-.6-.82-1.38-1.48-2.32-1.98-.94-.5-2.07-.75-3.37-.75s-2.43.25-3.37.75c-.94.5-1.72,1.16-2.32,1.98-.6.82-1.04,1.75-1.33,2.77-.28,1.03-.42,2.07-.42,3.13s.14,2.1.42,3.13Z\"/> </g> </g> <path class=\"cls-1\" d=\"M787.49,17.02v164.5H17.02V17.02h770.47M804.52,0H0v198.54h804.52V0h0Z\"/> <g> <path class=\"cls-1\" d=\"M170.11,64.21v88.78h-28.93v-61.69h-51.89v61.69h-28.93V45.54h28.93v18.68h80.82Z\"/> <path class=\"cls-1\" d=\"M311.1,46v107h-120.62V46h120.62ZM282.17,73.09h-62.76v52.81h62.76v-52.81Z\"/> <path class=\"cls-1\" d=\"M440.45,45.84v26.79h-78.99v80.37h-28.93V45.84h107.92Z\"/> <path class=\"cls-1\" d=\"M565.97,94.06v58.93h-113.43v-28.01h84.5v-7.81l-83.58-12.4v-58.78h111.9v27.09h-82.97v8.73l83.58,12.25Z\"/> <path class=\"cls-1\" d=\"M706.96,125.9v27.09h-120.62V45.69h28.93v18.52h69.8v27.09h-69.8v34.6h91.69Z\"/> <path class=\"cls-1\" d=\"M717.09,153v-27.07h27.07v27.07h-27.07Z\"/> </g> </svg>";
+const SVG_LOGO_D = "<svg width=\"184.7\" height=\"183.3\" id=\"Ebene_1\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewBox=\"0 0 184.7 183.3\"> <defs> <style> .st0 { fill: #201C25; } </style> </defs> <path class=\"st0\" d=\"M15.7,15.7h153.3v151.9H15.7V15.7ZM0,183.3h184.7V0H0v183.3Z\"/> <polygon class=\"st0\" points=\"143 59.3 143 141.3 116.3 141.3 116.3 84.3 68.4 84.3 68.4 141.3 41.7 141.3 41.7 42.1 68.4 42.1 68.4 59.3 143 59.3\"/> </svg>";
+// ---------- shared: media, type, signet ----------
 const M = {};
-function loadOne(k){
-  return new Promise(res => {
-    const done = () => res();
-    if (k.startsWith('v-')){
-      const v = document.createElement('video');
-      v.muted = true; v.playsInline = true; v.preload = 'auto';
-      v.addEventListener('loadeddata', done, { once:true }); v.addEventListener('error', done, { once:true });
-      v.src = `media/${k}.mp4`; M[k] = v;
-    } else {
-      const i = new Image(); i.onload = done; i.onerror = done;
-      i.src = `media/${k}`; M[k] = i;
-    }
-  });
-}
-const LOGO = 'horst-rz-white-scaled-1.png', STAMP = 'horst-rz-stempel-1.png';
-const mediaP = Promise.race([
-  Promise.all([...CUTS.map(c => c.k.startsWith('v-') ? c.k : c.k + '.jpg'), LOGO, STAMP].map(k => loadOne(k))),
-  new Promise(r => setTimeout(r, 8000)),
-]).then(() => { dirty = true; });
-const media = k => M[k] || M[k + '.jpg'];
-const ready = el => el && (el.tagName === 'VIDEO' ? el.videoWidth > 0 && el.readyState >= 1 : el.complete && el.naturalWidth > 0);
-function drawCover(el, x, y, w, h, zoom){
-  const iw = el.videoWidth || el.naturalWidth, ih = el.videoHeight || el.naturalHeight;
-  if (!iw || !ih) return;
-  const s = Math.max(w/iw, h/ih)*zoom, dw = iw*s, dh = ih*s;
-  ctx.drawImage(el, x + (w-dw)/2, y + (h-dh)/2, dw, dh);
-}
-function syncVideos(){
-  const active = T >= CUT_T0 && T < CUT_T0 + CUTS.length*CUT_D ? Math.floor((T - CUT_T0)/CUT_D) : -1;
-  CUTS.forEach((c, i) => {
-    const v = M[c.k]; if (!v || v.tagName !== 'VIDEO') return;
-    if (i !== active){ if (!v.paused) v.pause(); return; }
-    const want = Math.min(0.1 + T - CUT_T0 - i*CUT_D, Math.max(0, (v.duration || 1) - 0.05));
-    if (playing){ if (v.paused) v.play().catch(() => {}); if (Math.abs(v.currentTime - want) > 0.25) v.currentTime = want; }
-    else { if (!v.paused) v.pause(); if (Math.abs(v.currentTime - want) > 0.04) v.currentTime = want; }
-  });
-}
-
-// ---------- type helpers ----------
+function loadImg(key, src){ return new Promise(res => { const i = new Image(); i.onload = () => res(); i.onerror = () => res(); i.src = src; M[key] = i; }); }
+const svgURL = s => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s);
+const ready = el => el && el.complete && el.naturalWidth > 0;
+function syncVideos(){}
 const rnd = i => { const x = Math.sin(i*91.7 + 13.3)*43758.5453; return x - Math.floor(x); };
 function fitDisp(word, maxW, maxS){ ctx.save(); ctx.font = DISP(100); const w = ctx.measureText(word).width; ctx.restore(); return Math.min(maxS, 100*maxW/w); }
-// letters slam in one by one: big, tilted, then settle (ransom-note energy)
-function slamWord(word, size, x, y, color, tIn, step, seed){
-  ctx.save(); ctx.font = DISP(size); ctx.textAlign = 'left'; ctx.fillStyle = color;
-  const total = ctx.measureText(word).width;
+function slamWord(word, size, x, y, color, tIn, step, seed, lastColor){
+  ctx.save(); ctx.font = DISP(size); ctx.textAlign = 'left';
+  const total = ctx.measureText(word).width, x0 = x === 'center' ? (W - total)/2 : x;
   for (let i = 0; i < word.length; i++){
     const ch = word[i]; if (ch === ' ') continue;
     const st = tIn + i*step, p = seg(T, st, st + 0.22); if (p <= 0) continue;
-    const e = eo(p), px = x + ctx.measureText(word.slice(0, i)).width, gw = ctx.measureText(ch).width;
+    const e = eo(p), px = x0 + ctx.measureText(word.slice(0, i)).width, gw = ctx.measureText(ch).width;
     const rot = (rnd(seed + i) - .5)*0.7*(1 - e) + (rnd(seed + i + 50) - .5)*0.05;
-    ctx.save(); ctx.globalAlpha = Math.min(1, p*5);
+    ctx.save(); ctx.globalAlpha = Math.min(1, p*5); ctx.fillStyle = (lastColor && i === word.length - 1) ? lastColor : color;
     ctx.translate(px + gw/2, y - size*0.36); ctx.rotate(rot); ctx.scale(lerp(1.9, 1, e), lerp(1.9, 1, e));
     ctx.fillText(ch, -gw/2, size*0.36); ctx.restore();
   }
@@ -225,145 +181,126 @@ function layoutWords(str, font, maxW, lineH, x0, y0){
   }
   ctx.restore(); return out;
 }
-function wordsIn(list, font, color, tIn, step){
-  ctx.save(); ctx.font = font; ctx.fillStyle = color; ctx.textAlign = 'left'; ls(ctx, -2);
+function wordsIn(list, font, color, tIn, step, accent){
+  ctx.save(); ctx.font = font; ctx.textAlign = 'left'; ls(ctx, -2);
   list.forEach((o, j) => {
     const p = eo(seg(T, tIn + j*step, tIn + j*step + 0.25)); if (p <= 0) return;
-    ctx.globalAlpha = p; ctx.fillText(o.w, o.x, o.y + (1 - p)*36);
+    ctx.globalAlpha = p; ctx.fillStyle = accent && accent.includes(j) ? C.red : color;
+    ctx.fillText(o.w, o.x, o.y + (1 - p)*36);
   });
   ctx.restore();
 }
-
-// ---------- scene 1 · Monsterideen ----------
-function s1(){
-  ctx.fillStyle = T < 0.1 ? C.red : C.dark; ctx.fillRect(0, 0, W, H);
-  const size = fitDisp('MONSTER-', 960, 250), y1 = 800, y2 = y1 + size*1.02;
-  slamWord('MONSTER-', size, 60, y1, C.white, 0.12, 0.07, 1);
-  const w2 = slamWord('IDEEN', size, 60, y2, C.white, 0.12 + 8*0.07, 0.07, 20);
-  const ra = eo(seg(T, 1.0, 1.2));
-  if (ra > 0){ ctx.save(); ctx.globalAlpha = ra; ctx.fillStyle = C.red; ctx.font = F(800, size*0.42); ctx.fillText('®', 60 + w2 + 12, y2 - size*0.5); ctx.restore(); }
-  const a = eo(seg(T, 1.2, 1.55));
-  ctx.save(); ls(ctx, -1.5);
-  text('für mutige Marken.', 64, y2 + 150 + (1-a)*30, F(600, 72), C.white, 'left', a, -1.5);
+// signet (horst-rz-solo.svg, viewBox 184.7 × 183.3): square frame + "h"
+const SIG = { w:184.7, h:183.3, b:15.7, hp:[[143,59.3],[143,141.3],[116.3,141.3],[116.3,84.3],[68.4,84.3],[68.4,141.3],[41.7,141.3],[41.7,42.1],[68.4,42.1],[68.4,59.3]] };
+function drawSignet(cx, cy, size, color, p){ // p: 0..1 build progress (1 = complete)
+  const s = size/SIG.w, b = SIG.b, w = SIG.w, h = SIG.h;
+  ctx.save(); ctx.translate(cx - size/2, cy - SIG.h*s/2); ctx.scale(s, s); ctx.fillStyle = color;
+  const bar = (k) => clamp((p - k*0.14)/0.16, 0, 1);
+  const q = [bar(0), bar(1), bar(2), bar(3)].map(eio);
+  ctx.fillRect(0, 0, w*q[0], b);                       // top, left → right
+  ctx.fillRect(w - b, 0, b, h*q[1]);                   // right, top → bottom
+  ctx.fillRect(w - w*q[2], h - b, w*q[2], b);          // bottom, right → left
+  ctx.fillRect(0, h - h*q[3], b, h*q[3]);              // left, bottom → top
+  const hq = eio(clamp((p - 0.55)/0.45, 0, 1));
+  if (hq > 0){
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 141.3 - 99.2*hq, w, 99.2*hq + 1); ctx.clip();
+    ctx.beginPath(); SIG.hp.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
   ctx.restore();
-  // beat square
-  const lt = T % 0.5, bs = lerp(44, 22, eo(seg(lt, 0, 0.4)));
-  ctx.globalAlpha = a; ctx.fillStyle = C.red; ctx.fillRect(64, y2 + 230, bs, bs); ctx.globalAlpha = 1;
-  for (let i = 0; i < 4; i++){
-    const st = 2.2 + i*0.04, h = H*eio(seg(T, st, st + 0.22));
-    if (h > 0){ ctx.fillStyle = C.red; ctx.fillRect(Math.floor(i*W/4), H - h, Math.ceil(W/4) + 1, h); }
-  }
 }
-
-// ---------- scene 2 · Haltung ----------
-const L1 = 'Viele Marken sehen ordentlich aus.';
-const L2 = 'Aber fühlen sich nicht wirklich nach etwas an.';
-const KEY = [['THE IDEA', 3.9, C.white], ['IS THE', 4.05, C.white], ['KEY.', 4.2, C.red]];
-function s2(){
-  if (T < 3.9){
-    ctx.fillStyle = C.red; ctx.fillRect(0, 0, W, H);
-    const f = F(800, 96), b1 = layoutWords(L1, f, 940, 108, 62, 640);
-    wordsIn(b1, f, C.white, 2.55, 0.11);
-    const b2 = layoutWords(L2, f, 940, 108, 62, b1[b1.length-1].y + 170);
-    wordsIn(b2, f, C.dark, 3.15, 0.08);
-    return;
-  }
-  ctx.fillStyle = C.black; ctx.fillRect(0, 0, W, H);
-  const size = fitDisp('THE IDEA', 960, 240);
-  KEY.forEach(([s, t0, col], i) => {
-    if (T < t0) return;
-    const sc = lerp(1.18, 1, eo(seg(T, t0, t0 + 0.12)));
-    ctx.save(); ctx.translate(60, 760 + i*size*1.08); ctx.scale(sc, sc);
-    ctx.font = DISP(size); ctx.fillStyle = col; ctx.fillText(s, 0, 0); ctx.restore();
-  });
+function pill(label, cx, y, bg, fg, a){
+  if (a <= 0) return;
+  ctx.save(); ctx.font = F(700, 58); const tw = ctx.measureText(label).width; ctx.restore();
+  const pw = tw + 110, px = cx - pw/2, py = y + (1 - a)*30;
+  ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, py, pw, 124, 62) : ctx.rect(px, py, pw, 124); ctx.fill(); ctx.restore();
+  text(label, cx, py + 82, F(700, 58), fg, 'center', a, -1);
 }
-
-// ---------- scene 3 · Arbeiten ----------
-function s3(){
-  const c = clamp(Math.floor((T - CUT_T0)/CUT_D), 0, CUTS.length - 1), lt = T - CUT_T0 - c*CUT_D, cut = CUTS[c];
-  ctx.fillStyle = C.dark; ctx.fillRect(0, 0, W, H);
-  const MY = 430, MS = W;
-  ctx.save(); ls(ctx, 5);
-  text(`PROJEKT 0${c+1} / 0${CUTS.length}`, 62, 380, LAB(30), C.red, 'left', 1, 5);
-  ctx.restore();
-  const el = media(cut.k), rv = eo(seg(lt, 0.04, 0.3));
-  const zoom = lerp(1.14, 1, eo(seg(lt, 0, 0.45)))*(1 + 0.035*lt);
-  const half = MS/2*rv;
-  ctx.save(); ctx.beginPath(); ctx.rect(W/2 - half, MY, half*2, MS); ctx.clip();
-  if (ready(el)) drawCover(el, 0, MY, W, MS, zoom); else { ctx.fillStyle = '#2B2631'; ctx.fillRect(0, MY, W, MS); }
-  ctx.restore();
-  // red wiper on the cut
-  const sw = seg(lt, 0, 0.2);
-  if (sw < 1){ ctx.fillStyle = C.red; ctx.fillRect(lerp(-W*0.2, W, eio(sw)), MY, W*0.2, MS); }
-  // caption rises out of a mask under the picture
-  const size = fitDisp(cut.cap, 960, 110), cy = MY + MS + 40 + size*0.75, ca = eo(seg(lt, 0.12, 0.38));
-  ctx.save(); ctx.beginPath(); ctx.rect(0, cy - size*0.8, W, size*0.95); ctx.clip();
-  ctx.font = DISP(size); ctx.fillStyle = C.white; ctx.fillText(cut.cap, 60, cy + (1 - ca)*size); ctx.restore();
-  // progress ticks
-  for (let i = 0; i < CUTS.length; i++){ ctx.fillStyle = i <= c ? C.red : 'rgba(248,247,248,.25)'; ctx.fillRect(62 + i*44, 300, 34, 8); }
-}
-
-// ---------- scene 4 · Erfahrung ----------
-function s4(){
-  ctx.fillStyle = C.light; ctx.fillRect(0, 0, W, H);
-  const st = media(STAMP), p = clamp(eback(seg(T, 11.52, 12.05)), 0, 1.2);
-  if (ready(st) && p > 0){
-    const rot = -(1 - eo(seg(T, 11.52, 12.3)))*Math.PI + (T - 11.5)*0.3, s = 760*p;
-    ctx.save(); ctx.translate(W/2, 840); ctx.rotate(rot); ctx.drawImage(st, -s/2, -s/2*(st.naturalHeight/st.naturalWidth), s, s*(st.naturalHeight/st.naturalWidth)); ctx.restore();
-  }
-  const a = eo(seg(T, 11.9, 12.25));
-  text('Über 20 Jahre', 62, 1420 + (1-a)*30, F(800, 92), C.dark, 'left', a, -2.5);
-  text('Design und Agentur.', 62, 1524 + (1-a)*30, F(800, 92), C.dark, 'left', eo(seg(T, 12.0, 12.35)), -2.5);
-  ctx.save(); ls(ctx, 5); text('KIRCHZARTEN · SCHWARZWALD', 64, 1620, LAB(28), C.red, 'left', eo(seg(T, 12.15, 12.5)), 5); ctx.restore();
-  const r = eio(seg(T, 12.75, 13.0));
-  if (r > 0){ ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(W/2, 840, r*2200, 0, TAU); ctx.fill(); }
-}
-
-// ---------- scene 5 · Kontakt ----------
-function s5(){
-  ctx.fillStyle = C.red; ctx.fillRect(0, 0, W, H);
-  const lg = media(LOGO);
-  let lh = 150;
-  if (ready(lg)){
-    const lw = 940; lh = lw*lg.naturalHeight/lg.naturalWidth;
-    const rv = eio(seg(T, 13.05, 13.45));
-    ctx.save(); ctx.beginPath(); ctx.rect(70, 760 - lh/2, lw*rv, lh); ctx.clip();
-    ctx.drawImage(lg, 70, 760 - lh/2, lw, lh); ctx.restore();
-  }
-  const a = eo(seg(T, 13.4, 13.75)), y = 760 + lh/2 + 140;
-  text('Monsterideen® für', 70, y + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
-  text('mutige Marken.', 70, y + 92 + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
-  const pa = eo(seg(T, 13.75, 14.1));
-  if (pa > 0){
-    ctx.save(); ctx.font = F(700, 58); const tw = ctx.measureText('studio-horst.de').width; ctx.restore();
-    const pw = tw + 110, px = 70, py = 1420 + (1-pa)*30;
-    ctx.save(); ctx.globalAlpha = pa; ctx.fillStyle = C.dark; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, py, pw, 124, 62) : ctx.rect(px, py, pw, 124); ctx.fill(); ctx.restore();
-    text('studio-horst.de', px + 55, py + 82, F(700, 58), C.white, 'left', pa, -1);
-  }
-  ctx.save(); ls(ctx, 4); text('SALLI@STUDIO-HORST.DE', 72, 1640, LAB(30), C.white, 'left', eo(seg(T, 14.0, 14.3))*0.9, 4); ctx.restore();
-}
-
-// ---------- HUD ----------
-const FN = [s1, s2, s3, s4, s5];
-const sceneIdx = t => { let i = 0; SCENES.forEach((s, k) => { if (t >= s.t) i = k; }); return i; };
-function hud(idx){
-  const c = idx === 3 && T < 12.85 ? C.dark : C.white;
+function hudBase(c, right){
   ctx.save(); ctx.fillStyle = c; ctx.font = LAB(24); ls(ctx, 5);
   ctx.textAlign = 'left';  ctx.fillText('STUDIO HORST', 62, 130);
-  ctx.textAlign = 'right'; ctx.fillText('SHOWREEL 2026', W - 62, 130);
-  ctx.textAlign = 'left';  ctx.fillText(SCENES[idx].name.toUpperCase(), 62, H - 112);
-  ctx.textAlign = 'right'; ctx.fillText(`00:${String(Math.floor(T)).padStart(2,'0')}`, W - 62, H - 112);
+  ctx.textAlign = 'right'; ctx.fillText(right, W - 62, 130);
   ctx.globalAlpha = .3; ctx.fillRect(62, H - 86, W - 124, 3);
   ctx.globalAlpha = 1;  ctx.fillRect(62, H - 86, (W - 124)*(T/DUR), 3);
   ctx.restore();
 }
+// ---------- Claim: "Monsterideen® für mutige Marken." + the studio's promise ----------
+const mediaP = Promise.race([loadImg('logo', svgURL(SVG_LOGO_W)), new Promise(r => setTimeout(r, 8000))]).then(() => { dirty = true; });
+const BIG = [
+  { s:'MARKEN,',   t:7.0, bg:C.red,   fg:C.white },
+  { s:'PRODUKTE',  t:7.5, bg:C.white, fg:C.dark },
+  { s:'UND',       t:8.0, bg:C.dark,  fg:C.white },
+  { s:'KAMPAGNEN', t:8.5, bg:C.red,   fg:C.dark },
+];
+const P1 = 'Ich entwickle kraftvolle Ideen für';
+const P2 = '– und übersetze sie gemeinsam mit meinen Kunden in';
+function headerSignet(color){ drawSignet(540, 300, 120, color, 1); }
+function s1(){
+  ctx.fillStyle = C.dark; ctx.fillRect(0, 0, W, H);
+  const mv = eio(seg(T, 1.7, 2.4));
+  drawSignet(540, lerp(900, 300, mv), lerp(520, 120, mv), C.white, seg(T, 0.1, 1.5));
+  const a = eo(seg(T, 1.35, 1.6))*(1 - seg(T, 1.7, 1.9));
+  ctx.save(); ls(ctx, 6); text('STUDIO HORST', 540, 1300, LAB(34), C.red, 'center', a, 6); ctx.restore();
+}
+function s2(){
+  ctx.fillStyle = C.dark; ctx.fillRect(0, 0, W, H); headerSignet(C.white);
+  const size = fitDisp('MONSTER-', 960, 250), y1 = 860, y2 = y1 + size*1.02;
+  slamWord('MONSTER-', size, 60, y1, C.white, 2.5, 0.07, 1);
+  const w2 = slamWord('IDEEN', size, 60, y2, C.white, 2.5 + 8*0.07, 0.07, 20);
+  const ra = eo(seg(T, 3.4, 3.6));
+  if (ra > 0){ ctx.save(); ctx.globalAlpha = ra; ctx.fillStyle = C.red; ctx.font = F(800, size*0.42); ctx.fillText('®', 60 + w2 + 12, y2 - size*0.5); ctx.restore(); }
+  const a = eo(seg(T, 3.6, 3.95));
+  text('für mutige Marken.', 64, y2 + 150 + (1-a)*30, F(700, 78), C.white, 'left', a, -2);
+}
+function s3(){
+  if (T < 7.0){
+    ctx.fillStyle = C.dark; ctx.fillRect(0, 0, W, H); headerSignet(C.white);
+    const f = F(800, 104), list = layoutWords(P1, f, 940, 118, 62, 780);
+    wordsIn(list, f, C.white, 5.0, 0.28, [2, 3]);
+    return;
+  }
+  const k = clamp(Math.floor((T - 7.0)/0.5), 0, 3), b = BIG[k];
+  ctx.fillStyle = b.bg; ctx.fillRect(0, 0, W, H); headerSignet(b.fg);
+  const size = fitDisp(b.s, 960, b.s === 'UND' ? 260 : 330);
+  const sc = lerp(1.25, 1, eo(seg(T, b.t, b.t + 0.15)));
+  ctx.save(); ctx.font = DISP(size); const tw = ctx.measureText(b.s).width;
+  ctx.translate(W/2, 1000); ctx.scale(sc, sc); ctx.fillStyle = b.fg; ctx.fillText(b.s, -tw/2, size*0.36); ctx.restore();
+}
+function s4(){
+  if (T < 11.0){
+    ctx.fillStyle = C.dark; ctx.fillRect(0, 0, W, H); headerSignet(C.white);
+    const f = F(800, 96), list = layoutWords(P2, f, 940, 110, 62, 700);
+    wordsIn(list, f, C.white, 9.0, 0.2, [4]);
+    return;
+  }
+  ctx.fillStyle = C.red; ctx.fillRect(0, 0, W, H); headerSignet(C.white);
+  const size = fitDisp('SICHTBARE', 960, 260);
+  slamWord('SICHTBARE', size, 'center', 900, C.white, 11.0, 0.05, 7);
+  slamWord('AUFTRITTE.', size, 'center', 900 + size*1.05, C.dark, 11.45, 0.05, 30);
+}
+function s5(){
+  ctx.fillStyle = C.dark; ctx.fillRect(0, 0, W, H);
+  const lg = M.logo;
+  if (ready(lg)){
+    const lw = 860, lh = lw*lg.naturalHeight/lg.naturalWidth, x0 = 540 - lw/2, y0 = 780 - lh/2, wp = eio(seg(T, 13.05, 13.6));
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, y0 - 10, lw*wp, lh + 20); ctx.clip(); ctx.drawImage(lg, x0, y0, lw, lh); ctx.restore();
+    if (wp > 0 && wp < 1){ ctx.fillStyle = C.red; ctx.fillRect(x0 + lw*wp, y0 - 20, 26, lh + 40); }
+  }
+  const a = eo(seg(T, 13.5, 13.85));
+  text('Monsterideen® für', 540, 1110 + (1-a)*24, F(700, 76), C.white, 'center', a, -2);
+  text('mutige Marken.', 540, 1200 + (1-a)*24, F(700, 76), C.white, 'center', a, -2);
+  pill('studio-horst.de', 540, 1360, C.red, C.white, eo(seg(T, 13.8, 14.15)));
+  ctx.save(); ls(ctx, 4); text('SALLI@STUDIO-HORST.DE', 540, 1590, LAB(30), C.white, 'center', eo(seg(T, 14.05, 14.35))*0.9, 4); ctx.restore();
+}
+const FN = [s1, s2, s3, s4, s5];
+const sceneIdx = t => { let i = 0; SCENES.forEach((s, k) => { if (t >= s.t) i = k; }); return i; };
 function render(t){
   T = clamp(t, 0, DUR - 1e-4);
-  syncVideos();
   const idx = sceneIdx(T);
   ctx.textBaseline = 'alphabetic';
   FN[idx]();
-  hud(idx);
+  const light = T >= 7.5 && T < 8.0;
+  hudBase(light ? C.dark : C.white, 'MONSTERIDEEN®');
   return idx;
 }
 
@@ -410,39 +347,26 @@ const EVENTS = [];
 (function build(){
   const add = (t, fn) => EVENTS.push({ t, fn });
   const roots = [55, 43.65, 65.41, 49];
-  for (let k = 0; k < 30; k++){
+  [0.1, 0.31, 0.52, 0.73].forEach((t, i) => add(t, (d,w) => tone(d, w, 'square', 330*Math.pow(1.26, i), 0.06, 0.08, 0.003, 2000)));
+  add(0.9, (d,w) => riser(d, w, 0.6, 0.2));
+  add(1.5, (d,w) => kick(d, w, 1.1));
+  add(2.0, (d,w) => riser(d, w, 0.48, 0.24));
+  for (let i = 0; i < 13; i++) add(2.5 + i*0.07, (d,w) => noise(d, w, 'bandpass', 2400 + i*120, 1.2, 0.22, 0.05));
+  for (let k = 5; k < 26; k++){
     const tb = k*0.5;
-    if (tb < 2.5){ add(tb, (d,w) => kick(d, w, tb === 0 ? 1.2 : 0.9)); continue; }
-    if (tb < 3.9){ add(tb, (d,w) => kick(d, w, 0.8)); add(tb + 0.25, (d,w) => hat(d, w)); continue; }
-    if (tb < 4.5) continue;
-    if (tb < 11.5){
-      add(tb, (d,w) => kick(d, w));
-      add(tb + 0.25, (d,w) => hat(d, w));
-      if (k % 2) add(tb, (d,w) => clap(d, w));
-      const f = roots[Math.floor((tb - 4.5)/2) % 4]*2;
-      add(tb + 0.25, (d,w) => tone(d, w, 'sawtooth', f, 0.26, 0.2, 0.004, 650));
-      continue;
-    }
-    if (tb === 11.5){
-      add(tb, (d,w) => kick(d, w, 1.2)); add(tb, (d,w) => crash(d, w));
-      [220, 261.63, 329.63].forEach(f => add(tb, (d,w) => tone(d, w, 'triangle', f, 0.06, 1.4, 0.04)));
-      continue;
-    }
-    if (tb === 13){
-      add(tb, (d,w) => kick(d, w, 1.2)); add(tb, (d,w) => crash(d, w));
-      add(tb, (d,w) => tone(d, w, 'sawtooth', 55, 0.33, 2.2, 0.01, 300));
-      [220, 261.63, 329.63, 493.88].forEach(f => add(tb, (d,w) => tone(d, w, 'triangle', f, 0.07, 2.2, 0.06)));
-      continue;
-    }
-    add(tb + 0.25, (d,w) => hat(d, w, 0.07));
-    if (tb % 1 === 0) add(tb, (d,w) => kick(d, w, 0.45));
+    if (tb >= 10.5 && tb < 11) continue;
+    add(tb, (d,w) => kick(d, w, tb >= 7 && tb < 9 ? 1.1 : 0.9));
+    add(tb + 0.25, (d,w) => hat(d, w));
+    if (k % 2 || (tb >= 7 && tb < 9)) add(tb, (d,w) => clap(d, w));
+    const f = roots[Math.floor((tb - 2.5)/2) % 4]*2;
+    add(tb + 0.25, (d,w) => tone(d, w, 'sawtooth', f, 0.24, 0.2, 0.004, 650));
   }
-  for (let i = 0; i < 13; i++) add(0.12 + i*0.07, (d,w) => noise(d, w, 'bandpass', 2400 + i*120, 1.2, 0.22, 0.05));
-  [3.9, 4.05, 4.2].forEach(t => { add(t, (d,w) => kick(d, w, 1.1)); add(t, (d,w) => clap(d, w)); });
-  for (let i = 0; i < CUTS.length; i++) add(CUT_T0 + i*CUT_D, (d,w) => noise(d, w, 'highpass', 3000, 0.6, 0.28, 0.1));
-  add(2.0,  (d,w) => riser(d, w, 0.48, 0.24));
-  add(11.0, (d,w) => riser(d, w, 0.48, 0.3));
-  add(12.55,(d,w) => riser(d, w, 0.43, 0.24));
+  add(10.5, (d,w) => riser(d, w, 0.5, 0.3));
+  add(11.0, (d,w) => crash(d, w));
+  for (let i = 0; i < 19; i++) add(11.0 + (i < 9 ? i*0.05 : 0.45 + (i-9)*0.05), (d,w) => noise(d, w, 'bandpass', 2600 + i*80, 1.2, 0.2, 0.05));
+  add(13, (d,w) => kick(d, w, 1.2)); add(13, (d,w) => crash(d, w));
+  add(13, (d,w) => tone(d, w, 'sawtooth', 55, 0.3, 1.9, 0.01, 300));
+  [220, 261.63, 329.63, 493.88].forEach(f => add(13, (d,w) => tone(d, w, 'triangle', f, 0.07, 1.9, 0.06)));
   EVENTS.sort((a,b) => a.t - b.t);
 })();
 function schedule(){
@@ -528,7 +452,7 @@ exportBtn.addEventListener('click', async () => {
     const ext = MIME.includes('mp4') ? 'mp4' : 'webm';
     const blob = new Blob(chunks, { type:MIME.split(';')[0] });
     statusEl.textContent = `Aufnahme fertig (${(blob.size/1048576).toFixed(1)} MB). Bitte das Speichern bestätigen.`;
-    try { await dl.save({ filename:`studio-horst-reel.${ext}`, data:blob });
+    try { await dl.save({ filename:`studio-horst-claim.${ext}`, data:blob });
       statusEl.textContent = ext === 'mp4' ? 'Gespeichert. Die MP4 kann direkt zu Instagram.' : 'Gespeichert als WebM. Für Instagram vorher in MP4 umwandeln, oder in Safari bzw. aktuellem Chrome erneut aufnehmen.';
     } catch(e){ statusEl.textContent = e && e.code === 'declined' ? 'Speichern abgebrochen.' : `Speichern hat nicht geklappt (${e && e.code || 'unbekannt'}).`; }
   };
@@ -563,7 +487,7 @@ const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: 
 if (reduce) t = 13.8;
 render(t);
 requestAnimationFrame(frame);
-const fontsP = document.fonts ? Promise.all([document.fonts.load(DISP(100), 'HORST'), document.fonts.load(F(800, 100), 'Marken'), document.fonts.load(LAB(30), 'A')]).catch(() => {}) : Promise.resolve();
+const fontsP = document.fonts ? Promise.all([document.fonts.load(DISP(100), 'A'), document.fonts.load(F(800, 100), 'Marken'), document.fonts.load(LAB(30), 'A')]).catch(() => {}) : Promise.resolve();
 Promise.all([fontsP, mediaP]).then(() => { dirty = true; if (!reduce){ t = 0; play(); } });
 })();
 </script>
