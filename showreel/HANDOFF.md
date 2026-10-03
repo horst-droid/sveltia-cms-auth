@@ -9,6 +9,7 @@ Stand 2026-10-03. Alles hier wurde in einer Claude-Code-Session gebaut. Diese Da
 | `horst-reel-2026/` | https://claude.ai/artifact/AThPAEWv9VrRHEsVs2KtuE | Showreel 15 s: MONSTERIDEEN®-Intro, „Viele Marken sehen ordentlich aus…“, THE IDEA IS THE KEY, 7 Projekte (Bilder + 3 Videos), Stempel „20 · seit 2004“, Kontakt |
 | `monster-reel/` | https://claude.ai/artifact/AX6MGsa4jgF16Y86eBdibA | 13,5 s: Monster HORST (Website-Video als Boomerang) stellt sich in Sprechblasen vor, stürzt auf die Kamera zu, Zähne fressen den Screen („MAMPF!“), innen roter Abspann |
 | `referenzen-reel/` | https://claude.ai/artifact/EtaTQa1e4KBB9iHNkX1u1i | 15 s: horst.-Logo (SVG) fest in der Mitte, darunter 15 Kundenlogos im Takt, immer schneller, dann Logo-Wand, Kontakt |
+| `wer-ist-das-reel/` | https://claude.ai/artifact/UFgQUXeKKwbNcQ8roeqbzr | 15,5 s: Teaser durchs Guckloch – Fell, Kette, Ohr, Hörner, Schnauzer, Augen (Hinweis 1–6), dann Guckloch öffnet sich, „DAS IST HORST.“ + Ansage-Sprechblase, roter Abspann |
 | `claim-reel/` | https://claude.ai/artifact/BcbxvXYo3LotABEsURVVLM | 15 s: Signet baut sich auf, kinetische Typo: „Monsterideen® für mutige Marken. Ich entwickle kraftvolle Ideen für MARKEN, PRODUKTE UND KAMPAGNEN – und übersetze sie gemeinsam mit meinen Kunden in SICHTBARE AUFTRITTE.“ |
 
 Ältere Versuche (nicht mehr im Branding, nur Referenz): `studio-horst-reel-9x16.html`, `studio-horst-reel-16x9.html`, `claude-motion-reel.html`.
