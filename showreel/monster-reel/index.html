@@ -59,15 +59,15 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
 
   <div class="side">
     <header>
-      <p class="eyebrow">Instagram Reel · 1080 × 1920 · 12 Sekunden · 120 BPM</p>
+      <p class="eyebrow">Instagram Reel · 1080 × 1920 · 13,5 Sekunden · 120 BPM</p>
       <h1>Darf ich vorstellen: Horst<span>.</span></h1>
       <p class="lede">Das Monster aus dem Website-Video stellt sich vor, in Sprechblasen und mit Monster-Gebrabbel. Farben, Schrift und Logo von studio-horst.de.</p>
     </header>
 
     <div class="bar">
       <button id="play" type="button" aria-label="Abspielen">▶ Play</button>
-      <div class="tc" id="tc">00.0 <span>/ 12.0</span></div>
-      <div class="scrub"><input id="scrub" type="range" min="0" max="12000" step="1" value="0" aria-label="Zeitleiste"></div>
+      <div class="tc" id="tc">00.0 <span>/ 13.5</span></div>
+      <div class="scrub"><input id="scrub" type="range" min="0" max="13500" step="1" value="0" aria-label="Zeitleiste"></div>
       <button id="sound" type="button" aria-pressed="false">♪ Ton</button>
       <button id="loop" type="button" aria-pressed="true">↻ Loop</button>
     </div>
@@ -87,7 +87,7 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
 
 <script>
 (() => {
-const W = 1080, H = 1920, DUR = 12;
+const W = 1080, H = 1920, DUR = 13.5;
 const C = { red:'#FF4255', dark:'#201C25', black:'#000000', white:'#FFFFFF', light:'#F8F7F8' };
 const F = (w, s) => `${w} ${s}px Inter, system-ui, sans-serif`;
 const DISP = s => `700 ${s}px HorstRansom, "Arial Black", sans-serif`;
@@ -95,7 +95,7 @@ const LAB = s => `600 ${s}px Montserrat, Inter, sans-serif`;
 const SCENES = [
   { name:'Salli',   t:0    },
   { name:'Horst',   t:2    },
-  { name:'Kontakt', t:10.2 },
+  { name:'Kontakt', t:10.6 },
 ];
 const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
 let T = 0, recording = false;
@@ -249,11 +249,16 @@ function bubble(b, next){
 }
 function s2(){
   drawStage();
-  const lt = (T - 2) % 0.5, punch = 1 + 0.025*(1 - eo(seg(lt, 0, 0.3)));
-  drawMonster(W/2, 900, 1.05*punch);
+  const lt = (T - 2) % 0.5, punch = T < 9.9 ? 1 + 0.025*(1 - eo(seg(lt, 0, 0.3))) : 1;
+  // the lunge: HORST rushes at the camera, mouth lands in the middle of the screen
+  const lg = ein(seg(T, 9.9, 10.55)), sc = lerp(1.05, 4.2, lg)*punch;
+  const mouthY = lerp(824, 980, lg);
+  const shake = T > 10.2 ? (rnd(Math.floor(T*60)) - .5)*30*lg : 0;
+  drawMonster(W/2 + shake, mouthY + 72*sc + shake*0.6, sc);
+  if (lg > 0){ ctx.fillStyle = `rgba(0,0,0,${0.55*lg})`; ctx.fillRect(0, 0, W, H); }
   // headline
   const hs = 150;
-  slamWord('SALLI!', hs, 'center', 330, C.white, -10, 0, 3, C.red);
+  if (T < 9.95){ ctx.save(); ctx.globalAlpha = 1 - seg(T, 9.8, 9.95); slamWord('SALLI!', hs, 'center', 330, C.white, -10, 0, 3, C.red); ctx.restore(); }
   // red sticker on the "boring brands" line
   const sp = seg(T, 6.85, 7.1);
   if (sp > 0 && T < 8.4){
@@ -261,9 +266,7 @@ function s2(){
     ctx.fillStyle = C.red; ctx.fillRect(-170, -70, 340, 110);
     ctx.font = DISP(80); ctx.fillStyle = C.white; ctx.textAlign = 'center'; ctx.fillText('MAMPF!', 0, 10); ctx.restore();
   }
-  BUBBLES.forEach((b, i) => bubble(b, BUBBLES[i+1] ? BUBBLES[i+1].t : null));
-  const r = eio(seg(T, 9.95, 10.25));
-  if (r > 0){ ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(W/2, 1500, r*2200, 0, TAU); ctx.fill(); }
+  BUBBLES.forEach((b, i) => bubble(b, BUBBLES[i+1] ? BUBBLES[i+1].t : 9.95));
 }
 
 // ---------- scene 3 · Kontakt ----------
@@ -272,20 +275,20 @@ function s3(){
   const lg = M[LOGO]; let lh = 150;
   if (ready(lg)){
     const lw = 940; lh = lw*lg.naturalHeight/lg.naturalWidth;
-    const rv = eio(seg(T, 10.3, 10.7));
+    const rv = eio(seg(T, 11.0, 11.45));
     ctx.save(); ctx.beginPath(); ctx.rect(70, 760 - lh/2, lw*rv, lh); ctx.clip(); ctx.drawImage(lg, 70, 760 - lh/2, lw, lh); ctx.restore();
   }
-  const a = eo(seg(T, 10.6, 10.95)), y = 760 + lh/2 + 140;
+  const a = eo(seg(T, 11.35, 11.7)), y = 760 + lh/2 + 140;
   text('Monsterideen® für', 70, y + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
   text('mutige Marken.', 70, y + 92 + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
-  const pa = eo(seg(T, 10.95, 11.3));
+  const pa = eo(seg(T, 11.7, 12.05));
   if (pa > 0){
     ctx.save(); ctx.font = F(700, 58); const tw = ctx.measureText('studio-horst.de').width; ctx.restore();
     const pw = tw + 110, px = 70, py = 1420 + (1-pa)*30;
     ctx.save(); ctx.globalAlpha = pa; ctx.fillStyle = C.dark; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, py, pw, 124, 62) : ctx.rect(px, py, pw, 124); ctx.fill(); ctx.restore();
     text('studio-horst.de', px + 55, py + 82, F(700, 58), C.white, 'left', pa, -1);
   }
-  ctx.save(); ls(ctx, 4); text('SALLI@STUDIO-HORST.DE', 72, 1640, LAB(30), C.white, 'left', eo(seg(T, 11.2, 11.5))*0.9, 4); ctx.restore();
+  ctx.save(); ls(ctx, 4); text('SALLI@STUDIO-HORST.DE', 72, 1640, LAB(30), C.white, 'left', eo(seg(T, 11.95, 12.25))*0.9, 4); ctx.restore();
 }
 
 // ---------- HUD ----------
@@ -299,12 +302,37 @@ function hud(idx){
   ctx.globalAlpha = 1;  ctx.fillRect(62, H - 86, (W - 124)*(T/DUR), 3);
   ctx.restore();
 }
+// ---------- the bite: two rows of teeth snap shut over the whole screen ----------
+const TW = 135, TH = 160;
+function teeth(y, dir, off){
+  ctx.fillStyle = '#F4EEE2'; ctx.beginPath();
+  for (let x = -TW + off; x < W + TW; x += TW){ ctx.moveTo(x, y); ctx.lineTo(x + TW*0.5, y + dir*TH); ctx.lineTo(x + TW, y); }
+  ctx.closePath(); ctx.fill();
+}
+function bite(){
+  if (T < 10.3 || T > 11.25) return;
+  const close = ein(seg(T, 10.3, 10.6)), open = eo(seg(T, 10.85, 11.2)), p = close*(1 - open);
+  const yu = lerp(-200, H/2 - 150, p), yl = lerp(H + 200, H/2 + 150, p);   // gum lines
+  const shake = T > 10.6 && T < 10.85 ? (rnd(Math.floor(T*60) + 7) - .5)*36 : 0;
+  ctx.save(); ctx.translate(shake, shake*0.5);
+  ctx.fillStyle = '#5B1420'; ctx.fillRect(-40, yu - H, W + 80, H); ctx.fillRect(-40, yl, W + 80, H);
+  if (p > 0.6){ ctx.fillStyle = `rgba(30,6,10,${(p - 0.6)/0.4})`; ctx.fillRect(-40, yu, W + 80, yl - yu); }
+  teeth(yu, 1, 0); teeth(yl, -1, TW/2);
+  ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(-40, yu - 24, W + 80, 24); ctx.fillRect(-40, yl, W + 80, 24);
+  ctx.restore();
+  if (T > 10.6 && T < 10.85){
+    const a = eo(seg(T, 10.6, 10.68))*(1 - seg(T, 10.78, 10.85)), sc = lerp(1.4, 1, eo(seg(T, 10.6, 10.7)));
+    ctx.save(); ctx.globalAlpha = a; ctx.translate(W/2, H/2 - 520); ctx.rotate(-0.08); ctx.scale(sc, sc);
+    const s = fitDisp('MAMPF!', 900, 230); ctx.font = DISP(s); ctx.fillStyle = C.white; ctx.textAlign = 'center'; ctx.fillText('MAMPF!', 0, s*0.36); ctx.restore();
+  }
+}
 function render(t){
   T = clamp(t, 0, DUR - 1e-4);
   syncVideos();
   const idx = sceneIdx(T);
   ctx.textBaseline = 'alphabetic';
   FN[idx]();
+  bite();
   hud(idx);
   return idx;
 }
@@ -357,6 +385,7 @@ const EVENTS = [];
   add(0.9, (d,w) => riser(d, w, 0.5, 0.22));
   add(1.4, (d,w) => kick(d, w, 1.2)); add(1.4, (d,w) => crash(d, w));
   for (let k = 4; k < 20; k++){
+    if (k*0.5 >= 9.9) break;
     const tb = k*0.5;
     add(tb, (d,w) => kick(d, w, 0.9));
     add(tb + 0.25, (d,w) => hat(d, w));
@@ -373,11 +402,16 @@ const EVENTS = [];
     }
   });
   add(6.85, (d,w) => noise(d, w, 'lowpass', 900, 0.8, 0.5, 0.18));
-  add(9.7,  (d,w) => riser(d, w, 0.5, 0.3));
-  add(10.2, (d,w) => kick(d, w, 1.2)); add(10.2, (d,w) => crash(d, w));
-  add(10.2, (d,w) => tone(d, w, 'sawtooth', 55, 0.3, 1.8, 0.01, 300));
-  [220, 261.63, 329.63, 493.88].forEach(f => add(10.2, (d,w) => tone(d, w, 'triangle', f, 0.07, 1.8, 0.06)));
-  add(11, (d,w) => kick(d, w, 0.4));
+  add(9.9,  (d,w) => { const o = actx.createOscillator(), g = actx.createGain(), f = actx.createBiquadFilter();
+    o.type = 'sawtooth'; o.frequency.setValueAtTime(110, w); o.frequency.exponentialRampToValueAtTime(48, w + 0.65);
+    f.type = 'lowpass'; f.frequency.value = 500; env(g, w, 0.45, 0.62, 0.08); o.connect(f); f.connect(g); g.connect(d); o.start(w); o.stop(w + 0.8); });
+  add(9.9,  (d,w) => riser(d, w, 0.65, 0.25));
+  add(10.6, (d,w) => kick(d, w, 1.4)); add(10.6, (d,w) => noise(d, w, 'lowpass', 700, 0.8, 0.7, 0.22));
+  add(10.62,(d,w) => clap(d, w));
+  add(11.0, (d,w) => crash(d, w));
+  add(11.0, (d,w) => tone(d, w, 'sawtooth', 55, 0.3, 2.2, 0.01, 300));
+  [220, 261.63, 329.63, 493.88].forEach(f => add(11.0, (d,w) => tone(d, w, 'triangle', f, 0.07, 2.3, 0.06)));
+  add(12, (d,w) => kick(d, w, 0.4)); add(13, (d,w) => kick(d, w, 0.3));
   EVENTS.sort((a,b) => a.t - b.t);
 })();
 function schedule(){
@@ -489,13 +523,13 @@ function frame(now){
     const idx = render(t); dirty = false;
     if (idx !== lastIdx){ chips.forEach((c, i) => c.classList.toggle('on', i === idx)); lastIdx = idx; }
     scrub.value = Math.round(t*1000);
-    tc.innerHTML = `${t.toFixed(1).padStart(4,'0')} <span>/ 12.0</span>`;
-    if (recording) statusEl.textContent = `Aufnahme läuft … ${Math.min(t, DUR).toFixed(1)} von 12 s`;
+    tc.innerHTML = `${t.toFixed(1).padStart(4,'0')} <span>/ 13.5</span>`;
+    if (recording) statusEl.textContent = `Aufnahme läuft … ${Math.min(t, DUR).toFixed(1)} von 13,5 s`;
   }
   requestAnimationFrame(frame);
 }
 const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (reduce) t = 11.6;
+if (reduce) t = 13.0;
 render(t);
 requestAnimationFrame(frame);
 const fontsP = document.fonts ? Promise.all([document.fonts.load(DISP(100), 'SALLI'), document.fonts.load(F(800, 100), 'Marken'), document.fonts.load(LAB(30), 'A')]).catch(() => {}) : Promise.resolve();
