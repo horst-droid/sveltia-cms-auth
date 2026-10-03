@@ -1,0 +1,563 @@
+<title>Claude Motion Reel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout: a single dark screening room. The 16:9 reel is the hero, transport controls sit under it like an editing timeline. */
+:root{
+  --ink:#0B0C14;
+  --panel:#151729;
+  --line:#272A45;
+  --paper:#EEF0F6;
+  --muted:#8E93B2;
+  --blue:#2438F0;
+  --yellow:#FFC93C;
+  --display:"Archivo","Arial Black",system-ui,sans-serif;
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:14px;padding-inline:16px;padding-block:28px 40px}
+.wrap{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 32px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+h1{font-family:var(--display);font-stretch:125%;font-weight:900;font-size:clamp(28px,5vw,48px);line-height:.95;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1 em{font-family:var(--serif);font-style:italic;font-weight:400;font-stretch:100%;color:var(--yellow);letter-spacing:0}
+.lede{max-width:46ch;color:var(--muted);line-height:1.55;margin:0;font-size:13px}
+.stage{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;box-shadow:0 30px 80px -30px rgba(36,56,240,.45)}
+.stage canvas{display:block;width:100%;height:100%}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:10px 12px}
+button{font:inherit;color:var(--paper);background:transparent;border:1px solid var(--line);border-radius:3px;padding:8px 12px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;font-size:12px;display:inline-flex;align-items:center;gap:8px;min-height:36px}
+button:hover{border-color:var(--muted)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+#play{background:var(--blue);border-color:var(--blue);min-width:96px;justify-content:center}
+.tc{font-variant-numeric:tabular-nums;font-size:13px;color:var(--paper);min-width:11ch}
+.tc span{color:var(--muted)}
+.scrub{flex:1 1 220px;min-width:0;display:flex}
+#scrub{width:100%;accent-color:var(--yellow);cursor:pointer}
+.scenes{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.scenes button{flex-direction:column;align-items:flex-start;gap:3px;text-transform:none;letter-spacing:0;padding:8px 10px;border-radius:3px;position:relative;overflow:hidden}
+.scenes b{font-weight:500;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.scenes small{color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.scenes button.on{border-color:var(--yellow)}
+.scenes button.on small{color:var(--yellow)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;color:var(--muted);font-size:12px;line-height:1.5}
+kbd{font:inherit;border:1px solid var(--line);border-radius:3px;padding:0 5px;color:var(--paper)}
+@media (max-width:720px){.scenes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">Showreel · 15 Sekunden · 120 BPM</p>
+      <h1>Bewegung, <em>in Code geschrieben.</em></h1>
+    </div>
+    <p class="lede">Ein Canvas, eine Funktion <code>render(t)</code> und ein Synthesizer aus der Web Audio API. Keine Videodatei, kein Keyframe-Tool, keine Bibliothek. Jeder Frame wird live im Browser gerechnet.</p>
+  </header>
+
+  <div class="stage" id="stage" role="img" aria-label="Animiertes Showreel in sechs Szenen">
+    <canvas id="cv" width="1920" height="1080"></canvas>
+  </div>
+
+  <div class="bar">
+    <button id="play" type="button" aria-label="Abspielen">▶ Play</button>
+    <div class="tc" id="tc">00.00 <span>/ 15.00</span></div>
+    <div class="scrub"><input id="scrub" type="range" min="0" max="15000" step="1" value="0" aria-label="Zeitleiste"></div>
+    <button id="sound" type="button" aria-pressed="false">♪ Ton</button>
+    <button id="loop" type="button" aria-pressed="true">↻ Loop</button>
+  </div>
+
+  <div class="scenes" id="scenes"></div>
+
+  <div class="foot">
+    <span>Ton startet erst nach Klick auf <kbd>♪ Ton</kbd>. Der Beat wird live synthetisiert.</span>
+    <span><kbd>Leertaste</kbd> Play/Pause · <kbd>←</kbd> <kbd>→</kbd> ±1 s · <kbd>1</kbd>–<kbd>6</kbd> Szene</span>
+  </div>
+</div>
+
+<script>
+(() => {
+const W = 1920, H = 1080, DUR = 15;
+const C = { ink:'#0B0C14', paper:'#EEF0F6', blue:'#2438F0', yellow:'#FFC93C' };
+const DISP  = s => `900 expanded ${s}px Archivo, "Arial Black", sans-serif`;
+const SERIF = s => `italic 400 ${s}px "Instrument Serif", Georgia, serif`;
+const MONO  = s => `500 ${s}px "IBM Plex Mono", ui-monospace, monospace`;
+const SCENES = [
+  { name:'Countdown',  t:0   },
+  { name:'Typografie', t:2   },
+  { name:'Raster',     t:4.5 },
+  { name:'Marquee',    t:7   },
+  { name:'Raum',       t:9.5 },
+  { name:'Abspann',    t:12  },
+];
+
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+let T = 0;
+
+// ---------- math ----------
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const lerp = (a,b,p) => a + (b-a)*p;
+const seg = (t,a,b) => clamp((t-a)/(b-a), 0, 1);
+const eo  = p => p >= 1 ? 1 : 1 - Math.pow(2, -10*p);
+const ein = p => p*p*p;
+const eio = p => p < .5 ? 4*p*p*p : 1 - Math.pow(-2*p+2, 3)/2;
+const eback = p => p <= 0 ? 0 : 1 + 2.70158*Math.pow(p-1,3) + 1.70158*Math.pow(p-1,2);
+const TAU = Math.PI*2;
+
+// ---------- drawing helpers ----------
+function bg(c){ ctx.fillStyle = c; ctx.fillRect(0,0,W,H); }
+function disc(x,y,r,c){ if (r <= 0) return; ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.fill(); }
+function line(x1,y1,x2,y2){ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); }
+function ls(px){ if ('letterSpacing' in ctx) ctx.letterSpacing = px + 'px'; }
+function text(s,x,y,font,color,align='left',alpha=1){
+  ctx.save(); ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.globalAlpha = alpha;
+  ctx.fillText(s,x,y); ctx.restore();
+}
+function fit(word, fontFn, maxW, maxS){ ctx.font = fontFn(100); return Math.min(maxS, 100*maxW/ctx.measureText(word).width); }
+
+// letters rise into a mask, optionally leave upward
+function riseWord(word, fontFn, size, x, y, align, color, tIn, stagger, dur, tOut){
+  ctx.save();
+  ctx.font = fontFn(size); ctx.textAlign = 'left'; ctx.fillStyle = color;
+  const total = ctx.measureText(word).width;
+  const x0 = align === 'center' ? x - total/2 : x;
+  ctx.beginPath(); ctx.rect(x0 - size, y - size*0.8, total + size*2, size*0.92); ctx.clip();
+  for (let i = 0; i < word.length; i++){
+    const ch = word[i]; if (ch === ' ') continue;
+    const px = x0 + ctx.measureText(word.slice(0,i)).width;
+    const st = tIn + i*stagger;
+    let dy = (1 - eo(seg(T, st, st + dur))) * size * 1.05;
+    if (tOut != null){ const so = tOut + i*stagger*0.6; dy -= ein(seg(T, so, so + 0.2)) * size * 1.05; }
+    ctx.fillText(ch, px, y + dy);
+  }
+  ctx.restore();
+  return total;
+}
+
+// ---------- film grain ----------
+const grain = document.createElement('canvas'); grain.width = grain.height = 256;
+{ const g = grain.getContext('2d'), d = g.createImageData(256,256);
+  for (let i = 0; i < d.data.length; i += 4){ const v = Math.random()*255; d.data[i]=d.data[i+1]=d.data[i+2]=v; d.data[i+3]=255; }
+  g.putImageData(d,0,0); }
+const grainPat = ctx.createPattern(grain, 'repeat');
+
+// ---------- scene 1 · countdown ----------
+function s1(){
+  bg(C.ink);
+  ctx.save();
+  ctx.strokeStyle = 'rgba(238,240,246,0.09)'; ctx.lineWidth = 1.5;
+  for (let x = 0; x <= W; x += 120){
+    const d = Math.abs(x - W/2)/(W/2), h = H/2 * eo(seg(T, d*0.35, d*0.35 + 0.6));
+    line(x, H/2 - h, x, H/2 + h);
+  }
+  for (let y = 0; y <= H; y += 120){
+    const d = Math.abs(y - H/2)/(H/2), w = W/2 * eo(seg(T, d*0.35 + 0.1, d*0.35 + 0.7));
+    line(W/2 - w, y, W/2 + w, y);
+  }
+  // tick ring
+  const tp = eo(seg(T, 0.1, 0.9));
+  ctx.strokeStyle = 'rgba(238,240,246,0.45)'; ctx.lineWidth = 3;
+  for (let i = 0; i < 60; i++){
+    if (i/60 > tp) break;
+    const a = i/60*TAU - Math.PI/2 + T*0.4, r1 = 335, r2 = i % 5 ? 348 : 365;
+    line(W/2 + Math.cos(a)*r1, H/2 + Math.sin(a)*r1, W/2 + Math.cos(a)*r2, H/2 + Math.sin(a)*r2);
+  }
+  if (T < 1.5){
+    const beat = Math.min(2, Math.floor(T/0.5)), lt = T - beat*0.5;
+    ctx.strokeStyle = C.blue; ctx.lineWidth = 10; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(W/2, H/2, 300, -Math.PI/2, -Math.PI/2 + TAU*eio(seg(lt, 0, 0.46))); ctx.stroke();
+    const sc = 1 + 0.35*(1 - eo(seg(lt, 0, 0.4)));
+    ctx.translate(W/2, H/2); ctx.scale(sc, sc);
+    ctx.font = DISP(380); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = C.paper; ctx.globalAlpha = seg(lt, 0, 0.05);
+    ctx.fillText(['3','2','1'][beat], 0, 12);
+  }
+  ctx.restore();
+  if (T >= 1.5){
+    const p = eio(seg(T, 1.5, 2.0));
+    ctx.save(); ctx.strokeStyle = C.paper; ctx.lineWidth = 6;
+    ctx.beginPath(); ctx.arc(W/2, H/2, p*1150 + 30*(1-p), 0, TAU); ctx.stroke(); ctx.restore();
+    disc(W/2, H/2, p*1150, C.blue);
+  }
+}
+
+// ---------- scene 2 · typography ----------
+const WORDS = [
+  { w:'BEWEGUNG', s:2.05, e:3.0, st:0.045, d:0.5 },
+  { w:'RHYTHMUS', s:3.0,  e:3.5, st:0.02,  d:0.32 },
+  { w:'FORM',     s:3.5,  e:4.0, st:0.03,  d:0.32 },
+  { w:'ZEIT.',    s:4.0,  e:null, st:0.03, d:0.32 },
+];
+function s2(){
+  bg(C.blue);
+  const size = fit('BEWEGUNG', DISP, 1560, 300), y = 545;
+  for (const w of WORDS){
+    if (T < w.s - 0.01 || (w.e != null && T > w.e + 0.3)) continue;
+    riseWord(w.w, DISP, size, W/2, y, 'center', C.paper, w.s, w.st, w.d, w.e != null ? w.e - 0.16 : null);
+  }
+  const a = eo(seg(T, 2.35, 2.8));
+  text('ist eine Sprache.', W/2, 690 + (1-a)*30, SERIF(96), C.paper, 'center', a);
+  const lt = (T - 2) % 0.5, bw = lerp(280, 48, eo(seg(lt, 0, 0.45)));
+  ctx.globalAlpha = a; ctx.fillStyle = C.yellow; ctx.fillRect(W/2 - bw/2, 740, bw, 6); ctx.globalAlpha = 1;
+  ctx.fillStyle = C.paper;
+  for (let i = 0; i < 6; i++){
+    const s = 4.15 + i*0.025, h = H*eio(seg(T, s, s + 0.2));
+    if (h > 0) ctx.fillRect(Math.floor(i*W/6), H - h, Math.ceil(W/6) + 1, h);
+  }
+}
+
+// ---------- scene 3 · dot raster ----------
+const GC = 24, GR = 13, GS = 48, GX = 1280, GY = 540, DOTS = [];
+for (let r = 0; r < GR; r++) for (let c = 0; c < GC; c++){
+  const x = GX + (c - (GC-1)/2)*GS, y = GY + (r - (GR-1)/2)*GS;
+  DOTS.push({ x, y, d: Math.hypot(x - GX, y - GY) });
+}
+function s3(){
+  bg(C.paper);
+  const N = DOTS.length, morph = seg(T, 5.6, 6.35), col = eio(seg(T, 6.4, 6.72)), rot = T*0.9;
+  for (let k = 0; k < N; k++){
+    const dt = DOTS[k], st = 4.5 + dt.d/700*0.45;
+    const app = eo(seg(T, st, st + 0.4));
+    const wave = 0.5 + 0.5*Math.sin(dt.d*0.02 - T*7);
+    const mk = eio(clamp((morph - (k/N)*0.25)/0.75, 0, 1));
+    const ang = k/N*TAU + rot, R = 300*(1 - col);
+    const x = lerp(dt.x, GX + Math.cos(ang)*R, mk), y = lerp(dt.y, GY + Math.sin(ang)*R, mk);
+    const r = lerp((2.5 + 9*wave)*app, 5 + 3*Math.sin(ang*6 + T*5), mk) * (1 - col*0.7);
+    disc(x, y, r, wave > 0.93 && mk < 0.5 ? C.blue : C.ink);
+  }
+  const a = eo(seg(T, 4.75, 5.2)) * (1 - seg(T, 6.3, 6.55)), dx = (1 - a)*-30;
+  text('Rhythmus', 160 + dx, 470, SERIF(84), C.ink, 'left', a);
+  text('aus Mathematik.', 160 + dx, 556, SERIF(84), C.ink, 'left', a);
+  ctx.save(); ls(1);
+  text('r = 2.5 + 9 · sin(0.02d − 7t)', 162 + dx, 630, MONO(22), C.ink, 'left', a*0.75);
+  text('312 PUNKTE · 1 FUNKTION', 162 + dx, 666, MONO(22), C.blue, 'left', a);
+  ctx.restore();
+  disc(GX, GY, eio(seg(T, 6.62, 7.0))*1500, C.blue);
+}
+
+// ---------- scene 4 · marquee ----------
+const BANDS = [
+  { bg:C.paper, fg:C.ink,    text:'JEDES BILD  •  ',                 f:DISP(150),  base:162, sp:380 },
+  { bg:C.ink,   fg:C.paper,  text:'IN CODE  •  ',                    f:DISP(150),  base:162, sp:520 },
+  { bg:C.blue,  fg:C.paper,  text:'gerechnet, nicht gezeichnet  ·  ', f:SERIF(170), base:150, sp:300 },
+  { bg:C.ink,   fg:C.yellow, text:'KEIN KEYFRAME  •  ',              f:DISP(150),  base:162, sp:600 },
+  { bg:C.paper, fg:C.ink,    text:'60 FPS  •  900 FRAMES  •  ',      f:DISP(150),  base:162, sp:450 },
+];
+function s4(){
+  bg(C.blue);
+  const BH = H/5;
+  BANDS.forEach((b, i) => {
+    const dir = i % 2 ? 1 : -1, y0 = i*BH;
+    const ox = -dir * W * (1 - eo(seg(T, 7 + i*0.05, 7.5 + i*0.05)));
+    ctx.save(); ctx.translate(ox, 0);
+    ctx.fillStyle = b.bg; ctx.fillRect(0, y0, W, BH + 1);
+    ctx.beginPath(); ctx.rect(0, y0, W, BH); ctx.clip();
+    ctx.font = b.f; ctx.fillStyle = b.fg; ctx.textAlign = 'left';
+    const pw = ctx.measureText(b.text).width, off = (((T - 7)*b.sp*dir) % pw + pw) % pw;
+    for (let x = -pw + off; x < W; x += pw) ctx.fillText(b.text, x, y0 + b.base);
+    ctx.restore();
+  });
+  const e = eio(seg(T, 8.55, 9.0));
+  if (e > 0){ ctx.fillStyle = C.ink; const top = 2*BH*(1 - e), bot = 3*BH + 2*BH*e; ctx.fillRect(0, top, W, bot - top); }
+  const a = eo(seg(T, 8.85, 9.2));
+  if (a > 0){
+    text('Jedes Bild: eine Funktion von t.', W/2, 560 + (1-a)*30, SERIF(118), C.paper, 'center', a);
+    ctx.save(); ls(2);
+    text('render(t) → 2.073.600 PIXEL', W/2, 650 + (1-a)*30, MONO(26), C.yellow, 'center', a);
+    ctx.restore();
+  }
+}
+
+// ---------- scene 5 · sphere + numbers ----------
+const SPH = [], SN = 560, GA = Math.PI*(3 - Math.sqrt(5));
+for (let i = 0; i < SN; i++){
+  const y = 1 - (i/(SN-1))*2, r = Math.sqrt(1 - y*y), th = i*GA;
+  SPH.push({ x: Math.cos(th)*r, y, z: Math.sin(th)*r });
+}
+const STATS = [
+  { n:900, l:'BILDER',             s:9.75 },
+  { n:60,  l:'BILDER PRO SEKUNDE', s:9.95 },
+  { n:1,   l:'PROMPT',             s:10.15 },
+];
+function s5(){
+  bg(C.ink);
+  const SX = 1270, SY = 540;
+  const sc = eback(seg(T, 9.5, 10.25)), ex = eio(seg(T, 11.4, 11.9));
+  const R = 340*sc*(1 + ex*2.5);
+  const ay = T*0.9, ax = 0.4 + 0.15*Math.sin(T*1.3);
+  const cy = Math.cos(ay), sy = Math.sin(ay), cx = Math.cos(ax), sx = Math.sin(ax);
+  // orbit
+  ctx.save(); ctx.globalAlpha = clamp(sc,0,1)*(1 - ex); ctx.strokeStyle = C.blue; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.ellipse(SX, SY, R*1.38, R*0.3, -0.3, 0, TAU); ctx.stroke();
+  const oa = T*2.2;
+  const ox = Math.cos(oa)*R*1.38, oy = Math.sin(oa)*R*0.3, rr = -0.3;
+  disc(SX + ox*Math.cos(rr) - oy*Math.sin(rr), SY + ox*Math.sin(rr) + oy*Math.cos(rr), 12*sc, C.yellow);
+  ctx.restore();
+  for (const p of SPH){
+    const x1 = p.x*cy + p.z*sy, z1 = -p.x*sy + p.z*cy;
+    const y1 = p.y*cx - z1*sx, z2 = p.y*sx + z1*cx;
+    const per = 1/(1 - z2*0.35), depth = (z2 + 1)/2;
+    const r = (1.4 + 3.4*depth)*per*clamp(sc,0,1.2)*(1 - ex*0.5);
+    ctx.globalAlpha = (0.2 + 0.8*depth)*(1 - ex);
+    disc(SX + x1*R*per, SY + y1*R*per, r, Math.abs(p.y) < 0.035 ? C.yellow : C.paper);
+  }
+  ctx.globalAlpha = 1;
+  STATS.forEach((st, i) => {
+    const y = 390 + i*210, out = ein(seg(T, 11.35 + i*0.05, 11.65 + i*0.05));
+    ctx.save(); ctx.translate(-1100*out, 0);
+    const val = Math.round(st.n * eo(seg(T, st.s, st.s + 0.8)));
+    riseWord(String(val), DISP, 150, 160, y, 'left', C.paper, st.s, 0.03, 0.45, null);
+    const a = eo(seg(T, st.s + 0.2, st.s + 0.6));
+    ls(3); text(st.l, 164, y + 50, MONO(22), C.paper, 'left', a*0.7);
+    ctx.restore();
+  });
+  disc(SX, SY, eio(seg(T, 11.78, 12.0))*1700, C.blue);
+}
+
+// ---------- scene 6 · end card ----------
+const FOOT = ['SHOWREEL 2026', '15 SEKUNDEN', 'JEDES BILD IN CODE', 'BEREIT FÜR DEN NÄCHSTEN PROMPT'];
+function s6(){
+  bg(C.blue);
+  const size = fit('CLAUDE', DISP, 1150, 300);
+  ctx.font = DISP(size); const ww = ctx.measureText('CLAUDE').width;
+  const Rm = size*0.44, gap = size*0.3, total = Rm*2 + gap + ww;
+  const sx = (W - total)/2, base = 540, mx = sx + Rm, my = base - size*0.36, wx = sx + Rm*2 + gap;
+  // mark
+  const rot = -(1 - eo(seg(T, 12, 13.1)))*Math.PI*0.75 + (T - 12)*0.12;
+  ctx.save(); ctx.strokeStyle = C.paper; ctx.lineCap = 'round'; ctx.lineWidth = Rm*0.24;
+  for (let i = 0; i < 12; i++){
+    const L = Rm*(i % 2 ? 0.66 : 1)*eback(seg(T, 12.02 + i*0.025, 12.47 + i*0.025)) - ctx.lineWidth/2;
+    if (L <= 0) continue;
+    const a = i/12*TAU + rot;
+    line(mx, my, mx + Math.cos(a)*L, my + Math.sin(a)*L);
+  }
+  ctx.restore();
+  riseWord('CLAUDE', DISP, size, wx, base, 'left', C.paper, 12.15, 0.045, 0.55, null);
+  const a = eo(seg(T, 12.65, 13.1));
+  text('bewegt sich.', wx + 4, base + size*0.62 + (1-a)*24, SERIF(size*0.5), C.paper, 'left', a);
+  // rule + footer
+  const ry = base + size*0.98, rp = eio(seg(T, 12.8, 13.4));
+  ctx.save(); ctx.strokeStyle = C.paper; ctx.lineWidth = 2; if (rp > 0) line(sx, ry, sx + total*rp, ry);
+  ctx.font = MONO(20); ls(2);
+  const widths = FOOT.map(s => ctx.measureText(s).width);
+  const g = (total - widths.reduce((s,v) => s + v, 0))/(FOOT.length - 1);
+  let x = sx;
+  FOOT.forEach((s, i) => {
+    const fa = eo(seg(T, 13.1 + i*0.09, 13.5 + i*0.09));
+    ctx.globalAlpha = fa; ctx.fillStyle = C.paper; ctx.fillText(s, x, ry + 44 + (1-fa)*12);
+    if (i === FOOT.length - 1){ ctx.globalAlpha = fa*(0.55 + 0.45*Math.sin(T*6)); disc(x - 18, ry + 37, 6, C.yellow); }
+    x += widths[i] + g;
+  });
+  ctx.restore();
+}
+
+// ---------- HUD ----------
+const SCENE_FN = [s1, s2, s3, s4, s5, s6];
+function sceneIdx(t){ let i = 0; for (let k = 0; k < SCENES.length; k++) if (t >= SCENES[k].t) i = k; return i; }
+function hudColor(t){
+  if (t < 4.5) return C.paper;
+  if (t < 7)   return t < 6.82 ? C.ink : C.paper;
+  if (t < 9.5) return t < 8.75 ? C.ink : C.paper;
+  return C.paper;
+}
+function hud(idx){
+  const c = hudColor(T), m = 48, L = 34;
+  ctx.save();
+  ctx.strokeStyle = c; ctx.fillStyle = c; ctx.lineWidth = 2;
+  [[m,m,1,1],[W-m,m,-1,1],[m,H-m,1,-1],[W-m,H-m,-1,-1]].forEach(([x,y,dx,dy]) => {
+    ctx.beginPath(); ctx.moveTo(x + dx*L, y); ctx.lineTo(x, y); ctx.lineTo(x, y + dy*L); ctx.stroke();
+  });
+  if (T >= 7 && T < 8.75){ ctx.restore(); return; }
+  ctx.font = MONO(19); ls(2.5); ctx.globalAlpha = 0.9;
+  ctx.textAlign = 'left';  ctx.fillText('CLAUDE  /  MOTION REEL 2026', 100, 96);
+  ctx.textAlign = 'right'; ctx.fillText(`${String(idx+1).padStart(2,'0')} / 06  ${SCENES[idx].name.toUpperCase()}`, W - 100, 96);
+  const f = Math.floor(T*60), ss = Math.floor(T), ff = f % 60;
+  ctx.textAlign = 'left'; ctx.fillText(`00:00:${String(ss).padStart(2,'0')}:${String(ff).padStart(2,'0')}`, 100, H - 82);
+  ctx.textAlign = 'right'; ctx.fillText('120 BPM', W - 100 - 4*22 - 14, H - 82);
+  const beat = Math.floor(T/0.5) % 4;
+  for (let i = 0; i < 4; i++){
+    const bx = W - 100 - (4 - i)*22 + 8;
+    if (i === beat) ctx.fillRect(bx, H - 97, 14, 14); else ctx.strokeRect(bx + 1, H - 96, 12, 12);
+  }
+  ctx.globalAlpha = 0.25; ctx.fillRect(100, H - 60, W - 200, 2);
+  ctx.globalAlpha = 1;    ctx.fillRect(100, H - 60, (W - 200)*(T/DUR), 2);
+  ctx.restore();
+}
+
+function render(t){
+  T = clamp(t, 0, DUR - 1e-4);
+  const idx = sceneIdx(T);
+  ctx.textBaseline = 'alphabetic';
+  SCENE_FN[idx]();
+  hud(idx);
+  const fr = Math.floor(T*60);
+  ctx.save(); ctx.globalAlpha = 0.055; ctx.translate(-((fr*73) % 256), -((fr*151) % 256));
+  ctx.fillStyle = grainPat; ctx.fillRect(0, 0, W + 256, H + 256); ctx.restore();
+  return idx;
+}
+
+// ---------- audio ----------
+let actx = null, master = null, bus = null, noiseBuf = null, schedTimer = null, ctx0 = 0, audioT0 = 0, evIdx = 0;
+function ensureAudio(){
+  if (actx) return true;
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+  actx = new AC();
+  const comp = actx.createDynamicsCompressor();
+  master = actx.createGain(); master.gain.value = 0.7;
+  master.connect(comp); comp.connect(actx.destination);
+  noiseBuf = actx.createBuffer(1, actx.sampleRate*2, actx.sampleRate);
+  const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1;
+  return true;
+}
+function env(g, w, peak, dec, att = 0.002){
+  g.gain.setValueAtTime(0.0001, w); g.gain.exponentialRampToValueAtTime(peak, w + att);
+  g.gain.exponentialRampToValueAtTime(0.0001, w + att + dec);
+}
+function kick(d, w, g = 1){
+  const o = actx.createOscillator(), a = actx.createGain();
+  o.frequency.setValueAtTime(165, w); o.frequency.exponentialRampToValueAtTime(42, w + 0.13);
+  env(a, w, g, 0.38); o.connect(a); a.connect(d); o.start(w); o.stop(w + 0.45);
+}
+function noise(d, w, type, freq, q, g, dec, att = 0.002, sweepTo = null){
+  const s = actx.createBufferSource(); s.buffer = noiseBuf; s.loop = true;
+  const f = actx.createBiquadFilter(); f.type = type; f.frequency.setValueAtTime(freq, w); f.Q.value = q;
+  if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, w + att);
+  const a = actx.createGain(); env(a, w, g, dec, att);
+  s.connect(f); f.connect(a); a.connect(d); s.start(w); s.stop(w + att + dec + 0.05);
+}
+const hat   = (d,w,g=.16) => noise(d, w, 'highpass', 8000, 0.7, g, 0.045);
+const clap  = (d,w)       => noise(d, w, 'bandpass', 1600, 0.8, 0.5, 0.14);
+const crash = (d,w)       => noise(d, w, 'highpass', 4000, 0.5, 0.35, 1.8);
+const riser = (d,w,dur,g=.3) => noise(d, w, 'bandpass', 300, 1.2, g, 0.06, dur, 7000);
+function tone(d, w, type, f, g, dec, att = 0.004, lp = null){
+  const o = actx.createOscillator(), a = actx.createGain(); o.type = type; o.frequency.value = f;
+  let n = o; if (lp){ const fl = actx.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = lp; o.connect(fl); n = fl; }
+  env(a, w, g, dec, att); n.connect(a); a.connect(d); o.start(w); o.stop(w + att + dec + 0.05);
+}
+const EVENTS = [];
+(function build(){
+  const add = (t, fn) => EVENTS.push({ t, fn });
+  [0, 0.5, 1.0].forEach(t => add(t, (d,w) => tone(d, w, 'sine', 880, 0.3, 0.14)));
+  add(1.5, (d,w) => tone(d, w, 'sine', 1760, 0.25, 0.4));
+  add(1.5, (d,w) => riser(d, w, 0.48, 0.25));
+  const roots = [55, 43.65, 65.41, 49];
+  for (let k = 4; k < 30; k++){
+    const tb = k*0.5;
+    if (tb >= 11.5 && tb < 12) continue;
+    if (tb < 12){
+      add(tb, (d,w) => kick(d, w));
+      add(tb + 0.25, (d,w) => hat(d, w));
+      if (k % 2) add(tb, (d,w) => clap(d, w));
+      const f = roots[Math.floor((tb - 2)/2) % 4]*2;
+      add(tb + 0.25, (d,w) => tone(d, w, 'sawtooth', f, 0.28, 0.2, 0.004, 600));
+    } else if (tb === 12){
+      add(tb, (d,w) => kick(d, w, 1.2));
+      add(tb, (d,w) => crash(d, w));
+      add(tb, (d,w) => tone(d, w, 'sawtooth', 55, 0.35, 2.6, 0.01, 300));
+      [220, 261.63, 329.63, 493.88].forEach(f => add(tb, (d,w) => tone(d, w, 'triangle', f, 0.07, 2.8, 0.06)));
+    } else {
+      if (tb % 1 === 0) add(tb, (d,w) => kick(d, w, 0.45));
+      add(tb + 0.25, (d,w) => hat(d, w, 0.07));
+    }
+  }
+  add(4.15, (d,w) => riser(d, w, 0.33, 0.22));
+  add(6.6,  (d,w) => riser(d, w, 0.38, 0.22));
+  add(8.55, (d,w) => riser(d, w, 0.42, 0.22));
+  add(11.0, (d,w) => riser(d, w, 0.95, 0.35));
+  EVENTS.sort((a,b) => a.t - b.t);
+})();
+function schedule(){
+  if (!bus) return;
+  const now = actx.currentTime, horizon = audioT0 + (now - ctx0) + 0.15;
+  while (evIdx < EVENTS.length && EVENTS[evIdx].t < horizon){
+    const e = EVENTS[evIdx++], when = ctx0 + (e.t - audioT0);
+    if (when < now - 0.01) continue;
+    e.fn(bus, Math.max(when, now));
+  }
+}
+function startAudio(){
+  if (!soundOn || !actx) return;
+  bus = actx.createGain(); bus.connect(master);
+  ctx0 = actx.currentTime + 0.03; audioT0 = t;
+  evIdx = EVENTS.findIndex(e => e.t >= t - 0.001); if (evIdx < 0) evIdx = EVENTS.length;
+  schedule(); schedTimer = setInterval(schedule, 25);
+}
+function stopAudio(){
+  clearInterval(schedTimer); schedTimer = null;
+  if (bus){ const b = bus; bus = null; b.gain.setTargetAtTime(0, actx.currentTime, 0.01); setTimeout(() => b.disconnect(), 250); }
+}
+
+// ---------- transport ----------
+const $ = id => document.getElementById(id);
+const playBtn = $('play'), scrub = $('scrub'), tc = $('tc'), soundBtn = $('sound'), loopBtn = $('loop');
+let t = 0, playing = false, perf0 = 0, t0 = 0, soundOn = false, loopOn = true, dirty = true, lastIdx = -1;
+
+const sceneWrap = $('scenes');
+const chips = SCENES.map((s, i) => {
+  const b = document.createElement('button'); b.type = 'button';
+  b.innerHTML = `<b>${s.name}</b><small>${String(i+1).padStart(2,'0')} · ${s.t.toFixed(1).replace('.', ',')} s</small>`;
+  b.addEventListener('click', () => seek(s.t + 0.001));
+  sceneWrap.appendChild(b); return b;
+});
+
+function setPlayUI(){ playBtn.textContent = playing ? '❚❚ Pause' : '▶ Play'; playBtn.setAttribute('aria-label', playing ? 'Pausieren' : 'Abspielen'); }
+function play(){
+  if (t >= DUR - 0.01) t = 0;
+  playing = true; perf0 = performance.now(); t0 = t; startAudio(); setPlayUI();
+}
+function pause(){ playing = false; stopAudio(); setPlayUI(); dirty = true; }
+function seek(nt){
+  t = clamp(nt, 0, DUR);
+  if (playing){ perf0 = performance.now(); t0 = t; stopAudio(); startAudio(); }
+  dirty = true;
+}
+playBtn.addEventListener('click', () => playing ? pause() : play());
+$('stage').addEventListener('click', () => playing ? pause() : play());
+scrub.addEventListener('input', () => seek(scrub.value/1000));
+loopBtn.addEventListener('click', () => { loopOn = !loopOn; loopBtn.setAttribute('aria-pressed', loopOn); });
+soundBtn.addEventListener('click', () => {
+  if (!ensureAudio()) return;
+  actx.resume && actx.resume();
+  soundOn = !soundOn; soundBtn.setAttribute('aria-pressed', soundOn);
+  if (playing){ stopAudio(); perf0 = performance.now(); t0 = t; startAudio(); }
+  if (soundOn && !playing){ seek(0); play(); }
+});
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' && e.key !== ' ') return;
+  if (e.key === ' '){ e.preventDefault(); playing ? pause() : play(); }
+  else if (e.key === 'ArrowRight') seek(t + 1);
+  else if (e.key === 'ArrowLeft') seek(t - 1);
+  else if (/^[1-6]$/.test(e.key)) seek(SCENES[+e.key - 1].t + 0.001);
+});
+
+function frame(now){
+  if (playing){
+    t = t0 + Math.max(0, now - perf0)/1000;
+    if (t >= DUR){
+      if (loopOn){ t = 0; perf0 = now; t0 = 0; stopAudio(); startAudio(); }
+      else { t = DUR; pause(); }
+    }
+  }
+  if (playing || dirty){
+    const idx = render(t);
+    dirty = false;
+    scrub.value = Math.round(t*1000);
+    tc.innerHTML = `${t.toFixed(2).padStart(5,'0')} <span>/ 15.00</span>`;
+    if (idx !== lastIdx){ chips.forEach((c, i) => c.classList.toggle('on', i === idx)); lastIdx = idx; }
+  }
+  requestAnimationFrame(frame);
+}
+
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (reduce) t = 13.8;
+render(t);
+requestAnimationFrame(frame);
+const ready = document.fonts ? Promise.all([
+  document.fonts.load(DISP(100), 'CLAUDE'), document.fonts.load(SERIF(100), 'a'), document.fonts.load(MONO(20), '0')
+]).catch(() => {}) : Promise.resolve();
+ready.then(() => { dirty = true; if (!reduce){ t = 0; play(); } });
+})();
+</script>

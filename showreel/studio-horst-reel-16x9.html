@@ -1,0 +1,592 @@
+<title>Studio HORST Reel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;900&family=Fraunces:ital,wght@1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a print studio's light table at night. The 16:9 reel is the hero, the transport bar sits under it like a timeline. */
+:root{
+  --ink:#121412;
+  --panel:#1A1F1C;
+  --line:#2E3631;
+  --paper:#F1F0EA;
+  --muted:#93A099;
+  --green:#123F2F;
+  --orange:#FF6A2B;
+  --display:"Big Shoulders Display",Impact,"Arial Narrow",sans-serif;
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:14px;padding-inline:16px;padding-block:28px 40px}
+.wrap{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 32px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(36px,6vw,64px);line-height:.9;margin:0;text-wrap:balance;text-transform:uppercase}
+h1 em{font-family:var(--serif);font-style:italic;font-weight:400;text-transform:none;color:var(--orange);font-size:.78em}
+.lede{max-width:46ch;color:var(--muted);line-height:1.55;margin:0;font-size:13px}
+.stage{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;background:#000;border-radius:2px;overflow:hidden;cursor:pointer;box-shadow:0 30px 80px -30px rgba(255,106,43,.35)}
+.stage canvas{display:block;width:100%;height:100%}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:2px;padding:10px 12px}
+button{font:inherit;color:var(--paper);background:transparent;border:1px solid var(--line);border-radius:2px;padding:8px 12px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;font-size:12px;display:inline-flex;align-items:center;gap:8px;min-height:36px}
+button:hover{border-color:var(--muted)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+#play{background:var(--orange);border-color:var(--orange);color:var(--ink);min-width:96px;justify-content:center;font-weight:500}
+.tc{font-variant-numeric:tabular-nums;font-size:13px;min-width:11ch}
+.tc span{color:var(--muted)}
+.scrub{flex:1 1 220px;min-width:0;display:flex}
+#scrub{width:100%;accent-color:var(--orange);cursor:pointer}
+.scenes{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.scenes button{flex-direction:column;align-items:flex-start;gap:3px;text-transform:none;letter-spacing:0;padding:8px 10px}
+.scenes b{font-weight:500;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.scenes small{color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.scenes button.on{border-color:var(--orange)}
+.scenes button.on small{color:var(--orange)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;color:var(--muted);font-size:12px;line-height:1.5}
+kbd{font:inherit;border:1px solid var(--line);border-radius:2px;padding:0 5px;color:var(--paper)}
+@media (max-width:720px){.scenes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">Showreel 2026 · 15 Sekunden · 120 BPM</p>
+      <h1>Studio HORST, <em>in Bewegung.</em></h1>
+    </div>
+    <p class="lede">Branding- und Designstudio aus Kirchzarten im Schwarzwald. Markenstrategie, Markenauftritte, Kampagnen, visuelle Systeme, Print und Digital. Jedes Bild dieses Reels wird live im Browser gerechnet.</p>
+  </header>
+
+  <div class="stage" id="stage" role="img" aria-label="Animiertes Showreel von Studio HORST in sechs Szenen">
+    <canvas id="cv" width="1920" height="1080"></canvas>
+  </div>
+
+  <div class="bar">
+    <button id="play" type="button" aria-label="Abspielen">▶ Play</button>
+    <div class="tc" id="tc">00.00 <span>/ 15.00</span></div>
+    <div class="scrub"><input id="scrub" type="range" min="0" max="15000" step="1" value="0" aria-label="Zeitleiste"></div>
+    <button id="sound" type="button" aria-pressed="false">♪ Ton</button>
+    <button id="loop" type="button" aria-pressed="true">↻ Loop</button>
+  </div>
+
+  <div class="scenes" id="scenes"></div>
+
+  <div class="foot">
+    <span>Der Ton startet erst, wenn du auf <kbd>♪ Ton</kbd> klickst.</span>
+    <span><kbd>Leertaste</kbd> Play/Pause · <kbd>←</kbd> <kbd>→</kbd> ±1 s · <kbd>1</kbd>–<kbd>6</kbd> Szene</span>
+  </div>
+</div>
+
+<script>
+(() => {
+const W = 1920, H = 1080, DUR = 15;
+const C = { ink:'#121412', paper:'#F1F0EA', green:'#123F2F', orange:'#FF6A2B', cyan:'#00A0E3', mag:'#E5007D', yel:'#FFED00' };
+const DISP  = s => `900 ${s}px "Big Shoulders Display", Impact, "Arial Narrow", sans-serif`;
+const SERIF = s => `italic 400 ${s}px Fraunces, Georgia, serif`;
+const MONO  = s => `500 ${s}px "JetBrains Mono", ui-monospace, monospace`;
+const SCENES = [
+  { name:'Passer',     t:0   },
+  { name:'Leistung',   t:2   },
+  { name:'Raster',     t:4.5 },
+  { name:'Marquee',    t:7   },
+  { name:'Formate',    t:9.5 },
+  { name:'Abspann',    t:12  },
+];
+
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+let T = 0;
+
+// ---------- math ----------
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const lerp = (a,b,p) => a + (b-a)*p;
+const seg = (t,a,b) => clamp((t-a)/(b-a), 0, 1);
+const eo  = p => p >= 1 ? 1 : 1 - Math.pow(2, -10*p);
+const ein = p => p*p*p;
+const eio = p => p < .5 ? 4*p*p*p : 1 - Math.pow(-2*p+2, 3)/2;
+const eback = p => p <= 0 ? 0 : 1 + 2.70158*Math.pow(p-1,3) + 1.70158*Math.pow(p-1,2);
+const TAU = Math.PI*2;
+
+// ---------- drawing helpers ----------
+function bg(c){ ctx.fillStyle = c; ctx.fillRect(0,0,W,H); }
+function disc(x,y,r,c){ if (r <= 0) return; ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.fill(); }
+function line(x1,y1,x2,y2){ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); }
+function ls(px){ if ('letterSpacing' in ctx) ctx.letterSpacing = px + 'px'; }
+function text(s,x,y,font,color,align='left',alpha=1){
+  ctx.save(); ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.globalAlpha = alpha;
+  ctx.fillText(s,x,y); ctx.restore();
+}
+function fit(word, fontFn, maxW, maxS){ ctx.font = fontFn(100); return Math.min(maxS, 100*maxW/ctx.measureText(word).width); }
+
+// letters rise into a mask, optionally leave upward
+function riseWord(word, fontFn, size, x, y, align, color, tIn, stagger, dur, tOut){
+  ctx.save();
+  ctx.font = fontFn(size); ctx.textAlign = 'left'; ctx.fillStyle = color;
+  const total = ctx.measureText(word).width;
+  const x0 = align === 'center' ? x - total/2 : x;
+  ctx.beginPath(); ctx.rect(x0 - size, y - size*0.8, total + size*2, size*0.92); ctx.clip();
+  for (let i = 0; i < word.length; i++){
+    const ch = word[i]; if (ch === ' ') continue;
+    const px = x0 + ctx.measureText(word.slice(0,i)).width;
+    const st = tIn + i*stagger;
+    let dy = (1 - eo(seg(T, st, st + dur))) * size * 1.05;
+    if (tOut != null){ const so = tOut + i*stagger*0.6; dy -= ein(seg(T, so, so + 0.2)) * size * 1.05; }
+    ctx.fillText(ch, px, y + dy);
+  }
+  ctx.restore();
+  return total;
+}
+
+// ---------- film grain ----------
+const grain = document.createElement('canvas'); grain.width = grain.height = 256;
+{ const g = grain.getContext('2d'), d = g.createImageData(256,256);
+  for (let i = 0; i < d.data.length; i += 4){ const v = Math.random()*255; d.data[i]=d.data[i+1]=d.data[i+2]=v; d.data[i+3]=255; }
+  g.putImageData(d,0,0); }
+const grainPat = ctx.createPattern(grain, 'repeat');
+
+// registration mark (Passermarke)
+function regMark(x, y, r, p, color, lw = 3){
+  if (p <= 0) return;
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = lw;
+  ctx.beginPath(); ctx.arc(x, y, r, -Math.PI/2, -Math.PI/2 + TAU*eio(p)); ctx.stroke();
+  const L = r*1.55*eo(p);
+  line(x - L, y, x + L, y); line(x, y - L, x, y + L);
+  ctx.restore();
+}
+
+// ---------- scene 1 · registration marks ----------
+const BARS = [C.cyan, C.mag, C.yel, C.ink, 'rgba(0,160,227,.5)', 'rgba(229,0,125,.5)', 'rgba(255,237,0,.5)', 'rgba(18,20,18,.5)'];
+function s1(){
+  bg(C.green);
+  ctx.save();
+  ctx.strokeStyle = 'rgba(241,240,234,0.08)'; ctx.lineWidth = 1.5;
+  for (let x = 0; x <= W; x += 96){
+    const d = Math.abs(x - W/2)/(W/2), h = H/2*eo(seg(T, d*0.35, d*0.35 + 0.6));
+    line(x, H/2 - h, x, H/2 + h);
+  }
+  ctx.restore();
+  [[300,250],[W-300,250],[300,H-250],[W-300,H-250]].forEach(([x,y], i) => regMark(x, y, 34, seg(T, 0.1 + i*0.08, 0.6 + i*0.08), C.paper, 2.5));
+  // crop marks around a virtual A-format
+  ctx.save(); ctx.strokeStyle = 'rgba(241,240,234,.55)'; ctx.lineWidth = 2;
+  const cp = eo(seg(T, 0.2, 0.8)), bx = 470, by = 170, bw = W - 940, bh = H - 340, L = 50*cp;
+  [[bx,by,-1,-1],[bx+bw,by,1,-1],[bx,by+bh,-1,1],[bx+bw,by+bh,1,1]].forEach(([x,y,dx,dy]) => {
+    line(x + dx*12, y, x + dx*(12 + L), y); line(x, y + dy*12, x, y + dy*(12 + L));
+  });
+  ctx.restore();
+  // CMYK control strip
+  BARS.forEach((c, i) => {
+    const p = eo(seg(T, 0.3 + i*0.05, 0.7 + i*0.05));
+    ctx.fillStyle = c; ctx.globalAlpha = p;
+    ctx.fillRect(W/2 - 4*44 + i*44, H - 170 + (1-p)*20, 40, 22);
+  });
+  ctx.globalAlpha = 1;
+  if (T < 1.5){
+    const beat = Math.min(2, Math.floor(T/0.5)), lt = T - beat*0.5;
+    regMark(W/2, H/2, 300, seg(lt, 0, 0.46), C.orange, 8);
+    const sc = 1 + 0.3*(1 - eo(seg(lt, 0, 0.4)));
+    ctx.save(); ctx.translate(W/2, H/2); ctx.scale(sc, sc);
+    ctx.font = DISP(460); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.globalAlpha = seg(lt, 0, 0.05) * 0.85; ctx.fillStyle = C.mag; ctx.fillText(['3','2','1'][beat], 7, 24);
+    ctx.globalAlpha = seg(lt, 0, 0.05); ctx.fillStyle = C.paper; ctx.fillText(['3','2','1'][beat], 0, 18);
+    ctx.restore();
+  } else {
+    const p = eio(seg(T, 1.5, 2.0));
+    ctx.save(); ctx.strokeStyle = C.paper; ctx.lineWidth = 6;
+    ctx.beginPath(); ctx.arc(W/2, H/2, p*1150 + 30*(1-p), 0, TAU); ctx.stroke(); ctx.restore();
+    disc(W/2, H/2, p*1150, C.orange);
+  }
+}
+
+// ---------- scene 2 · services ----------
+const WORDS = [
+  { w:'MARKE',     s:2.05, e:3.0,  st:0.05, d:0.5 },
+  { w:'STRATEGIE', s:3.0,  e:3.5,  st:0.02, d:0.32 },
+  { w:'KAMPAGNE',  s:3.5,  e:4.0,  st:0.02, d:0.32 },
+  { w:'HORST.', s:4.0,  e:null, st:0.03, d:0.32 },
+];
+function s2(){
+  bg(C.orange);
+  const size = fit('STRATEGIE', DISP, 1400, 400), y = 560;
+  for (const w of WORDS){
+    if (T < w.s - 0.01 || (w.e != null && T > w.e + 0.3)) continue;
+    riseWord(w.w, DISP, size, W/2, y, 'center', C.ink, w.s, w.st, w.d, w.e != null ? w.e - 0.16 : null);
+  }
+  const a = eo(seg(T, 2.35, 2.8));
+  text('Monster-Ideen aus dem Schwarzwald.', W/2, 700 + (1-a)*30, SERIF(80), C.ink, 'center', a);
+  const lt = (T - 2) % 0.5, bw = lerp(300, 48, eo(seg(lt, 0, 0.45)));
+  ctx.globalAlpha = a; ctx.fillStyle = C.green; ctx.fillRect(W/2 - bw/2, 752, bw, 8); ctx.globalAlpha = 1;
+  ctx.fillStyle = C.paper;
+  for (let i = 0; i < 6; i++){
+    const s = 4.15 + i*0.025, h = H*eio(seg(T, s, s + 0.2));
+    if (h > 0) ctx.fillRect(Math.floor(i*W/6), H - h, Math.ceil(W/6) + 1, h);
+  }
+}
+
+// ---------- scene 3 · halftone H ----------
+const GC = 26, GR = 15, GS = 42, GX = 1290, GY = 540, DOTS = [];
+for (let r = 0; r < GR; r++) for (let c = 0; c < GC; c++){
+  const x = GX + (c - (GC-1)/2)*GS, y = GY + (r - (GR-1)/2)*GS;
+  const u = c/(GC-1), v = r/(GR-1);
+  const inH = v > 0.06 && v < 0.94 && ((u >= 0.22 && u <= 0.38) || (u >= 0.62 && u <= 0.78) || (v > 0.42 && v < 0.58 && u >= 0.22 && u <= 0.78));
+  DOTS.push({ x, y, d: Math.hypot(x - GX, y - GY), inH });
+}
+function s3(){
+  bg(C.paper);
+  const N = DOTS.length, hp = eio(seg(T, 4.95, 5.35)), morph = seg(T, 5.7, 6.35), col = eio(seg(T, 6.4, 6.72)), rot = T*0.9;
+  for (let k = 0; k < N; k++){
+    const dt = DOTS[k], st = 4.5 + dt.d/700*0.45;
+    const app = eo(seg(T, st, st + 0.4));
+    const wave = 0.5 + 0.5*Math.sin(dt.d*0.02 - T*7);
+    const rWave = (2 + 8*wave)*app;
+    const rH = dt.inH ? 17 + 2.5*wave : 2 + 3*wave;
+    const rGrid = lerp(rWave, rH*app, hp);
+    const mk = eio(clamp((morph - (k/N)*0.25)/0.75, 0, 1));
+    const ang = k/N*TAU + rot, R = 300*(1 - col);
+    const x = lerp(dt.x, GX + Math.cos(ang)*R, mk), y = lerp(dt.y, GY + Math.sin(ang)*R, mk);
+    const r = lerp(rGrid, 5 + 3*Math.sin(ang*6 + T*5), mk)*(1 - col*0.7);
+    if (dt.inH && hp > 0 && mk < 1){ ctx.globalAlpha = hp*(1 - mk); disc(x + 5, y + 4, r, C.orange); ctx.globalAlpha = 1; }
+    disc(x, y, r, dt.inH && hp > 0.5 ? C.green : C.ink);
+  }
+  const a = eo(seg(T, 4.75, 5.2))*(1 - seg(T, 6.3, 6.55)), dx = (1 - a)*-30;
+  text('Raster, Punkt,', 160 + dx, 470, SERIF(76), C.ink, 'left', a);
+  text('Druck.', 160 + dx, 552, SERIF(76), C.ink, 'left', a);
+  ctx.save(); ls(1);
+  text('C 15° · M 75° · Y 0° · K 45°', 162 + dx, 628, MONO(21), C.ink, 'left', a*0.75);
+  text('390 PUNKTE · 1 H', 162 + dx, 664, MONO(21), C.orange, 'left', a);
+  ctx.restore();
+  disc(GX, GY, eio(seg(T, 6.62, 7.0))*1500, C.green);
+}
+
+// ---------- scene 4 · marquee ----------
+const BANDS = [
+  { bg:C.paper,  fg:C.ink,    text:'MARKENSTRATEGIE  •  POSITIONIERUNG  •  ',      f:DISP(176),  base:170, sp:380 },
+  { bg:C.ink,    fg:C.paper,  text:'BRANDING  •  MARKENAUFTRITTE  •  ',             f:DISP(176),  base:170, sp:520 },
+  { bg:C.orange, fg:C.ink,    text:'Monster-Ideen aus dem Schwarzwald  ·  ', f:SERIF(140), base:150, sp:300 },
+  { bg:C.green,  fg:C.orange, text:'KAMPAGNEN  •  LEITIDEEN  •  ',   f:DISP(176),  base:170, sp:600 },
+  { bg:C.paper,  fg:C.ink,    text:'MARKENZEICHEN  •  VISUELLE SYSTEME  •  PRINT  •  DIGITAL  •  ',     f:DISP(176),  base:170, sp:450 },
+];
+function s4(){
+  bg(C.green);
+  const BH = H/5;
+  BANDS.forEach((b, i) => {
+    const dir = i % 2 ? 1 : -1, y0 = i*BH;
+    const ox = -dir*W*(1 - eo(seg(T, 7 + i*0.05, 7.5 + i*0.05)));
+    ctx.save(); ctx.translate(ox, 0);
+    ctx.fillStyle = b.bg; ctx.fillRect(0, y0, W, BH + 1);
+    ctx.beginPath(); ctx.rect(0, y0, W, BH); ctx.clip();
+    ctx.font = b.f; ctx.fillStyle = b.fg; ctx.textAlign = 'left';
+    const pw = ctx.measureText(b.text).width, off = (((T - 7)*b.sp*dir) % pw + pw) % pw;
+    for (let x = -pw + off; x < W; x += pw) ctx.fillText(b.text, x, y0 + b.base);
+    ctx.restore();
+  });
+  const e = eio(seg(T, 8.55, 9.0));
+  if (e > 0){ ctx.fillStyle = C.ink; const top = 2*BH*(1 - e), bot = 3*BH + 2*BH*e; ctx.fillRect(0, top, W, bot - top); }
+  const a = eo(seg(T, 8.85, 9.2));
+  if (a > 0){
+    text('Struktur. Klarheit. Verantwortung.', W/2, 560 + (1-a)*30, SERIF(104), C.paper, 'center', a);
+    ctx.save(); ls(2);
+    text('SEIT ÜBER 20 JAHREN IN DESIGN & AGENTUR', W/2, 650 + (1-a)*30, MONO(25), C.orange, 'center', a);
+    ctx.restore();
+  }
+}
+
+// ---------- scene 5 · one layout, many formats ----------
+const FORMATS = [
+  { n:'A4 HOCH · 210 × 297 MM', r:210/297 },
+  { n:'STORY · 1080 × 1920',    r:9/16 },
+  { n:'POST · 1080 × 1080',     r:1 },
+  { n:'SCREEN · 1920 × 1080',   r:16/9 },
+  { n:'FEED · 1080 × 1350',     r:4/5 },
+  { n:'BANNER · 1500 × 500',    r:3 },
+  { n:'A5 QUER · 210 × 148 MM', r:210/148 },
+];
+const box = (r, M = 600) => r >= 1 ? { w: M, h: M/r } : { w: M*r, h: M };
+const STATS = [
+  { n:20, l:'JAHRE DESIGN & AGENTUR', s:9.75, plus:true },
+  { n:5,  l:'LEISTUNGSFELDER',        s:9.95 },
+  { n:1,  l:'STARKE IDEE',            s:10.15 },
+];
+function s5(){
+  bg(C.ink);
+  const SX = 1300, SY = 520;
+  const sc = eback(seg(T, 9.5, 10.1)), ex = eio(seg(T, 11.4, 11.8));
+  // ghost outlines of every format
+  ctx.save(); ctx.strokeStyle = C.paper; ctx.lineWidth = 1.5;
+  FORMATS.forEach((f, i) => {
+    const b = box(f.r); ctx.globalAlpha = 0.14*eo(seg(T, 9.6 + i*0.05, 10 + i*0.05))*(1 - ex);
+    ctx.strokeRect(SX - b.w/2, SY - b.h/2, b.w, b.h);
+  });
+  ctx.restore();
+  // current format, morphing every 0.25 s
+  const ft = clamp((T - 9.9)/0.25, 0, FORMATS.length - 1);
+  const i0 = Math.floor(ft), i1 = Math.min(FORMATS.length - 1, i0 + 1), m = eio(clamp((ft - i0)/0.6, 0, 1));
+  const b0 = box(FORMATS[i0].r), b1 = box(FORMATS[i1].r);
+  let w = lerp(b0.w, b1.w, m)*clamp(sc, 0, 1.2), h = lerp(b0.h, b1.h, m)*clamp(sc, 0, 1.2);
+  w = lerp(w, w*0.2, ex); h = lerp(h, h*0.2, ex);
+  const x = SX - w/2, y = SY - h/2;
+  if (w > 1 && h > 1){
+    ctx.save(); ctx.globalAlpha = 1 - ex;
+    ctx.fillStyle = C.orange; ctx.fillRect(x, y, w, h);
+    const u = Math.min(w, h), pad = u*0.08;
+    ctx.fillStyle = C.green; ctx.beginPath(); ctx.arc(x + w - pad - u*0.22, y + pad + u*0.22, u*0.22, 0, TAU); ctx.fill();
+    ctx.fillStyle = C.ink;
+    [0.62, 0.44, 0.3].forEach((k, j) => ctx.fillRect(x + pad, y + h - pad - u*0.24 + j*u*0.075, (w - 2*pad)*k, u*0.05));
+    ctx.fillStyle = C.paper; ctx.fillRect(x + pad, y + pad, u*0.16, u*0.04);
+    ctx.restore();
+    ctx.save(); ls(2.5);
+    text(FORMATS[m > 0.5 ? i1 : i0].n, SX, SY + 360, MONO(22), C.orange, 'center', clamp(sc, 0, 1)*(1 - ex));
+    ctx.restore();
+  }
+  STATS.forEach((st, i) => {
+    const yy = 380 + i*220, out = ein(seg(T, 11.35 + i*0.05, 11.65 + i*0.05));
+    ctx.save(); ctx.translate(-1100*out, 0);
+    const val = Math.round(st.n*eo(seg(T, st.s, st.s + 0.8)));
+    riseWord(String(val) + (st.plus ? '+' : ''), DISP, 190, 160, yy, 'left', C.paper, st.s, 0.03, 0.45, null);
+    const a = eo(seg(T, st.s + 0.2, st.s + 0.6));
+    ls(3); text(st.l, 164, yy + 50, MONO(22), C.paper, 'left', a*0.7);
+    ctx.restore();
+  });
+  disc(SX, SY, eio(seg(T, 11.72, 12.0))*1700, C.green);
+}
+
+// ---------- scene 6 · end card ----------
+const FOOT = ['SHOWREEL 2026', 'KIRCHZARTEN · SCHWARZWALD', 'STUDIO-HORST.DE', 'ANFRAGEN WILLKOMMEN'];
+function s6(){
+  bg(C.green);
+  const word = 'STUDIO HORST';
+  const size = fit(word, DISP, 1180, 330);
+  ctx.font = DISP(size); const ww = ctx.measureText(word).width;
+  const Rm = size*0.38, gap = size*0.42, total = Rm*2 + gap + ww;
+  const sx = (W - total)/2, base = 540, mx = sx + Rm, my = base - size*0.36, wx = sx + Rm*2 + gap;
+  // spinning registration mark
+  const p = seg(T, 12.0, 12.7);
+  ctx.save(); ctx.translate(mx, my); ctx.rotate(-(1 - eo(seg(T, 12, 13.2)))*Math.PI + (T - 12)*0.1);
+  regMark(0, 0, Rm, p, C.orange, Rm*0.14);
+  disc(0, 0, Rm*0.32*eback(seg(T, 12.3, 12.75)), C.orange);
+  ctx.restore();
+  riseWord(word, DISP, size, wx, base, 'left', C.paper, 12.15, 0.035, 0.55, null);
+  const a = eo(seg(T, 12.65, 13.1));
+  text('Monster-Ideen für starke Marken.', wx + 4, base + size*0.5 + (1-a)*24, SERIF(size*0.3), C.paper, 'left', a);
+  const ry = base + size*0.82, rp = eio(seg(T, 12.8, 13.4));
+  ctx.save(); ctx.strokeStyle = C.paper; ctx.lineWidth = 2; if (rp > 0) line(sx, ry, sx + total*rp, ry);
+  ctx.font = MONO(20); ls(2);
+  const widths = FOOT.map(s => ctx.measureText(s).width);
+  const g = (total - widths.reduce((s,v) => s + v, 0))/(FOOT.length - 1);
+  let x = sx;
+  FOOT.forEach((s, i) => {
+    const fa = eo(seg(T, 13.1 + i*0.08, 13.5 + i*0.08));
+    ctx.globalAlpha = fa; ctx.fillStyle = C.paper; ctx.fillText(s, x, ry + 44 + (1-fa)*12);
+    if (i === FOOT.length - 1){ ctx.globalAlpha = fa*(0.55 + 0.45*Math.sin(T*6)); disc(x - 18, ry + 37, 6, C.orange); }
+    x += widths[i] + g;
+  });
+  ctx.restore();
+}
+
+// ---------- HUD ----------
+const SCENE_FN = [s1, s2, s3, s4, s5, s6];
+function sceneIdx(t){ let i = 0; for (let k = 0; k < SCENES.length; k++) if (t >= SCENES[k].t) i = k; return i; }
+function hudColor(t){
+  if (t < 2)   return C.paper;
+  if (t < 4.5) return t < 4.3 ? C.ink : C.ink;
+  if (t < 7)   return t < 6.82 ? C.ink : C.paper;
+  if (t < 9.5) return t < 8.75 ? C.ink : C.paper;
+  return C.paper;
+}
+function hud(idx){
+  const c = hudColor(T), m = 48, L = 34;
+  ctx.save();
+  ctx.strokeStyle = c; ctx.fillStyle = c; ctx.lineWidth = 2;
+  [[m,m,1,1],[W-m,m,-1,1],[m,H-m,1,-1],[W-m,H-m,-1,-1]].forEach(([x,y,dx,dy]) => {
+    ctx.beginPath(); ctx.moveTo(x + dx*L, y); ctx.lineTo(x, y); ctx.lineTo(x, y + dy*L); ctx.stroke();
+  });
+  if (T >= 7 && T < 8.75){ ctx.restore(); return; }
+  ctx.font = MONO(19); ls(2.5); ctx.globalAlpha = 0.9;
+  ctx.textAlign = 'left';  ctx.fillText('STUDIO HORST  /  KIRCHZARTEN', 100, 96);
+  ctx.textAlign = 'right'; ctx.fillText(`${String(idx+1).padStart(2,'0')} / 06  ${SCENES[idx].name.toUpperCase()}`, W - 100, 96);
+  const f = Math.floor(T*60), ss = Math.floor(T), ff = f % 60;
+  ctx.textAlign = 'left'; ctx.fillText(`00:00:${String(ss).padStart(2,'0')}:${String(ff).padStart(2,'0')}`, 100, H - 82);
+  ctx.textAlign = 'right'; ctx.fillText('120 BPM', W - 100 - 4*22 - 14, H - 82);
+  const beat = Math.floor(T/0.5) % 4;
+  for (let i = 0; i < 4; i++){
+    const bx = W - 100 - (4 - i)*22 + 8;
+    if (i === beat) ctx.fillRect(bx, H - 97, 14, 14); else ctx.strokeRect(bx + 1, H - 96, 12, 12);
+  }
+  ctx.globalAlpha = 0.25; ctx.fillRect(100, H - 60, W - 200, 2);
+  ctx.globalAlpha = 1;    ctx.fillRect(100, H - 60, (W - 200)*(T/DUR), 2);
+  ctx.restore();
+}
+
+function render(t){
+  T = clamp(t, 0, DUR - 1e-4);
+  const idx = sceneIdx(T);
+  ctx.textBaseline = 'alphabetic';
+  SCENE_FN[idx]();
+  hud(idx);
+  const fr = Math.floor(T*60);
+  ctx.save(); ctx.globalAlpha = 0.055; ctx.translate(-((fr*73) % 256), -((fr*151) % 256));
+  ctx.fillStyle = grainPat; ctx.fillRect(0, 0, W + 256, H + 256); ctx.restore();
+  return idx;
+}
+
+// ---------- audio ----------
+let actx = null, master = null, bus = null, noiseBuf = null, schedTimer = null, ctx0 = 0, audioT0 = 0, evIdx = 0;
+function ensureAudio(){
+  if (actx) return true;
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+  actx = new AC();
+  const comp = actx.createDynamicsCompressor();
+  master = actx.createGain(); master.gain.value = 0.7;
+  master.connect(comp); comp.connect(actx.destination);
+  noiseBuf = actx.createBuffer(1, actx.sampleRate*2, actx.sampleRate);
+  const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1;
+  return true;
+}
+function env(g, w, peak, dec, att = 0.002){
+  g.gain.setValueAtTime(0.0001, w); g.gain.exponentialRampToValueAtTime(peak, w + att);
+  g.gain.exponentialRampToValueAtTime(0.0001, w + att + dec);
+}
+function kick(d, w, g = 1){
+  const o = actx.createOscillator(), a = actx.createGain();
+  o.frequency.setValueAtTime(165, w); o.frequency.exponentialRampToValueAtTime(42, w + 0.13);
+  env(a, w, g, 0.38); o.connect(a); a.connect(d); o.start(w); o.stop(w + 0.45);
+}
+function noise(d, w, type, freq, q, g, dec, att = 0.002, sweepTo = null){
+  const s = actx.createBufferSource(); s.buffer = noiseBuf; s.loop = true;
+  const f = actx.createBiquadFilter(); f.type = type; f.frequency.setValueAtTime(freq, w); f.Q.value = q;
+  if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, w + att);
+  const a = actx.createGain(); env(a, w, g, dec, att);
+  s.connect(f); f.connect(a); a.connect(d); s.start(w); s.stop(w + att + dec + 0.05);
+}
+const hat   = (d,w,g=.16) => noise(d, w, 'highpass', 8000, 0.7, g, 0.045);
+const clap  = (d,w)       => noise(d, w, 'bandpass', 1600, 0.8, 0.5, 0.14);
+const crash = (d,w)       => noise(d, w, 'highpass', 4000, 0.5, 0.35, 1.8);
+const riser = (d,w,dur,g=.3) => noise(d, w, 'bandpass', 300, 1.2, g, 0.06, dur, 7000);
+function tone(d, w, type, f, g, dec, att = 0.004, lp = null){
+  const o = actx.createOscillator(), a = actx.createGain(); o.type = type; o.frequency.value = f;
+  let n = o; if (lp){ const fl = actx.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = lp; o.connect(fl); n = fl; }
+  env(a, w, g, dec, att); n.connect(a); a.connect(d); o.start(w); o.stop(w + att + dec + 0.05);
+}
+const EVENTS = [];
+(function build(){
+  const add = (t, fn) => EVENTS.push({ t, fn });
+  [0, 0.5, 1.0].forEach(t => add(t, (d,w) => tone(d, w, 'sine', 880, 0.3, 0.14)));
+  add(1.5, (d,w) => tone(d, w, 'sine', 1760, 0.25, 0.4));
+  add(1.5, (d,w) => riser(d, w, 0.48, 0.25));
+  const roots = [73.42, 58.27, 87.31, 65.41];
+  for (let k = 4; k < 30; k++){
+    const tb = k*0.5;
+    if (tb >= 11.5 && tb < 12) continue;
+    if (tb < 12){
+      add(tb, (d,w) => kick(d, w));
+      add(tb + 0.25, (d,w) => hat(d, w));
+      if (k % 2) add(tb, (d,w) => clap(d, w));
+      const f = roots[Math.floor((tb - 2)/2) % 4]*1.5;
+      add(tb + 0.25, (d,w) => tone(d, w, 'sawtooth', f, 0.28, 0.2, 0.004, 600));
+    } else if (tb === 12){
+      add(tb, (d,w) => kick(d, w, 1.2));
+      add(tb, (d,w) => crash(d, w));
+      add(tb, (d,w) => tone(d, w, 'sawtooth', 73.42, 0.35, 2.6, 0.01, 300));
+      [293.66, 349.23, 440, 659.26].forEach(f => add(tb, (d,w) => tone(d, w, 'triangle', f, 0.07, 2.8, 0.06)));
+    } else {
+      if (tb % 1 === 0) add(tb, (d,w) => kick(d, w, 0.45));
+      add(tb + 0.25, (d,w) => hat(d, w, 0.07));
+    }
+  }
+  add(4.15, (d,w) => riser(d, w, 0.33, 0.22));
+  add(6.6,  (d,w) => riser(d, w, 0.38, 0.22));
+  add(8.55, (d,w) => riser(d, w, 0.42, 0.22));
+  add(11.0, (d,w) => riser(d, w, 0.95, 0.35));
+  EVENTS.sort((a,b) => a.t - b.t);
+})();
+function schedule(){
+  if (!bus) return;
+  const now = actx.currentTime, horizon = audioT0 + (now - ctx0) + 0.15;
+  while (evIdx < EVENTS.length && EVENTS[evIdx].t < horizon){
+    const e = EVENTS[evIdx++], when = ctx0 + (e.t - audioT0);
+    if (when < now - 0.01) continue;
+    e.fn(bus, Math.max(when, now));
+  }
+}
+function startAudio(){
+  if (!soundOn || !actx) return;
+  bus = actx.createGain(); bus.connect(master);
+  ctx0 = actx.currentTime + 0.03; audioT0 = t;
+  evIdx = EVENTS.findIndex(e => e.t >= t - 0.001); if (evIdx < 0) evIdx = EVENTS.length;
+  schedule(); schedTimer = setInterval(schedule, 25);
+}
+function stopAudio(){
+  clearInterval(schedTimer); schedTimer = null;
+  if (bus){ const b = bus; bus = null; b.gain.setTargetAtTime(0, actx.currentTime, 0.01); setTimeout(() => b.disconnect(), 250); }
+}
+
+// ---------- transport ----------
+const $ = id => document.getElementById(id);
+const playBtn = $('play'), scrub = $('scrub'), tc = $('tc'), soundBtn = $('sound'), loopBtn = $('loop');
+let t = 0, playing = false, perf0 = 0, t0 = 0, soundOn = false, loopOn = true, dirty = true, lastIdx = -1;
+
+const sceneWrap = $('scenes');
+const chips = SCENES.map((s, i) => {
+  const b = document.createElement('button'); b.type = 'button';
+  b.innerHTML = `<b>${s.name}</b><small>${String(i+1).padStart(2,'0')} · ${s.t.toFixed(1).replace('.', ',')} s</small>`;
+  b.addEventListener('click', () => seek(s.t + 0.001));
+  sceneWrap.appendChild(b); return b;
+});
+
+function setPlayUI(){ playBtn.textContent = playing ? '❚❚ Pause' : '▶ Play'; playBtn.setAttribute('aria-label', playing ? 'Pausieren' : 'Abspielen'); }
+function play(){
+  if (t >= DUR - 0.01) t = 0;
+  playing = true; perf0 = performance.now(); t0 = t; startAudio(); setPlayUI();
+}
+function pause(){ playing = false; stopAudio(); setPlayUI(); dirty = true; }
+function seek(nt){
+  t = clamp(nt, 0, DUR);
+  if (playing){ perf0 = performance.now(); t0 = t; stopAudio(); startAudio(); }
+  dirty = true;
+}
+playBtn.addEventListener('click', () => playing ? pause() : play());
+$('stage').addEventListener('click', () => playing ? pause() : play());
+scrub.addEventListener('input', () => seek(scrub.value/1000));
+loopBtn.addEventListener('click', () => { loopOn = !loopOn; loopBtn.setAttribute('aria-pressed', loopOn); });
+soundBtn.addEventListener('click', () => {
+  if (!ensureAudio()) return;
+  actx.resume && actx.resume();
+  soundOn = !soundOn; soundBtn.setAttribute('aria-pressed', soundOn);
+  if (playing){ stopAudio(); perf0 = performance.now(); t0 = t; startAudio(); }
+  if (soundOn && !playing){ seek(0); play(); }
+});
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' && e.key !== ' ') return;
+  if (e.key === ' '){ e.preventDefault(); playing ? pause() : play(); }
+  else if (e.key === 'ArrowRight') seek(t + 1);
+  else if (e.key === 'ArrowLeft') seek(t - 1);
+  else if (/^[1-6]$/.test(e.key)) seek(SCENES[+e.key - 1].t + 0.001);
+});
+
+function frame(now){
+  if (playing){
+    t = t0 + Math.max(0, now - perf0)/1000;
+    if (t >= DUR){
+      if (loopOn){ t = 0; perf0 = now; t0 = 0; stopAudio(); startAudio(); }
+      else { t = DUR; pause(); }
+    }
+  }
+  if (playing || dirty){
+    const idx = render(t);
+    dirty = false;
+    scrub.value = Math.round(t*1000);
+    tc.innerHTML = `${t.toFixed(2).padStart(5,'0')} <span>/ 15.00</span>`;
+    if (idx !== lastIdx){ chips.forEach((c, i) => c.classList.toggle('on', i === idx)); lastIdx = idx; }
+  }
+  requestAnimationFrame(frame);
+}
+
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (reduce) t = 13.8;
+render(t);
+requestAnimationFrame(frame);
+const ready = document.fonts ? Promise.all([
+  document.fonts.load(DISP(100), 'HORST'), document.fonts.load(SERIF(100), 'a'), document.fonts.load(MONO(20), '0')
+]).catch(() => {}) : Promise.resolve();
+ready.then(() => { dirty = true; if (!reduce){ t = 0; play(); } });
+})();
+</script>

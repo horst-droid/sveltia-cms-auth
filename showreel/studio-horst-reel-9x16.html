@@ -1,0 +1,650 @@
+<title>HORST Insta Reel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap">
+<style>
+/* Layout: the 9:16 reel stands on the left like a phone; editing tools (transport, project slots, export) sit to its right and stack below on narrow screens. */
+:root{
+  --paper:#BFC2AE; --ink:#1E2620; --lichen:#D8CF62;
+  --bg:#E4E6DA; --fg:#1E2620; --muted:#56604F; --card:#EEEFE6; --line:rgba(30,38,32,.2);
+  --font:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161C17;--fg:#E4E6DA;--muted:#A3AB98;--card:#1F2720;--line:rgba(228,230,218,.18);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#161C17;--fg:#E4E6DA;--muted:#A3AB98;--card:#1F2720;--line:rgba(228,230,218,.18);color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;padding-inline:16px;padding-block:24px 48px;-webkit-font-smoothing:antialiased}
+.layout{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}}
+.stage{width:min(100%,calc(84vh*9/16),440px);max-width:100%;aspect-ratio:9/16;margin-inline:auto;border-radius:18px;overflow:hidden;background:var(--ink);cursor:pointer;box-shadow:0 30px 70px -30px rgba(30,38,32,.55)}
+.stage canvas{display:block;width:100%;height:100%}
+.side{display:flex;flex-direction:column;gap:18px;min-width:0}
+.eyebrow{margin:0 0 6px;font-size:13px;font-weight:600;color:var(--muted)}
+h1{margin:0;font-size:clamp(34px,5vw,56px);line-height:.95;letter-spacing:-.04em;font-weight:780;text-wrap:balance}
+.lede{margin:10px 0 0;color:var(--muted);line-height:1.5;max-width:52ch}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+button{font:inherit;font-weight:600;font-size:14px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;min-height:38px;display:inline-flex;align-items:center;gap:6px}
+button:hover{border-color:var(--fg)}
+button:focus-visible,input:focus-visible,.drop:focus-within{outline:2px solid var(--fg);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button:disabled{opacity:.45;cursor:default}
+#play{background:var(--ink);color:#E4E6DA;border-color:var(--ink);min-width:92px;justify-content:center}
+.tc{font-variant-numeric:tabular-nums;min-width:9ch}
+.tc span{color:var(--muted)}
+.scrub{flex:1 1 160px;min-width:0;display:flex}
+#scrub{width:100%;accent-color:#7d8a2a;cursor:pointer}
+h2{margin:6px 0 0;font-size:22px;letter-spacing:-.02em;font-weight:720}
+.hint{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
+.slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:480px){.slots{grid-template-columns:minmax(0,1fr)}}
+.slot{display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);min-width:0}
+.slot-head{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;color:var(--muted)}
+.drop{position:relative;display:grid;place-items:center;aspect-ratio:4/5;border:1.5px dashed var(--line);border-radius:8px;overflow:hidden;cursor:pointer;text-align:center;padding:10px;font-size:13px;color:var(--muted);line-height:1.35}
+.drop.over{border-color:var(--fg);background:rgba(216,207,98,.25)}
+.drop img,.drop video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.slot label.cap{font-size:12px;color:var(--muted)}
+.slot input[type=text]{font:inherit;font-size:14px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+.remove{font-size:12px;min-height:28px;padding:3px 10px}
+.export{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:12px;background:var(--lichen);color:var(--ink)}
+.export h2{margin:0}
+.export p{margin:0;line-height:1.45;font-size:14px}
+.export button{align-self:flex-start;background:var(--ink);color:#E4E6DA;border-color:var(--ink)}
+#status{font-weight:600;min-height:1.4em}
+kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
+.foot{color:var(--muted);font-size:13px}
+</style>
+
+<div class="layout">
+  <div class="stage" id="stage" role="img" aria-label="Instagram-Reel von Studio HORST, 9:16, fünf Szenen">
+    <canvas id="cv" width="1080" height="1920"></canvas>
+  </div>
+
+  <div class="side">
+    <header>
+      <p class="eyebrow">Instagram Reel · 1080 × 1920 · 15 Sekunden · 120 BPM</p>
+      <h1>Monsterideen, in 15&nbsp;Sekunden.</h1>
+      <p class="lede">Gebaut im Look eurer Dither-Demo: Schwarzwald im Linienraster, ein Fenster zeigt das echte Bild, das Monster schaut zu. Zieh eure Projektbilder und -videos in die vier Slots, dann speicherst du das Reel als Video.</p>
+    </header>
+
+    <div class="bar">
+      <button id="play" type="button" aria-label="Abspielen">▶ Play</button>
+      <div class="tc" id="tc">00.0 <span>/ 15.0</span></div>
+      <div class="scrub"><input id="scrub" type="range" min="0" max="15000" step="1" value="0" aria-label="Zeitleiste"></div>
+      <button id="sound" type="button" aria-pressed="false">♪ Ton</button>
+      <button id="loop" type="button" aria-pressed="true">↻ Loop</button>
+    </div>
+
+    <section>
+      <h2>Eure Arbeiten</h2>
+      <p class="hint">Szene 3 zeigt vier Projekte, je 1,1 Sekunden. Jedes startet im Raster, dann öffnet sich das Fenster aufs echte Bild. Bilder und Videos bleiben nur in deinem Browser, nichts wird hochgeladen.</p>
+    </section>
+    <div class="slots" id="slots"></div>
+
+    <section class="export">
+      <h2>Als Video speichern</h2>
+      <p>Spielt das Reel einmal in Echtzeit ab und nimmt Bild und Ton auf (15 Sekunden). Chrome und Safari liefern MP4, ältere Browser WebM.</p>
+      <button id="export" type="button">● Reel aufnehmen</button>
+      <p id="status" aria-live="polite"></p>
+    </section>
+
+    <p class="foot"><kbd>Leertaste</kbd> Play/Pause · <kbd>←</kbd> <kbd>→</kbd> ±1 s · Klick aufs Reel pausiert</p>
+  </div>
+</div>
+
+<script>
+(() => {
+const W = 1080, H = 1920, DUR = 15;
+const C = { paper:'#BFC2AE', ink:'#1E2620', lichen:'#D8CF62', light:'#E4E6DA', eye:'#EEEFE6', body:'#26301F' };
+const F = (w, s) => `${w} ${s}px "Bricolage Grotesque", system-ui, sans-serif`;
+const SCENES = [
+  { name:'Wald',       t:0   },
+  { name:'Leistungen', t:2.5 },
+  { name:'Arbeiten',   t:5   },
+  { name:'Studio',     t:9.4 },
+  { name:'Abspann',    t:12  },
+];
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+let T = 0, recording = false;
+
+// ---------- math ----------
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const lerp = (a,b,p) => a + (b-a)*p;
+const seg = (t,a,b) => clamp((t-a)/(b-a), 0, 1);
+const eo  = p => p >= 1 ? 1 : 1 - Math.pow(2, -10*p);
+const ein = p => p*p*p;
+const eio = p => p < .5 ? 4*p*p*p : 1 - Math.pow(-2*p+2, 3)/2;
+const TAU = Math.PI*2;
+
+// ---------- helpers ----------
+function ls(c, px){ if ('letterSpacing' in c) c.letterSpacing = px + 'px'; }
+function text(s, x, y, font, color, align = 'left', alpha = 1, spacing = 0){
+  ctx.save(); ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.globalAlpha = alpha; ls(ctx, spacing);
+  ctx.fillText(s, x, y); ctx.restore();
+}
+function fit(word, weight, maxW, maxS, spacing = 0){
+  ctx.save(); ctx.font = F(weight, 100); ls(ctx, spacing*1); const w = ctx.measureText(word).width; ctx.restore();
+  return Math.min(maxS, 100*maxW/w);
+}
+function riseWord(word, weight, size, x, y, color, tIn, stagger, dur, tOut, spacing){
+  ctx.save();
+  ctx.font = F(weight, size); ls(ctx, spacing ?? -size*0.035); ctx.textAlign = 'left'; ctx.fillStyle = color;
+  const total = ctx.measureText(word).width;
+  ctx.beginPath(); ctx.rect(x - 40, y - size*0.86, total + 120, size*1.14); ctx.clip();
+  for (let i = 0; i < word.length; i++){
+    const ch = word[i]; if (ch === ' ') continue;
+    const px = x + ctx.measureText(word.slice(0, i)).width;
+    const st = tIn + i*stagger;
+    let dy = (1 - eo(seg(T, st, st + dur)))*size*1.15;
+    if (tOut != null){ const so = tOut + i*stagger*0.6; dy -= ein(seg(T, so, so + 0.2))*size*1.15; }
+    ctx.fillText(ch, px, y + dy);
+  }
+  ctx.restore();
+  return total;
+}
+function wrap(s, font, maxW){
+  ctx.save(); ctx.font = font;
+  const words = s.split(/\s+/).filter(Boolean), lines = []; let cur = '';
+  for (const w of words){ const tst = cur ? cur + ' ' + w : w; if (ctx.measureText(tst).width > maxW && cur){ lines.push(cur); cur = w; } else cur = tst; }
+  if (cur) lines.push(cur); ctx.restore();
+  return lines.slice(0, 3);
+}
+function rrect(c, x, y, w, h, r){ c.beginPath(); c.roundRect ? c.roundRect(x, y, w, h, r) : c.rect(x, y, w, h); }
+
+// ---------- Black Forest landscape (from the HORST dither demo) ----------
+const LAYERS = [
+  {b:.50,a:.06, s:.004,c:'#A9AF9C',ts:0,   sp:0,   f:[3.1,7.3,13.7],p:[0.3,1.7,4.1]},
+  {b:.58,a:.055,s:.007,c:'#8D957F',ts:.45, sp:.016,f:[2.3,6.1,15.2],p:[2.1,0.4,3.3]},
+  {b:.67,a:.05, s:.011,c:'#6E7962',ts:.7,  sp:.022,f:[3.7,8.9,17.1],p:[1.2,2.8,0.9]},
+  {b:.77,a:.045,s:.017,c:'#4C5843',ts:1,   sp:.03, f:[2.9,7.7,19.3],p:[4.4,1.1,2.2]},
+  {b:.89,a:.04, s:.026,c:'#2C352A',ts:1.45,sp:.04, f:[2.1,5.3,11.9],p:[0.7,3.9,1.5]},
+];
+const ridge = (L,u) => L.b + L.a*(Math.sin(u*L.f[0]+L.p[0])*.55 + Math.sin(u*L.f[1]+L.p[1])*.3 + Math.sin(u*L.f[2]+L.p[2])*.15);
+const hash = n => { const x = Math.sin(n*127.1+311.7)*43758.5453; return x - Math.floor(x); };
+const blinkAt = t => (((t*1.9) % 4.3) < 0.13 ? 0.12 : 1);
+
+function monsterRect(w, h, t, mx, peek){
+  const L = LAYERS[3], S = w*0.17, x = mx*w;
+  const yr = ridge(L, mx + t*L.s)*h;
+  return { x, yTop: yr - S*peek*(.62 + .12*Math.sin(t*.9)), S };
+}
+function drawMonsterAt(c, x, yTop, S, look, blink){
+  const bw = S*.5;
+  c.fillStyle = C.body; c.beginPath();
+  c.moveTo(x-S*.34,yTop+S*.14); c.lineTo(x-S*.44,yTop-S*.22); c.lineTo(x-S*.14,yTop+S*.05); c.closePath();
+  c.moveTo(x+S*.34,yTop+S*.14); c.lineTo(x+S*.44,yTop-S*.22); c.lineTo(x+S*.14,yTop+S*.05); c.closePath();
+  c.moveTo(x-bw,yTop+S*1.6); c.lineTo(x-bw,yTop+S*.4);
+  c.quadraticCurveTo(x-bw,yTop,x,yTop); c.quadraticCurveTo(x+bw,yTop,x+bw,yTop+S*.4);
+  c.lineTo(x+bw,yTop+S*1.6); c.closePath(); c.fill();
+  [-1,1].forEach(sd => {
+    const ex = x+sd*S*.2, ey = yTop+S*.36, r = S*.13;
+    c.fillStyle = C.eye; c.beginPath(); c.ellipse(ex,ey,r,r*blink,0,0,TAU); c.fill();
+    if (blink > .5){
+      const dx = look.x-ex, dy = look.y-ey, dl = Math.hypot(dx,dy) || 1;
+      c.fillStyle = C.ink; c.beginPath(); c.arc(ex+dx/dl*r*.45, ey+dy/dl*r*.45, r*.5, 0, TAU); c.fill();
+    }
+  });
+}
+function drawScene(c, w, h, t, o){
+  const g = c.createLinearGradient(0,0,0,h*.6);
+  g.addColorStop(0,'#DDE0D2'); g.addColorStop(1,'#C9CDBC');
+  c.fillStyle = g; c.fillRect(0,0,w,h);
+  c.fillStyle = 'rgba(240,241,232,.9)';
+  c.beginPath(); c.arc(w*(o.sun ?? .76), h*.3, w*.09, 0, TAU); c.fill();
+  const step = Math.max(2, w/140), m = w;
+  LAYERS.forEach((L,i) => {
+    const sh = t*L.s;
+    if (i === 3 && o.peek > 0){
+      const mr = monsterRect(w, h, t, o.mx, o.peek);
+      drawMonsterAt(c, mr.x, mr.yTop, mr.S, { x:o.look.x*w, y:o.look.y*h }, blinkAt(t));
+    }
+    c.fillStyle = L.c; c.beginPath(); c.moveTo(0,h);
+    for (let x = 0; x <= w+step; x += step) c.lineTo(x, ridge(L, x/w+sh)*h);
+    c.lineTo(w,h); c.closePath(); c.fill();
+    if (L.ts){
+      c.beginPath();
+      const k0 = Math.floor(sh/L.sp)-2, k1 = k0 + Math.ceil(1/L.sp) + 4;
+      for (let k = k0; k <= k1; k++){
+        const r = hash(k*7.3+i*101); if (r < .18) continue;
+        const u = k*L.sp - sh + (hash(k+i*53)-.5)*L.sp*.6;
+        const x = u*w, y = ridge(L,u+sh)*h + m*.006;
+        const th = m*(.05+.07*r)*L.ts, tw = th*.3;
+        c.moveTo(x,y-th); c.lineTo(x+tw,y); c.lineTo(x-tw,y); c.closePath();
+      }
+      c.fill();
+    }
+    if (i < 3){
+      const yb = L.b*h, fg = c.createLinearGradient(0,yb-h*.02,0,yb+h*.12);
+      fg.addColorStop(0,'rgba(226,229,216,0)'); fg.addColorStop(.5,'rgba(226,229,216,.4)'); fg.addColorStop(1,'rgba(226,229,216,0)');
+      c.fillStyle = fg; c.fillRect(0,yb-h*.02,w,h*.14);
+    }
+  });
+}
+
+// ---------- dither (Bayer, ink on paper) ----------
+const PX = 3, LW = W/PX, LH = H/PX;
+const low = document.createElement('canvas'); low.width = LW; low.height = LH;
+const lctx = low.getContext('2d', { willReadFrequently:true });
+const dith = document.createElement('canvas'); dith.width = LW; dith.height = LH;
+const dctx = dith.getContext('2d'); const out = dctx.createImageData(LW, LH);
+const BAYER = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5], PAP = [191,194,174], INK = [30,38,32];
+function dither(){
+  const src = lctx.getImageData(0,0,LW,LH).data, o = out.data;
+  for (let y = 0; y < LH; y++){
+    const by = (y&3)*4;
+    for (let x = 0; x < LW; x++){
+      const i = (y*LW+x)*4;
+      const lum = (src[i]*.299 + src[i+1]*.587 + src[i+2]*.114)/255;
+      const d = (1-lum-.16)*1.55;
+      const c = (d > 0 && ((x%3) + BAYER[by+(x&3)]/16*.9) < d*3.1) ? INK : PAP;
+      o[i]=c[0]; o[i+1]=c[1]; o[i+2]=c[2]; o[i+3]=255;
+    }
+  }
+  dctx.putImageData(out,0,0);
+  ctx.save(); ctx.imageSmoothingEnabled = false; ctx.drawImage(dith, 0, 0, W, H); ctx.restore();
+}
+
+// ---------- project slots ----------
+const SLOT_N = 4, SLOT_T0 = 5, SLOT_D = 1.1;
+const slots = Array.from({ length:SLOT_N }, (_, i) => ({ el:null, type:null, url:null,
+  caption:['Markenauftritt','Corporate Identity','Kampagne','Leitidee'][i] }));
+const mediaReady = s => s.el && (s.type === 'image' ? s.el.complete && s.el.naturalWidth > 0 : s.el.readyState >= 2);
+function drawCover(c, w, h, el, zoom){
+  const iw = el.videoWidth || el.naturalWidth, ih = el.videoHeight || el.naturalHeight;
+  if (!iw || !ih) return;
+  const s = Math.max(w/iw, h/ih)*zoom, dw = iw*s, dh = ih*s;
+  c.drawImage(el, (w-dw)/2, (h-dh)/2, dw, dh);
+}
+function syncVideos(){
+  const active = T >= SLOT_T0 && T < SLOT_T0 + SLOT_N*SLOT_D ? Math.floor((T - SLOT_T0)/SLOT_D) : -1;
+  slots.forEach((s, i) => {
+    if (s.type !== 'video' || !s.el) return;
+    if (i !== active){ if (!s.el.paused) s.el.pause(); return; }
+    const want = Math.min(T - SLOT_T0 - i*SLOT_D, Math.max(0, (s.el.duration || 1) - 0.05));
+    if (playing){ if (s.el.paused) s.el.play().catch(() => {}); if (Math.abs(s.el.currentTime - want) > 0.25) s.el.currentTime = want; }
+    else { if (!s.el.paused) s.el.pause(); if (Math.abs(s.el.currentTime - want) > 0.04) s.el.currentTime = want; }
+  });
+}
+
+// ---------- scene 1 · forest ----------
+const HEAD = ['Monster-', 'ideen für', 'mutige', 'Marken.'];
+function s1(){
+  const look = { x:.25 + .2*Math.sin(T*1.4), y:.28 };
+  const peek = eio(seg(T, 0.3, 1.1));
+  const o = { mx:.68, peek, look };
+  drawScene(lctx, LW, LH, T, o); dither();
+  const e = eio(seg(T, 1.5, 2.3));
+  if (e > 0){
+    const mr = monsterRect(W, H, T, o.mx, peek);
+    const rw = lerp(360, W, e), rh = lerp(300, H, e);
+    const cx = lerp(mr.x, W/2, e), cy = lerp(mr.yTop + mr.S*.4, H/2, e);
+    const rx = clamp(cx - rw/2, 0, W - rw), ry = clamp(cy - rh/2, 0, H - rh);
+    ctx.save(); ctx.beginPath(); ctx.rect(rx, ry, rw, rh); ctx.clip(); drawScene(ctx, W, H, T, o); ctx.restore();
+    if (e < .98){ ctx.strokeStyle = C.ink; ctx.lineWidth = 3; ctx.strokeRect(rx + 1.5, ry + 1.5, rw - 3, rh - 3); }
+  }
+  HEAD.forEach((l, i) => riseWord(l, 780, 156, 66, 380 + i*150, C.ink, 0.2 + i*0.13, 0.025, 0.5, null));
+  const wh = H*eio(seg(T, 2.28, 2.5));
+  if (wh > 0){ ctx.fillStyle = C.lichen; ctx.fillRect(0, H - wh, W, wh); }
+}
+
+// ---------- scene 2 · services ----------
+const SERV = [
+  { w:'Strategie.',  d:'Wofür eure Marke steht und warum das jemanden interessieren sollte.' },
+  { w:'Konzeption.', d:'Die eine Idee, die alles zusammenhält.' },
+  { w:'Identität.',  d:'Logo, Schrift, Farbe, Ton. Ein System, das im Alltag hält.' },
+  { w:'Kampagnen.',  d:'Auftritte, über die man spricht. Online, gedruckt, auf der Straße.' },
+];
+function s2(){
+  ctx.fillStyle = C.lichen; ctx.fillRect(0, 0, W, H);
+  text('Was wir machen', 66, 330, F(600, 44), C.ink, 'left', eo(seg(T, 2.5, 2.8)));
+  const size = fit('Konzeption.', 800, 930, 176);
+  const k = clamp(Math.floor((T - 2.5)/0.5), 0, 3);
+  SERV.forEach((s, i) => {
+    const st = 2.5 + i*0.5; if (T < st) return;
+    const col = i === k ? C.ink : 'rgba(30,38,32,.26)';
+    riseWord(s.w, 800, size, 62, 560 + i*size*1.02, col, st, 0.022, 0.38, null);
+  });
+  const a = eo(seg(T, 2.5 + k*0.5 + 0.05, 2.5 + k*0.5 + 0.3));
+  const lines = wrap(SERV[k].d, F(500, 50), 760);
+  lines.forEach((l, i) => text(l, 66, 1340 + i*64 + (1-a)*20, F(500, 50), C.ink, 'left', a, -0.5));
+  // the monster checks in from below
+  const pk = eo(seg(T, 3.7, 4.3));
+  if (pk > 0) drawMonsterAt(ctx, 800, H - 330*0.72*pk, 330, { x:300, y:900 + 300*Math.sin(T*2) }, blinkAt(T));
+  ctx.fillStyle = C.ink;
+  for (let i = 0; i < 5; i++){
+    const st = 4.75 + i*0.03, h = H*eio(seg(T, st, st + 0.2));
+    if (h > 0) ctx.fillRect(Math.floor(i*W/5), H - h, Math.ceil(W/5) + 1, h);
+  }
+}
+
+// ---------- scene 3 · work ----------
+const SLOT_MX = [.28, .72, .45, .6];
+function s3(){
+  const i = clamp(Math.floor((T - SLOT_T0)/SLOT_D), 0, SLOT_N - 1), lt = T - SLOT_T0 - i*SLOT_D;
+  const s = slots[i], has = mediaReady(s), zoom = 1.03 + 0.07*lt/SLOT_D;
+  const o = { mx:SLOT_MX[i], peek:1, look:{ x:.5, y:.15 }, sun:[.2,.8,.3,.7][i] };
+  const tt = T + i*9;
+  lctx.fillStyle = C.paper; lctx.fillRect(0, 0, LW, LH);
+  if (has) drawCover(lctx, LW, LH, s.el, zoom); else drawScene(lctx, LW, LH, tt, o);
+  dither();
+  const e = eio(seg(lt, 0.1, 0.5));
+  const rw = lerp(420, W, e), rh = lerp(540, H, e), rx = (W - rw)/2, ry = lerp(H*.42, H/2, e) - rh/2;
+  ctx.save(); ctx.beginPath(); ctx.rect(rx, ry, rw, rh); ctx.clip();
+  if (has){ ctx.fillStyle = C.ink; ctx.fillRect(0, 0, W, H); drawCover(ctx, W, H, s.el, zoom); } else drawScene(ctx, W, H, tt, o);
+  ctx.restore();
+  if (e < .98){ ctx.strokeStyle = C.ink; ctx.lineWidth = 3; ctx.strokeRect(rx + 1.5, ry + 1.5, rw - 3, rh - 3); }
+  // scrims so the light HUD reads on any picture
+  const gt = ctx.createLinearGradient(0, 0, 0, 260); gt.addColorStop(0, 'rgba(20,26,22,.55)'); gt.addColorStop(1, 'rgba(20,26,22,0)');
+  ctx.fillStyle = gt; ctx.fillRect(0, 0, W, 260);
+  const gb = ctx.createLinearGradient(0, H - 220, 0, H); gb.addColorStop(0, 'rgba(20,26,22,0)'); gb.addColorStop(1, 'rgba(20,26,22,.55)');
+  ctx.fillStyle = gb; ctx.fillRect(0, H - 220, W, 220);
+  // caption card
+  const a = eo(seg(lt, 0.25, 0.5)), cap = (s.caption || '').trim();
+  const lines = cap ? wrap(cap, F(760, 76), W - 132 - 80) : [];
+  const bh = 120 + lines.length*84, by = H - 300 - bh + (1-a)*40;
+  ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = C.lichen; rrect(ctx, 66, by, W - 132, bh, 18); ctx.fill(); ctx.restore();
+  text(`Projekt 0${i+1}`, 106, by + 70, F(600, 36), C.ink, 'left', a);
+  lines.forEach((l, j) => text(l, 104, by + 152 + j*84, F(760, 76), C.ink, 'left', a, -2.5));
+  if (!has && !recording){
+    ctx.save(); ctx.globalAlpha = 0.9; ctx.fillStyle = C.ink; rrect(ctx, 66, 230, W - 132, 84, 42); ctx.fill(); ctx.restore();
+    text('Platzhalter · eigenes Bild oder Video einfügen', W/2, 284, F(600, 32), C.light, 'center');
+  }
+  const fl = 1 - seg(lt, 0, 0.09);
+  if (fl > 0){ ctx.globalAlpha = fl*0.85; ctx.fillStyle = C.lichen; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
+}
+
+// ---------- scene 4 · studio ----------
+const STATS = [
+  { n:20,   suf:'+', l:'Jahre Agenturerfahrung',   s:9.5,  count:true },
+  { n:2023, suf:'',  l:'gegründet als Studio HORST', s:9.75, count:false },
+  { n:4,    suf:'',  l:'Disziplinen. Eine Idee.',  s:10.0, count:true },
+];
+function s4(){
+  ctx.fillStyle = C.ink; ctx.fillRect(0, 0, W, H);
+  const k = T < 9.75 ? 0 : T < 10.0 ? 1 : 2;
+  STATS.forEach((st, i) => {
+    const y = 760 + i*400, out = ein(seg(T, 11.3 + i*0.05, 11.6 + i*0.05));
+    ctx.save(); ctx.translate(-1200*out, 0);
+    const v = st.count ? Math.round(st.n*eo(seg(T, st.s, st.s + 0.7))) : st.n;
+    riseWord(String(v) + st.suf, 800, 260, 60, y, C.light, st.s, 0.03, 0.42, null);
+    text(st.l, 70, y + 78, F(500, 48), C.light, 'left', eo(seg(T, st.s + 0.2, st.s + 0.55))*0.78, -0.5);
+    ctx.restore();
+  });
+  // eyes in the dark, following the current line
+  const ea = eo(seg(T, 9.6, 10.0)), bl = blinkAt(T + 1.3);
+  [[790,360],[930,360]].forEach(([ex, ey]) => {
+    const r = 52*ea, tx = 300, ty = 560 + k*400, dx = tx - ex, dy = ty - ey, dl = Math.hypot(dx, dy);
+    ctx.fillStyle = C.eye; ctx.beginPath(); ctx.ellipse(ex, ey, r, r*bl, 0, 0, TAU); ctx.fill();
+    if (bl > .5 && r > 0){ ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(ex + dx/dl*r*.45, ey + dy/dl*r*.45, r*.5, 0, TAU); ctx.fill(); }
+  });
+  const p = eio(seg(T, 11.68, 12.0));
+  if (p > 0){ ctx.fillStyle = C.lichen; ctx.beginPath(); ctx.arc(860, 360, p*2100, 0, TAU); ctx.fill(); }
+}
+
+// ---------- scene 5 · end card ----------
+function s5(){
+  const lookPill = seg(T, 13.2, 13.6);
+  const o = { mx:.5, peek:eio(seg(T, 12.4, 13.0)), look:{ x:.5, y:lerp(.2, .9, lookPill) } };
+  drawScene(lctx, LW, LH, T, o); dither();
+  const size = fit('HORST', 800, 940, 400);
+  riseWord('HORST', 800, size, 56, 560, C.ink, 12.05, 0.05, 0.5, null, -size*0.04);
+  const a = eo(seg(T, 12.5, 12.9));
+  text('Monsterideen® für', 66, 700 + (1-a)*20, F(650, 78), C.ink, 'left', a, -2.5);
+  text('mutige Marken.', 66, 790 + (1-a)*20, F(650, 78), C.ink, 'left', a, -2.5);
+  text('Kirchzarten bei Freiburg', 68, 880 + (1-a)*20, F(500, 40), C.ink, 'left', a*0.8);
+  const pa = eo(seg(T, 13.0, 13.4));
+  if (pa > 0){
+    ctx.save(); ctx.font = F(700, 56); const tw = ctx.measureText('studio-horst.de').width; ctx.restore();
+    const pw = tw + 100, px = (W - pw)/2, py = 1640 + (1-pa)*40;
+    ctx.save(); ctx.globalAlpha = pa; ctx.fillStyle = C.ink; rrect(ctx, px, py, pw, 116, 58); ctx.fill(); ctx.restore();
+    text('studio-horst.de', W/2, py + 77, F(700, 56), C.light, 'center', pa);
+  }
+}
+
+// ---------- HUD ----------
+const FN = [s1, s2, s3, s4, s5];
+const sceneIdx = t => { let i = 0; SCENES.forEach((s, k) => { if (t >= s.t) i = k; }); return i; };
+function hud(idx){
+  const light = idx === 2 || idx === 3;
+  const c = light ? C.light : C.ink;
+  ctx.save();
+  if (idx === 2){ ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 14; }
+  ctx.fillStyle = c; ctx.textBaseline = 'alphabetic';
+  ctx.font = F(800, 52); ls(ctx, -2); ctx.textAlign = 'left'; ctx.fillText('HORST', 66, 140);
+  ctx.font = F(500, 30); ls(ctx, 0); ctx.textAlign = 'right'; ctx.fillText('Showreel 2026', W - 66, 136);
+  ctx.textAlign = 'left'; ctx.fillText(`0${idx+1} / 05  ${SCENES[idx].name}`, 66, H - 110);
+  ctx.textAlign = 'right'; ctx.fillText(`00:${String(Math.floor(T)).padStart(2,'0')}`, W - 66, H - 110);
+  ctx.shadowBlur = 0;
+  ctx.globalAlpha = .3; ctx.fillRect(66, H - 84, W - 132, 3);
+  ctx.globalAlpha = 1;  ctx.fillRect(66, H - 84, (W - 132)*(T/DUR), 3);
+  ctx.restore();
+}
+function render(t){
+  T = clamp(t, 0, DUR - 1e-4);
+  syncVideos();
+  const idx = sceneIdx(T);
+  ctx.textBaseline = 'alphabetic';
+  FN[idx]();
+  hud(idx);
+  return idx;
+}
+
+// ---------- audio ----------
+let actx = null, master = null, bus = null, noiseBuf = null, schedTimer = null, ctx0 = 0, audioT0 = 0, evIdx = 0;
+function ensureAudio(){
+  if (actx) return true;
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+  actx = new AC();
+  const comp = actx.createDynamicsCompressor();
+  master = actx.createGain(); master.gain.value = 0.7;
+  master.connect(comp); comp.connect(actx.destination);
+  master._out = comp;
+  noiseBuf = actx.createBuffer(1, actx.sampleRate*2, actx.sampleRate);
+  const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1;
+  return true;
+}
+function env(g, w, peak, dec, att = 0.002){
+  g.gain.setValueAtTime(0.0001, w); g.gain.exponentialRampToValueAtTime(peak, w + att);
+  g.gain.exponentialRampToValueAtTime(0.0001, w + att + dec);
+}
+function kick(d, w, g = 1){
+  const o = actx.createOscillator(), a = actx.createGain();
+  o.frequency.setValueAtTime(160, w); o.frequency.exponentialRampToValueAtTime(42, w + 0.13);
+  env(a, w, g, 0.38); o.connect(a); a.connect(d); o.start(w); o.stop(w + 0.45);
+}
+function noise(d, w, type, freq, q, g, dec, att = 0.002, sweepTo = null){
+  const s = actx.createBufferSource(); s.buffer = noiseBuf; s.loop = true;
+  const f = actx.createBiquadFilter(); f.type = type; f.frequency.setValueAtTime(freq, w); f.Q.value = q;
+  if (sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo, w + att);
+  const a = actx.createGain(); env(a, w, g, dec, att);
+  s.connect(f); f.connect(a); a.connect(d); s.start(w); s.stop(w + att + dec + 0.05);
+}
+const hat   = (d,w,g=.15) => noise(d, w, 'highpass', 8000, 0.7, g, 0.045);
+const clap  = (d,w)       => noise(d, w, 'bandpass', 1500, 0.8, 0.45, 0.14);
+const crash = (d,w)       => noise(d, w, 'highpass', 4000, 0.5, 0.3, 1.8);
+const riser = (d,w,dur,g=.28) => noise(d, w, 'bandpass', 300, 1.2, g, 0.06, dur, 7000);
+function tone(d, w, type, f, g, dec, att = 0.004, lp = null){
+  const o = actx.createOscillator(), a = actx.createGain(); o.type = type; o.frequency.value = f;
+  let n = o; if (lp){ const fl = actx.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = lp; o.connect(fl); n = fl; }
+  env(a, w, g, dec, att); n.connect(a); a.connect(d); o.start(w); o.stop(w + att + dec + 0.05);
+}
+const EVENTS = [];
+(function build(){
+  const add = (t, fn) => EVENTS.push({ t, fn });
+  // forest intro: soft plucks, then the beat drops at 2.5
+  [0, 0.5, 1.0, 1.5, 2.0].forEach((t, i) => add(t, (d,w) => tone(d, w, 'triangle', [440, 523.25, 659.25, 587.33, 523.25][i], 0.12, 0.45)));
+  add(1.5, (d,w) => riser(d, w, 1.0, 0.22));
+  const roots = [55, 43.65, 65.41, 49];
+  for (let k = 5; k < 30; k++){
+    const tb = k*0.5;
+    if (tb >= 11.5 && tb < 12) continue;
+    if (tb < 12){
+      add(tb, (d,w) => kick(d, w));
+      add(tb + 0.25, (d,w) => hat(d, w));
+      if (k % 2) add(tb, (d,w) => clap(d, w));
+      const f = roots[Math.floor(tb/2) % 4]*2;
+      add(tb + 0.25, (d,w) => tone(d, w, 'sawtooth', f, 0.26, 0.2, 0.004, 650));
+    } else if (tb === 12){
+      add(tb, (d,w) => kick(d, w, 1.2));
+      add(tb, (d,w) => crash(d, w));
+      add(tb, (d,w) => tone(d, w, 'sawtooth', 55, 0.33, 2.6, 0.01, 300));
+      [220, 261.63, 329.63, 493.88].forEach(f => add(tb, (d,w) => tone(d, w, 'triangle', f, 0.07, 2.8, 0.06)));
+    } else {
+      if (tb % 1 === 0) add(tb, (d,w) => kick(d, w, 0.45));
+      add(tb + 0.25, (d,w) => hat(d, w, 0.07));
+    }
+  }
+  for (let i = 0; i < 4; i++) add(SLOT_T0 + i*SLOT_D, (d,w) => noise(d, w, 'highpass', 2500, 0.6, 0.25, 0.12));
+  add(4.7,  (d,w) => riser(d, w, 0.3, 0.2));
+  add(11.0, (d,w) => riser(d, w, 0.95, 0.33));
+  EVENTS.sort((a,b) => a.t - b.t);
+})();
+function schedule(){
+  if (!bus) return;
+  const now = actx.currentTime, horizon = audioT0 + (now - ctx0) + 0.15;
+  while (evIdx < EVENTS.length && EVENTS[evIdx].t < horizon){
+    const e = EVENTS[evIdx++], when = ctx0 + (e.t - audioT0);
+    if (when < now - 0.01) continue;
+    e.fn(bus, Math.max(when, now));
+  }
+}
+function startAudio(){
+  if (!soundOn || !actx) return;
+  bus = actx.createGain(); bus.connect(master);
+  ctx0 = actx.currentTime + 0.03; audioT0 = t;
+  evIdx = EVENTS.findIndex(e => e.t >= t - 0.001); if (evIdx < 0) evIdx = EVENTS.length;
+  schedule(); schedTimer = setInterval(schedule, 25);
+}
+function stopAudio(){
+  clearInterval(schedTimer); schedTimer = null;
+  if (bus){ const b = bus; bus = null; b.gain.setTargetAtTime(0, actx.currentTime, 0.01); setTimeout(() => b.disconnect(), 250); }
+}
+
+// ---------- transport ----------
+const $ = id => document.getElementById(id);
+const playBtn = $('play'), scrub = $('scrub'), tc = $('tc'), soundBtn = $('sound'), loopBtn = $('loop'), statusEl = $('status'), exportBtn = $('export');
+let t = 0, playing = false, perf0 = 0, t0 = 0, soundOn = false, loopOn = true, dirty = true;
+
+function setPlayUI(){ playBtn.textContent = playing ? '❚❚ Pause' : '▶ Play'; playBtn.setAttribute('aria-label', playing ? 'Pausieren' : 'Abspielen'); }
+function play(){ if (t >= DUR - 0.01) t = 0; playing = true; perf0 = performance.now(); t0 = t; startAudio(); setPlayUI(); }
+function pause(){ playing = false; stopAudio(); setPlayUI(); dirty = true; }
+function seek(nt){ t = clamp(nt, 0, DUR); if (playing){ perf0 = performance.now(); t0 = t; stopAudio(); startAudio(); } dirty = true; }
+playBtn.addEventListener('click', () => { if (!recording) playing ? pause() : play(); });
+$('stage').addEventListener('click', () => { if (!recording) playing ? pause() : play(); });
+scrub.addEventListener('input', () => { if (!recording) seek(scrub.value/1000); });
+loopBtn.addEventListener('click', () => { loopOn = !loopOn; loopBtn.setAttribute('aria-pressed', loopOn); });
+soundBtn.addEventListener('click', () => {
+  if (!ensureAudio()) return;
+  actx.resume && actx.resume();
+  soundOn = !soundOn; soundBtn.setAttribute('aria-pressed', soundOn);
+  if (playing){ stopAudio(); perf0 = performance.now(); t0 = t; startAudio(); }
+  if (soundOn && !playing){ seek(0); play(); }
+});
+document.addEventListener('keydown', e => {
+  if (recording || e.target.tagName === 'INPUT') return;
+  if (e.key === ' '){ e.preventDefault(); playing ? pause() : play(); }
+  else if (e.key === 'ArrowRight') seek(t + 1);
+  else if (e.key === 'ArrowLeft') seek(t - 1);
+});
+
+// ---------- slot UI ----------
+const slotsEl = $('slots');
+slots.forEach((s, i) => {
+  const card = document.createElement('div'); card.className = 'slot';
+  card.innerHTML = `
+    <div class="slot-head"><span>Projekt 0${i+1} · ${(SLOT_T0 + i*SLOT_D).toFixed(1).replace('.', ',')} s</span><button class="remove" type="button" hidden>Entfernen</button></div>
+    <label class="drop" for="file-${i}"><span class="ph">Bild oder Video hierher ziehen oder tippen</span><input type="file" id="file-${i}" accept="image/*,video/*"></label>
+    <label class="cap" for="cap-${i}">Titel im Reel</label>
+    <input type="text" id="cap-${i}" maxlength="60">`;
+  slotsEl.appendChild(card);
+  const drop = card.querySelector('.drop'), file = card.querySelector('input[type=file]'), cap = card.querySelector(`#cap-${i}`), rm = card.querySelector('.remove'), ph = card.querySelector('.ph');
+  cap.value = s.caption;
+  cap.addEventListener('input', () => { s.caption = cap.value; dirty = true; });
+  const clear = () => {
+    if (s.el){ if (s.type === 'video') s.el.pause(); s.el.remove(); }
+    if (s.url) URL.revokeObjectURL(s.url);
+    s.el = s.url = s.type = null; ph.hidden = false; rm.hidden = true; dirty = true;
+  };
+  const load = f => {
+    if (!f || !/^(image|video)\//.test(f.type)){ statusEl.textContent = 'Bitte ein Bild oder Video wählen.'; return; }
+    clear();
+    s.url = URL.createObjectURL(f);
+    if (f.type.startsWith('image/')){
+      s.type = 'image'; s.el = new Image(); s.el.alt = ''; s.el.onload = () => { dirty = true; }; s.el.src = s.url;
+    } else {
+      s.type = 'video'; const v = document.createElement('video');
+      v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
+      v.addEventListener('loadeddata', () => { dirty = true; }); v.src = s.url; s.el = v;
+    }
+    drop.appendChild(s.el); ph.hidden = true; rm.hidden = false;
+    seek(SLOT_T0 + i*SLOT_D + 0.6);
+  };
+  file.addEventListener('change', () => { load(file.files[0]); file.value = ''; });
+  rm.addEventListener('click', clear);
+  ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', e => load(e.dataTransfer.files[0]));
+});
+
+// ---------- export ----------
+const downloadsP = (window.claude && window.claude.use) ? window.claude.use('downloads').catch(() => null) : Promise.resolve(null);
+const MIME = window.MediaRecorder ? ['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm']
+  .find(m => { try { return MediaRecorder.isTypeSupported(m); } catch(e){ return false; } }) : null;
+let rec = null, recDest = null, prev = null;
+exportBtn.addEventListener('click', async () => {
+  if (recording) return;
+  const dl = await downloadsP;
+  if (!dl){ statusEl.textContent = 'Speichern ist in dieser Ansicht nicht verfügbar. Öffne das Reel in claude.ai im Browser.'; return; }
+  if (!MIME || !cv.captureStream){ statusEl.textContent = 'Dieser Browser kann das Reel nicht aufnehmen. Nimm aktuelles Chrome oder Safari.'; return; }
+  if (!ensureAudio()){ statusEl.textContent = 'Kein Web Audio verfügbar.'; return; }
+  try { await actx.resume(); } catch(e){}
+  recDest = actx.createMediaStreamDestination(); master._out.connect(recDest);
+  const stream = cv.captureStream(60);
+  recDest.stream.getAudioTracks().forEach(tr => stream.addTrack(tr));
+  const chunks = [];
+  rec = new MediaRecorder(stream, { mimeType:MIME, videoBitsPerSecond:16e6, audioBitsPerSecond:192e3 });
+  rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+  rec.onstop = async () => {
+    try { master._out.disconnect(recDest); } catch(e){}
+    recording = false; soundOn = prev.sound; loopOn = prev.loop;
+    soundBtn.setAttribute('aria-pressed', soundOn); exportBtn.disabled = false; exportBtn.textContent = '● Reel aufnehmen';
+    const ext = MIME.includes('mp4') ? 'mp4' : 'webm';
+    const blob = new Blob(chunks, { type:MIME.split(';')[0] });
+    statusEl.textContent = `Aufnahme fertig (${(blob.size/1048576).toFixed(1)} MB). Bitte das Speichern bestätigen.`;
+    try { await dl.save({ filename:`studio-horst-reel.${ext}`, data:blob });
+      statusEl.textContent = ext === 'mp4' ? 'Gespeichert. Die MP4 kann direkt zu Instagram.' : 'Gespeichert als WebM. Für Instagram vorher in MP4 umwandeln, oder in Safari bzw. aktuellem Chrome erneut aufnehmen.';
+    } catch(e){ statusEl.textContent = e && e.code === 'declined' ? 'Speichern abgebrochen.' : `Speichern hat nicht geklappt (${e && e.code || 'unbekannt'}).`; }
+  };
+  prev = { sound:soundOn, loop:loopOn };
+  soundOn = true; loopOn = false; soundBtn.setAttribute('aria-pressed', true);
+  if (playing) pause();
+  t = 0; dirty = true; render(0);
+  recording = true; exportBtn.disabled = true; exportBtn.textContent = 'Aufnahme läuft …';
+  rec.start(250); play();
+});
+
+// ---------- loop ----------
+function frame(now){
+  if (playing){
+    t = t0 + Math.max(0, now - perf0)/1000;
+    if (t >= DUR){
+      if (recording){ t = DUR; pause(); setTimeout(() => rec && rec.state !== 'inactive' && rec.stop(), 150); }
+      else if (loopOn){ t = 0; perf0 = now; t0 = 0; stopAudio(); startAudio(); }
+      else { t = DUR; pause(); }
+    }
+  }
+  if (playing || dirty){
+    render(t); dirty = false;
+    scrub.value = Math.round(t*1000);
+    tc.innerHTML = `${t.toFixed(1).padStart(4,'0')} <span>/ 15.0</span>`;
+    if (recording) statusEl.textContent = `Aufnahme läuft … ${Math.min(t, DUR).toFixed(1)} von 15 s`;
+  }
+  requestAnimationFrame(frame);
+}
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (reduce) t = 13.8;
+render(t);
+requestAnimationFrame(frame);
+const ready = document.fonts ? document.fonts.load(F(800, 100), 'HORST').catch(() => {}) : Promise.resolve();
+ready.then(() => { dirty = true; if (!reduce){ t = 0; play(); } });
+})();
+</script>
