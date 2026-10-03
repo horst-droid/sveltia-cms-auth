@@ -1,51 +1,44 @@
-# Übergabe: Showreel Studio HORST
+# Übergabe: Reels für Studio HORST
 
-Stand 2026-10-03. Ziel: echtes Showreel für Studio HORST, zuerst 9:16 für Instagram (1080 × 1920, ca. 15 s), danach optional 16:9.
+Stand 2026-10-03. Alles hier wurde in einer Claude-Code-Session gebaut. Diese Datei reicht, um nahtlos weiterzumachen.
 
-## Bisher gebaut
-- **`claim-reel/`**: Typo-Reel mit Claim und Versprechen, Signet baut sich auf: https://claude.ai/artifact/BcbxvXYo3LotABEsURVVLM
-- **`referenzen-reel/`**: Logo fest in der Mitte, darunter 15 Kundenlogos im Takt: https://claude.ai/artifact/EtaTQa1e4KBB9iHNkX1u1i
-- **`monster-reel/`**: Das HORST-Monster stellt sich vor (Video von der Website, Boomerang-Loop): https://claude.ai/artifact/AX6MGsa4jgF16Y86eBdibA
-- **`horst-reel-2026/`**: aktuelles Reel mit echter Marke, live als Artifact: https://claude.ai/artifact/AThPAEWv9VrRHEsVs2KtuE (Medien liegen in `media/`, beim Publish als Dateien mitgeben).
-- `studio-horst-reel-9x16.html`, live als Artifact: https://claude.ai/artifact/Wyts464KW48V5isM1k7gH1
-  Canvas-Engine mit `render(t)`, Web-Audio-Beat, vier Medien-Slots, Export per MediaRecorder und `downloads`-Capability.
-  **Achtung:** Farben und Schrift kommen dort aus einer alten Dither-Demo (Grün-Grau, Bricolage) und sind NICHT die echte Marke. Auf das Branding unten umstellen.
-- `studio-horst-reel-16x9.html`: Querformat, Farben frei gewählt, ebenfalls umstellen.
-- `claude-motion-reel.html`: erste Demo, nur als Referenz.
+## Die Reels (alle 9:16, 1080 × 1920, für Instagram)
 
-## Echte Marke (von studio-horst.de, Elementor-Kit)
-- Farben: Rot `#FF4255` (Akzent), Dunkel `#201C25`, Schwarz `#000000`, Weiß `#FFFFFF`, Hellgrau `#F8F7F8`
-- Schriften: `ransom` für Headlines (Datei `assets/font/ransom.woff2`, 700), `Inter` 600 für Text/Labels (Google Fonts), `Montserrat` 600 uppercase für kleine Labels
-- Logo: Wortmarke „horst.“ mit „Design und Kreativstudio“ (`assets/logo/horst-rz-white-scaled-1.png`, weiß), Bildmarke „h“ im Quadrat (`assets/logo/horst-logo-05.png`), Stempel „20 · Thatendrang und Heldenthaten · seit 2004“ (`assets/logo/horst-rz-stempel-1.png`)
-- Claim: „Monsterideen® für mutige Marken.“ Gruß: „Salli!“ Leitsatz: „THE IDEA IS THE KEY.“
+| Ordner | Live-Artifact | Inhalt |
+| --- | --- | --- |
+| `horst-reel-2026/` | https://claude.ai/artifact/AThPAEWv9VrRHEsVs2KtuE | Showreel 15 s: MONSTERIDEEN®-Intro, „Viele Marken sehen ordentlich aus…“, THE IDEA IS THE KEY, 7 Projekte (Bilder + 3 Videos), Stempel „20 · seit 2004“, Kontakt |
+| `monster-reel/` | https://claude.ai/artifact/AX6MGsa4jgF16Y86eBdibA | 13,5 s: Monster HORST (Website-Video als Boomerang) stellt sich in Sprechblasen vor, stürzt auf die Kamera zu, Zähne fressen den Screen („MAMPF!“), innen roter Abspann |
+| `referenzen-reel/` | https://claude.ai/artifact/EtaTQa1e4KBB9iHNkX1u1i | 15 s: horst.-Logo (SVG) fest in der Mitte, darunter 15 Kundenlogos im Takt, immer schneller, dann Logo-Wand, Kontakt |
+| `claim-reel/` | https://claude.ai/artifact/BcbxvXYo3LotABEsURVVLM | 15 s: Signet baut sich auf, kinetische Typo: „Monsterideen® für mutige Marken. Ich entwickle kraftvolle Ideen für MARKEN, PRODUKTE UND KAMPAGNEN – und übersetze sie gemeinsam mit meinen Kunden in SICHTBARE AUFTRITTE.“ |
+
+Ältere Versuche (nicht mehr im Branding, nur Referenz): `studio-horst-reel-9x16.html`, `studio-horst-reel-16x9.html`, `claude-motion-reel.html`.
+
+## Marke Studio HORST
+- Farben: Rot `#FF4255`, Dunkel `#201C25`, Schwarz `#000000`, Weiß `#FFFFFF`, Hellgrau `#F8F7F8`
+- Schriften: **ransom** (Headlines, eckig-geometrisch, `assets/font/ransom.woff2`, im HTML als base64 `@font-face` „HorstRansom“ eingebettet), **Inter** 600–800 (Text), **Montserrat** 600 uppercase gesperrt (kleine Labels)
+- Logo „horst. Design und Kreativstudio“: `assets/logo/horst-rz-02.svg` (Original von Felix, Fill `#1d1d1b`, für Weiß im Code umgefärbt)
+- Signet „h im Quadrat“: `assets/logo/horst-rz-solo.svg` (viewBox 184.7 × 183.3; im Code als Geometrie nachgebaut, damit es sich Balken für Balken aufbauen kann)
+- Stempel „20 · Thatendrang und Heldenthaten · seit 2004“: `assets/logo/horst-rz-stempel-1.png`
+- Claim: „Monsterideen® für mutige Marken.“ · Gruß: „Salli!“ · Leitsatz: „THE IDEA IS THE KEY.“
 - Kontakt: Felix Thatenhorst, Hauptstr. 24, 79199 Kirchzarten, salli@studio-horst.de, 07661 90 95 259, studio-horst.de
-- Kernaussagen: über 20 Jahre Design- und Agenturerfahrung; „Viele Marken sehen ordentlich aus. Aber fühlen sich nicht wirklich nach etwas an.“; „Am Anfang steht nicht das Design – sondern die Idee.“
-- Leistungen: Monsteridee entwickeln · Branding & Markenauftritt · Logo & Markenzeichen · Visuelle Systeme · Kampagnen · Print & digitale Medien · Marken-Check · Kreative Sparringsrunden · Langfristige Markenbegleitung
+- Ton der Texte: direkt, ich-Form, Schwarzwald, „Monsteridee“ als Leitidee eines Projekts
 
-## Material in `assets/`
-Logo und Signet als SVG (von Felix): `assets/logo/horst-rz-02.svg`, `assets/logo/horst-rz-solo.svg`. Kundenlogos (weiß, transparent) von der Website: `assets/referenzen/`.
+## Material (`assets/`)
+- `projekte/`: 12 Galerie-Bilder der Website (1080²) – Fisherman's Friend, EVOMOTIV, Ganter, green hornets, JACOB (2), p4u, Weinflaschen, Kaffee/Visitenkarten, Zahn-Motiv, Prägung, Geschäftsausstattung „W“
+- `videos/`: Website-Videos (u. a. `horst-1.mov` = Monster HORST, `green-hornets.mp4`, `evomotiv-film.mp4`, `w-start.mp4`)
+- `referenzen/`: 15 Kundenlogos (weiß auf transparent) von der Website
+- Projekt-Zuordnungen und Unterzeilen („Logoentwicklung“, „Kampagne“ …) sind aus den Bildern abgeleitet, nicht von Felix bestätigt.
 
-Projekte (1080 × 1080 JPG, aus der Website-Galerie):
-| Datei | Motiv |
-| --- | --- |
-| `-FF2` | Fisherman's Friend Dose |
-| `-evo5` | EVOMOTIV Prägung auf Rot |
-| `-ganter` | Ganter/Freiburger Bier, Paar als Flaschen |
-| `-gh` | green hornets Solartechnik Logo |
-| `-jm` | JACOB Transporter-Beschriftung |
-| `-jm3` | JACOB Messtechnik Logo auf Blau |
-| `-p4u` | „Ein Plus für Sie.“ Logo-Prägung |
-| `-s2` | Drei Weinflaschen auf Lila |
-| `-st` | Kaffeebecher und Visitenkarten |
-| `-v` | Zahnmaler im Mund (Zahnarzt-Motiv) |
-| `-w` | Bildmarke-Prägung grau |
-| `1` | Geschäftsausstattung schwarz-weiß „W“ |
+## Technik (gilt für alle Reels)
+- Eine HTML-Datei pro Reel, geschrieben als claude.ai-Artifact (ohne `<html>/<head>`; der Publish setzt das Gerüst). Ein Canvas 1080 × 1920, eine deterministische Funktion `render(t)` → jedes Bild ist eine Funktion der Zeit, Scrubben geht exakt.
+- Szenen als Funktionen (`s1()`, `s2()` …) mit Zeitfenstern in `SCENES`; Helfer: `seg/eo/ein/eio/eback`, `slamWord` (Buchstaben knallen einzeln rein), `layoutWords/wordsIn` (Wort für Wort), `drawSignet`, `pill`.
+- Ton: Web Audio, live synthetisiert (Kick, Hat, Clap, Bass, Riser, Crash, Pads), Event-Liste `EVENTS` mit Zeiten, Lookahead-Scheduler. Ton startet erst nach Klick (Browser-Regel).
+- Export: Button „● Reel aufnehmen“ = `MediaRecorder` auf `canvas.captureStream(60)` + Audio-Stream, Echtzeit-Aufnahme, Speichern über die Artifact-Capability `downloads` (`claude.use("downloads").save`). Chrome/Safari → MP4, sonst WebM.
+- Medien liegen in `<reel>/media/` und werden beim Publish als Dateien mitgegeben: Artifact-Tool mit `root` = Reel-Ordner, `files` = `{"media/x.jpg": "media/x.jpg", …}`, `capabilities: {"downloads": true}`.
+- Videos: H.264-MP4, für Canvas vorher mit ffmpeg zuschneiden/komprimieren (z. B. 1080², crf 27, ohne Ton). Video-Zeichnen prüft `videoWidth > 0` (nicht `readyState >= 2`), sonst flackert es beim Seeken.
+- Testen lokal: `python3 -m http.server` im Reel-Ordner, Playwright scrubbt per `#scrub` und screenshottet `#cv`. Achtung: Playwright-Chromium kann kein H.264 → für Tests eine VP9-WebM-Kopie verwenden. Ohne `<meta charset>` zeigt der lokale Test Umlaute falsch (nur lokal).
 
-Videos (MP4, quadratisch 1080/960, 5–15 s): `evomotiv-film.mp4`, `green-hornets.mp4`, `w-start.mp4`, `gen4-animation-1/2.mp4`; `horst-1.mov` (1280 × 720).
-
-Kundennamen und Bildzuordnung bitte mit Felix abstimmen, bevor sie als Text ins Reel gehen.
-
-## Nächste Schritte
-1. 9:16-Reel auf echtes Branding umbauen (Farben, ransom/Inter, Logo „horst.“, Stempel).
-2. Projektbilder und -videos fest einbauen (über `assets`-Capability hochladen oder als Dateien neben der Seite publizieren), statt leerer Slots.
-3. Texte aus der Website verwenden, Export testen, dann 16:9-Version.
+## Offene Ideen
+- Monster-Reel: Mundraum in `#FF4255` statt Dunkelrot? Zoom weniger stark (Video wird unscharf).
+- 16:9-Fassungen für Website/Präsentation.
+- Reels für Kunden mit Logo-Animation: Material liegt in Felix' Google-Drive-Ordner (lokale Session nötig). SVG-Logos bevorzugen, dann lassen sich Logos Teil für Teil animieren.
