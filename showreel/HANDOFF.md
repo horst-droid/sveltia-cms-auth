@@ -1,6 +1,6 @@
 # Übergabe: Reels für Studio HORST
 
-Stand 2026-10-03. Alles hier wurde in einer Claude-Code-Session gebaut. Diese Datei reicht, um nahtlos weiterzumachen.
+Stand 2026-10-03 (abends: Statement- und Projekt-Reels ergänzt, gebaut in einer lokalen Session mit Zugriff auf den Google-Drive-Content-Pool). Alles hier wurde in einer Claude-Code-Session gebaut. Diese Datei reicht, um nahtlos weiterzumachen.
 
 ## Die Reels (alle 9:16, 1080 × 1920, für Instagram)
 
@@ -11,8 +11,13 @@ Stand 2026-10-03. Alles hier wurde in einer Claude-Code-Session gebaut. Diese Da
 | `referenzen-reel/` | https://claude.ai/artifact/EtaTQa1e4KBB9iHNkX1u1i | 15 s: horst.-Logo (SVG) fest in der Mitte, darunter 15 Kundenlogos im Takt, immer schneller, dann Logo-Wand, Kontakt |
 | `wer-ist-das-reel/` | https://claude.ai/artifact/UFgQUXeKKwbNcQ8roeqbzr | 15,5 s: HORST setzt sich auf einem Bild Stück für Stück zusammen (weiche Flecken: Fell am Arm, Kette, Ohren, Hörner, Schnauzer, Augen), kein Text bis er ganz da ist, dann „DAS IST HORST.“ + Ansage-Sprechblase, roter Abspann |
 | `claim-reel/` | https://claude.ai/artifact/BcbxvXYo3LotABEsURVVLM | 15 s: Signet baut sich auf, kinetische Typo: „Monsterideen® für mutige Marken. Ich entwickle kraftvolle Ideen für MARKEN, PRODUKTE UND KAMPAGNEN – und übersetze sie gemeinsam mit meinen Kunden in SICHTBARE AUFTRITTE.“ |
+| `statement-reels/` | https://claude.ai/artifact/V9LKvxFRu8wSWSYx2rZ9nQ | 6 Haltungs-Reels à 12 s, umschaltbar (Chips oder `#slug`): **Sichtbarkeit** (Spotlight findet „Substanz“ → SICHTBAR WACHSEN), **Bekanntheit** (30 gleiche Kacheln, eine wird rot → CHARAKTER), **Mut** (laut, durchgestrichen → „Mut heißt klar sein.“ → „ordentlich“ gestrichen), **Design** (Konstruktionsraster, Signet mit Maßen), **Kreativität** (Gekritzel wird Linie → VERSTEHEN, EINORDNEN, ZUSPITZEN → THE IDEA IS THE KEY), **KI** (Variantenrauschen → „Aber nur Menschen haben Ideen.“ → KI ALS WERKZEUG / IDEE ALS SCHLÜSSEL). Texte aus `content-pool/01-ideen-haltung/statements/statements.docx` und `ki .docx` |
+| `projekt-reels/` | https://claude.ai/artifact/XLGnxRnLX9YcirURJrjEdR | **Showreel** 15 s (5 MARKEN. 5 MONSTERIDEEN. → 5 Logoanimationen à 2 s → Abspann) + je 12 s **EVOMOTIV, JACOB, green hornets, Riva, Goth**: Name + Unterzeile → Logoanimation → „Im Einsatz“-Bilder (bzw. „Ein Zeichen, das bleibt.“ ohne Bilder) → „Deine Marke als Nächstes?“ |
 
 Ältere Versuche (nicht mehr im Branding, nur Referenz): `studio-horst-reel-9x16.html`, `studio-horst-reel-16x9.html`, `claude-motion-reel.html`.
+
+### Quellcode der Varianten-Reels
+`statement-reels/` und `projekt-reels/` werden aus `_build/` erzeugt: `python3 _build/build.py .` (im Ordner `showreel/`, aus `_build/` heraus aufrufen) nimmt Motor, Ton und Transport aus `claim-reel/index.html` und setzt die Szenen aus `stmt-scenes.js` bzw. `proj-scenes.js` ein. Jede Variante: `{slug, name, dur, end, draw, hits}`; `draw()` gibt `true` zurück, wenn der Hintergrund hell ist (HUD wird dann dunkel). Der Ton baut sich pro Variante aus `soundFor()` (Beat bis `end`, Akzente auf `hits`, Crash am Abspann). Datei-Export heißt `studio-horst-statement-<slug>.mp4` bzw. `studio-horst-projekt-<slug>.mp4`.
 
 ## Marke Studio HORST
 - Farben: Rot `#FF4255`, Dunkel `#201C25`, Schwarz `#000000`, Weiß `#FFFFFF`, Hellgrau `#F8F7F8`
@@ -28,6 +33,7 @@ Stand 2026-10-03. Alles hier wurde in einer Claude-Code-Session gebaut. Diese Da
 - `projekte/`: 12 Galerie-Bilder der Website (1080²) – Fisherman's Friend, EVOMOTIV, Ganter, green hornets, JACOB (2), p4u, Weinflaschen, Kaffee/Visitenkarten, Zahn-Motiv, Prägung, Geschäftsausstattung „W“
 - `videos/`: Website-Videos (u. a. `horst-1.mov` = Monster HORST, `green-hornets.mp4`, `evomotiv-film.mp4`, `w-start.mp4`)
 - `referenzen/`: 15 Kundenlogos (weiß auf transparent) von der Website
+- `projekt-reels/media/`: Logoanimationen (je 6 s, 4:5, weißer Grund; Logo baut sich 0,5–2,5 s auf, steht bis ~5 s) aus `content-pool/03-projekte-cases/<kunde>/*_00.mp4`, dazu Anwendungsbilder EVOMOTIV (Prägung, Geschäftsausstattung, Zeitung), JACOB (Transporter), green hornets (Wald-Visual, CD-Cover 2024)
 - Projekt-Zuordnungen und Unterzeilen („Logoentwicklung“, „Kampagne“ …) sind aus den Bildern abgeleitet, nicht von Felix bestätigt.
 
 ## Technik (gilt für alle Reels)
@@ -42,4 +48,6 @@ Stand 2026-10-03. Alles hier wurde in einer Claude-Code-Session gebaut. Diese Da
 ## Offene Ideen
 - Monster-Reel: Mundraum in `#FF4255` statt Dunkelrot? Zoom weniger stark (Video wird unscharf).
 - 16:9-Fassungen für Website/Präsentation.
-- Reels für Kunden mit Logo-Animation: Material liegt in Felix' Google-Drive-Ordner (lokale Session nötig). SVG-Logos bevorzugen, dann lassen sich Logos Teil für Teil animieren.
+- Unterzeilen der Projekt-Reels („Logo · Corporate Design“, „Logo · Fahrzeug“ …) sind aus dem Material abgeleitet – von Felix bestätigen lassen; Freigaben der Kunden für Instagram stehen in den `_quellen.md` noch auf ☐.
+- Weitere Projekt-Reels: Content-Pool hat Material zu Ganter, Rothaus/SC Freiburg, Strudels, Fisherman's Friend (nur Bilder, keine Logoanimation) – dafür eine Bilder-Variante von `caseReel()` bauen.
+- Statements übrig für weitere Reels: „Positionierung ist kein Workshop-Ergebnis. Sie ist eine Entscheidung.“, „Substanz vor Fassade.“, „20+ Jahre Erfahrung …“, „Ich gebe die Richtung vor. Wir entwickeln sie gemeinsam weiter.“
