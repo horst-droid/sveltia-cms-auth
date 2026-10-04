@@ -51,7 +51,7 @@ def build(name, scenes, title, aria, eyebrow, h1, lede, fname_prefix, note=None)
     a = re.sub(r'<p class="lede">.*?</p>', f'<p class="lede">{lede}</p>', a, count=1, flags=re.S)
     if note: a = rep(a, '<p class="note">', f'<p class="note">{note} ')
     b = rep(B, "filename:`studio-horst-claim.${ext}`", f"filename:`{fname_prefix}-${{VARIANTS[cur].slug}}.${{ext}}`")
-    out = a + open(scenes).read() + '\n' + b
+    out = a + ''.join(open(f).read() + '\n' for f in (scenes if isinstance(scenes, list) else [scenes])) + b
     open(f'{R}/{name}/index.html', 'w').write(out)
     print(name, len(out))
 build('statement-reels', 'stmt-scenes.js', 'HORST Statement Reels', 'Instagram-Reel mit einem Haltungs-Statement von Studio HORST',
@@ -62,3 +62,11 @@ build('projekt-reels', 'proj-scenes.js', 'HORST Projekt Reels', 'Instagram-Reel 
   'Instagram Reels · 1080 × 1920 · Showreel 15 s + 5 Projekte à 12 s', 'Projekte<span>.</span>',
   'Logoanimationen aus deinem Portfolio: ein Showreel mit allen fünf Marken und je ein Projekt-Reel für EVOMOTIV, JACOB, green hornets, Riva und Goth – Name, Logo in Bewegung, Anwendung, Abspann.',
   'studio-horst-projekt', 'Videos und Bilder aus dem Content-Pool (03-projekte-cases). Unterzeilen wie „Logo · Corporate Design“ bitte prüfen.')
+build('pool-reels', ['pool-scenes.js', 'common-media.js'], 'HORST Pool Reels', 'Instagram-Reel aus dem Content-Pool von Studio HORST',
+  'Instagram Reels · 1080 × 1920 · Chronik, 5 Irrtümer, Checkliste, Finde Felix', 'Aus dem Pool<span>.</span>',
+  'Acht Reels aus deinem Content-Pool: „20 Thaten“ als Chronik von 2003 bis heute, fünf Marken-Irrtümer und eine Checkliste aus deinem Free Guide (Säule Wissen &amp; Hilfe) und „Finde Felix“ mit dem Monsterbad.',
+  'studio-horst-pool', 'Bilder aus 20-jahre-schtorys, 03-projekte-cases und dem Ideenatlas. Projekte 2006–2018 sind als Arbeit bei Jung &amp; Hungrig gekennzeichnet.')
+build('ideenatlas-reels', ['atlas-scenes.js', 'common-media.js'], 'HORST Ideenatlas Reels', 'Instagram-Reel nach einer Karte aus dem Ideenatlas von Studio HORST',
+  'Instagram Reels · 1080 × 1920 · Karten A12, A04, C14 + E06-Endkarte', 'Ideenatlas<span>.</span>',
+  'Drei Karten aus deinem Ideenatlas, umgesetzt ohne Dreh: A12 „Eine Idee. Viele Auftritte.“ mit echten EVOMOTIV-Anwendungen, A04 „Kirchzarten hast vergessen“ mit HORST und C14 „Zettelberge“. Dazu die Endkarte für E06 „Mein schwierigster Kunde“ zum Anhängen in CapCut.',
+  'studio-horst-atlas', 'Karten-IDs wie im Ideenatlas vom 19.09.2026.')
