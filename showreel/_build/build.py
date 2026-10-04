@@ -66,11 +66,15 @@ build('pool-reels', ['pool-scenes.js', 'common-media.js'], 'HORST Pool Reels', '
   'Instagram Reels · 1080 × 1920 · Chronik, 5 Irrtümer, Checkliste, Finde Felix', 'Aus dem Pool<span>.</span>',
   'Acht Reels aus deinem Content-Pool: „20 Thaten“ als Chronik von 2003 bis heute, fünf Marken-Irrtümer und eine Checkliste aus deinem Free Guide (Säule Wissen &amp; Hilfe) und „Finde Felix“ mit dem Monsterbad.',
   'studio-horst-pool', 'Bilder aus 20-jahre-schtorys, 03-projekte-cases und dem Ideenatlas. Projekte 2006–2018 sind als Arbeit bei Jung &amp; Hungrig gekennzeichnet.')
-build('ideenatlas-reels', ['atlas-scenes.js', 'common-media.js'], 'HORST Ideenatlas Reels', 'Instagram-Reel nach einer Karte aus dem Ideenatlas von Studio HORST',
-  'Instagram Reels · 1080 × 1920 · Karten A12, A04, C14 + E06-Endkarte', 'Ideenatlas<span>.</span>',
-  'Drei Karten aus deinem Ideenatlas, umgesetzt ohne Dreh: A12 „Eine Idee. Viele Auftritte.“ mit echten EVOMOTIV-Anwendungen, A04 „Kirchzarten hast vergessen“ mit HORST und C14 „Zettelberge“. Dazu die Endkarte für E06 „Mein schwierigster Kunde“ zum Anhängen in CapCut.',
+build('ideenatlas-reels', ['font-agilo.js', 'atlas-scenes.js', 'common-media.js'], 'HORST Ideenatlas Reels', 'Instagram-Reel nach einer Karte aus dem Ideenatlas von Studio HORST',
+  'Instagram Reels · 1080 × 1920 · Ideen überall, A12, A04, C14 + E06-Endkarte', 'Ideenatlas<span>.</span>',
+  'Karten aus deinem Ideenatlas, umgesetzt ohne Dreh: „Ideen überall“ aus dem Hook-Storyboard C01–C08 im Skizzenbuch-Look, A12 „Eine Idee. Viele Auftritte.“ mit echten EVOMOTIV-Anwendungen, A04 „Kirchzarten hast vergessen“ mit HORST und C14 „Zettelberge“. Dazu die Endkarte für E06 „Mein schwierigster Kunde“ zum Anhängen in CapCut.',
   'studio-horst-atlas', 'Karten-IDs wie im Ideenatlas vom 19.09.2026.')
 build('website-showreel', ['web-scenes.js', 'common-media.js'], 'HORST Website Showreel', 'Showreel von Studio HORST mit Referenzen von der Website',
   'Showreel · 1080 × 1920 · 42,7 Sekunden · 90 BPM Laid-back Hip-Hop', 'Showreel<span>.</span>',
   'Deine Website als Geschichte in 16 Takten: Schwarzwald, HORST sagt Salli, die ehrliche Einordnung, die Monsteridee, 16 Referenzen auf dem Beat, ein Logo entsteht im Zeitraffer, Logos und Filme in Bewegung, Markenidentitäten, Abspann. Jeder Schnitt sitzt auf dem Beat.',
   'studio-horst-showreel', 'Material aus deinem Website-Ordner: Hero-Slider, Schwarzwald-Hintergrund, Kundenlogos, Logoanimationen, Filme und das HORST-Video.')
+build('skizzenbuch-reels', ['font-agilo.js', 'font-barlow.js', 'sketch-scenes.js', 'common-media.js'], 'HORST Skizzenbuch Reels', 'Instagram-Reel im Skizzenbuch-Look von Studio HORST',
+  'Instagram Reels · 1080 × 1920 · Lookstudie 01 · drei Beispiele', 'Aus dem Skizzenbuch<span>.</span>',
+  'Der Look aus deiner Lookstudie 01 als Reihe: Riso-Bilder auf gerissenem Papier, Klebeband, Schnittmarken, Druckschrift-Headlines und rote Marker-Notizen. Drei Beispiele: „Jetzt bin ich selbst dran.“, „Salli.“ und „Was ist eine Monsteridee?“',
+  'studio-horst-skizzenbuch', 'Bilder aus Sichtbarkeits-Moodboard, Lookstudie und Monsterbad, im Riso-Verfahren neu gerastert.')
