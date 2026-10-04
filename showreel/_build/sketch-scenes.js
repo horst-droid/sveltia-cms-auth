@@ -1,5 +1,6 @@
 // ---------- Skizzenbuch-Look (Lookstudie 01): riso images on torn paper, tape, crop marks, ink headlines, red marker notes ----------
-const MEDIA = ['s1-tuer.jpg', 's2-monster.jpg', 's3-vorhang.jpg', 's4-tisch.jpg', 'mb-full.jpg', 'l1-person.jpg', 'l2-geschichte.jpg', 'l3-ideen.jpg'];
+const OUT = ['o1.jpg', 'o2.jpg', 'o3.jpg', 'o4.jpg', 'o5.jpg', 'o6.jpg'];
+const MEDIA = [...OUT, 's1-tuer.jpg', 's2-monster.jpg', 's3-vorhang.jpg', 's4-tisch.jpg', 'mb-full.jpg', 'l1-person.jpg', 'l2-geschichte.jpg', 'l3-ideen.jpg'];
 const SB = 60/90, sb = n => n*SB;                                  // 90 BPM
 const SK = { paper:'#ECE5D8', ink:'#1C181B', red:'#FF4255', tape:'rgba(233,223,201,.82)' };
 const INKF = s => `900 ${s}px Barlow, "Arial Narrow", sans-serif`;
@@ -101,10 +102,10 @@ function note(c, rx, ry, r, label, lx, ly, t0, seed, size = 92){ // ring + arrow
   stroke(sh, eio(seg(T, t0 + 0.15, t0 + 0.42)), 8); stroke(hd, eio(seg(T, t0 + 0.4, t0 + 0.5)), 8);
   handWrite([label], size, lx, ly, 0, SK.red, t0 + 0.05, 0.35, 'center', -0.05);
 }
-function paperEnd(t0){
+function paperEnd(t0, head = ['MONSTERIDEEN®', 'FÜR MUTIGE', 'MARKEN']){
   paperBg();
   drawSignet(540, 640, 220, SK.ink, seg(T, t0, t0 + 0.7));
-  inkHead(['MONSTERIDEEN®', 'FÜR MUTIGE', 'MARKEN'], 150, 540, 960, 146, [t0 + 0.4, t0 + 0.6, t0 + 0.8], [SK.ink, SK.ink, SK.ink], 'center', true);
+  inkHead(head, 150, 540, 960, 146, head.map((_, k) => t0 + 0.4 + k*0.2), head.map((_, k) => k === head.length - 1 && head.length > 3 ? SK.red : SK.ink), 'center', true);
   monoLabel('STUDIO-HORST.DE / KIRCHZARTEN', 540, 1420, 32, SK.ink, eo(seg(T, t0 + 1.1, t0 + 1.4)), 'center');
   stroke([[300, 1460], [540, 1452], [780, 1458]], eio(seg(T, t0 + 1.3, t0 + 1.6)), 9);
   stroke([[320, 1482], [560, 1476], [760, 1480]], eio(seg(T, t0 + 1.45, t0 + 1.75)), 6, SK.ink);
@@ -201,6 +202,105 @@ function vMonster(){
   return true;
 }
 
+// ---------- Route „Die Idee bleibt“ (Studio HORST 2026): AI as toolkit, the idea as the key ----------
+const KEY_END = ['THE IDEA', 'IS STILL', 'THE KEY'];
+// positioning reel: everyone talks about what AI can do → yes, a lot → even runs the studio → but one thing matters more → the idea
+const ENGINE = ['ANFRAGE', 'PROJEKT', 'BRIEFING', 'VARIANTEN', 'RECHNUNG'], ENGINE_R = ['SORTIERT', 'ANGELEGT', 'VORBEREITET', 'ERZEUGT', 'VORBEREITET'];
+function vDieIdee(){
+  const b = T/SB;
+  if (b >= 22){ paperEnd(sb(22), KEY_END); return true; }
+  paperBg(); monoLabel('DIE IDEE BLEIBT / 2026', 62, 250, 26, SK.ink, 0.85);
+  if (b < 4){
+    const c = photoCard('mb-full.jpg', 540, 1290, 680, -0.02, sb(0), 77);
+    const s_ = fitInk('WAS KI INZWISCHEN', 950, 120);
+    inkHead(['ALLE REDEN DARÜBER,', 'WAS KI INZWISCHEN', 'ALLES KANN.'], s_, 62, 470, s_*0.98, [sb(0.3), sb(1), sb(1.7)], [SK.ink, SK.ink, SK.ink]);
+    return true;
+  }
+  if (b < 8){ // outputs on eighth notes
+    const k = Math.min(OUT.length - 1, Math.floor((b - 4)*2)), t0 = sb(4 + k/2);
+    for (let j = Math.max(0, k - 2); j <= k; j++) photoCard(OUT[j], 540 + (j % 2 ? 40 : -40), 1130 + (j - k)*-26, 900, (j % 2 ? 0.04 : -0.035), sb(4 + j/2), 300 + j*11);
+    const s_ = fitInk('ZIEMLICH VIEL.', 900, 200); inkHead(['UND JA.', 'ZIEMLICH VIEL.'], s_, 62, 500, s_*0.98, [sb(4.2), sb(5.2)], [SK.ink, SK.red]);
+    monoLabel(['BILD', 'FILM', 'ANIMATION', 'LAYOUT', 'WEBSITE', 'KAMPAGNE'][k] + ' / ' + String(k + 1).padStart(2, '0'), 62, 1700, 30, SK.ink, 1);
+    return true;
+  }
+  if (b < 13){ // Maschinenraum: the studio engine ticks through
+    const s_ = fitInk('MEIN STUDIO MIT.', 950, 130);
+    inkHead(['INZWISCHEN', 'ORGANISIERT SIE', 'MEIN STUDIO MIT.'], s_, 62, 470, s_*0.98, [sb(8), sb(8.6), sb(9.2)], [SK.ink, SK.ink, SK.ink]);
+    monoLabel('MASCHINENRAUM / HORST', 62, 900, 30, SK.red, eo(seg(T, sb(9.4), sb(9.7))));
+    ENGINE.forEach((e, j) => { const t0 = sb(9.8 + j*0.6), a = eo(seg(T, t0, t0 + 0.2)); if (a <= 0) return; const y = 1010 + j*110;
+      monoLabel(`${e} / ${ENGINE_R[j]}`, 62, y, 44, SK.ink, a); stroke([[900, y - 14], [925, y + 12], [975, y - 40]], eio(seg(T, t0 + 0.2, t0 + 0.4)), 10); });
+    return true;
+  }
+  if (b < 17){
+    const c = photoCard('mb-full.jpg', 540, 1310, 700, 0.02, sb(13), 91);
+    const s_ = fitInk('NICHT UNWICHTIGER.', 950, 140);
+    inkHead(['ABER EINE SACHE', 'WIRD DADURCH', 'NICHT UNWICHTIGER.'], s_, 62, 470, s_*0.98, [sb(13.2), sb(14), sb(14.8)], [SK.ink, SK.ink, SK.red]);
+    return true;
+  }
+  const c = photoCard('mb-full.jpg', 540, 1050, 820, 0.02, sb(13), 91);
+  if (c) note(c, 0.5, 0.31, 80, 'die eine.', 300, 420, sb(17.1), 61, 100);
+  const s_ = fitInk('DIE IDEE.', 900, 300); inkHead(['DIE IDEE.'], s_, 540, 1720, 0, [sb(19)], [SK.ink], 'center');
+  return true;
+}
+// Idee → Direction → System
+const TRIAD = [
+  { k:'l3-ideen.jpg',  n:'01 / MONSTERIDEE', head:['DIE IDEE.'],      hand:'kommt aus dem Kopf.' },
+  { k:'l1-person.jpg', n:'02 / FELIX',       head:['DIE RICHTUNG.'],  hand:'wer entscheidet.' },
+  { k:null,            n:'03 / MASCHINENRAUM', head:['DAS SYSTEM.'],  hand:'macht es sichtbar.' },
+];
+function vTriad(){
+  const b = T/SB;
+  if (b >= 16){ paperEnd(sb(16), KEY_END); return true; }
+  paperBg(); monoLabel('DIE IDEE BLEIBT / ARBEITSWEISE', 62, 250, 26, SK.ink, 0.85);
+  if (b < 4){
+    const s_ = fitInk('IDEE → DIRECTION', 960, 170);
+    inkHead(['IDEE →', 'DIRECTION →', 'SYSTEM.'], s_, 62, 760, s_*1.0, [sb(0.3), sb(1.3), sb(2.3)], [SK.ink, SK.ink, SK.red]);
+    return true;
+  }
+  const i = Math.min(2, Math.floor((b - 4)/4)), c0 = TRIAD[i], t0 = sb(4 + i*4);
+  monoLabel(c0.n, 62, 340, 32, SK.ink, eo(seg(T, t0, t0 + 0.2)));
+  if (c0.k) photoCard(c0.k, 540, 900, 640, i ? 0.025 : -0.025, t0, 140 + i*9);
+  else ENGINE.forEach((e, j) => { const tt = t0 + j*0.25, a = eo(seg(T, tt, tt + 0.2)); if (a > 0) monoLabel(`${String(j + 1).padStart(2, '0')} / ${e}`, 140, 620 + j*120, 52, SK.ink, a); });
+  const s_ = fitInk(c0.head[0], 900, 210); inkHead(c0.head, s_, 62, 1500, 0, [t0 + sb(1)], [i === 2 ? SK.red : SK.ink]);
+  handWrite([c0.hand], 84, 62, 1640, 0, SK.red, t0 + sb(2), 0.45, 'left', -0.03);
+  return true;
+}
+// Statement series: lines slam in, one gesture in red marker, end card THE IDEA IS STILL THE KEY
+const STMTS = [
+  { slug:'s-entscheiden', name:'Entscheiden', lines:['JEDER KANN', 'GENERIEREN.', 'NICHT JEDER', 'KANN ENTSCHEIDEN.'], red:[2, 3], mark:{ t:'under', l:3 } },
+  { slug:'s-briefing',    name:'Mach mal schön', lines:['KI KANN VIEL.', 'ABER', '', 'IST IMMER NOCH', 'KEIN BRIEFING.'], red:[4], hand:{ l:2, s:'„mach mal schön“' }, mark:{ t:'strikeHand', l:2 } },
+  { slug:'s-varianten',   name:'100 Varianten', lines:['100 VARIANTEN', 'SIND NOCH', 'KEINE IDEE.'], red:[2], grid:true },
+  { slug:'s-richtung',    name:'Richtung', lines:['DIE AUSFÜHRUNG', 'WIRD SCHNELLER.', 'DIE RICHTUNG', 'NICHT AUTOMATISCH', 'BESSER.'], red:[2, 3, 4], mark:{ t:'under', l:3 } },
+  { slug:'s-studio',      name:'Mein Studio', lines:['MEIN STUDIO', 'IST NICHT', 'GRÖSSER GEWORDEN.', 'NUR SEINE', 'MÖGLICHKEITEN.'], red:[4], mark:{ t:'ring', l:4 } },
+  { slug:'s-frueher',     name:'Früher / heute', lines:['FRÜHER:', 'GRAFIKDESIGNER.', 'HEUTE:', 'IDEE. DIRECTION.', 'SYSTEM.'], red:[3, 4], mark:{ t:'strike', l:1 } },
+  { slug:'s-toolkit',     name:'Toolkit', lines:['AI IS NOT', 'MY STYLE.', 'IT’S MY', 'TOOLKIT.'], red:[3], mark:{ t:'ring', l:3 } },
+  { slug:'s-wichtiger',   name:'Wichtiger', lines:['GENERIEREN', 'WIRD EINFACHER.', 'ENTSCHEIDEN', 'WIRD WICHTIGER.'], red:[2, 3], mark:{ t:'under', l:3 } },
+];
+function vStmt(st, n){ return () => {
+  const b = T/SB;
+  if (b >= 10){ paperEnd(sb(10), KEY_END); return true; }
+  paperBg(); monoLabel(`DIE IDEE BLEIBT / ${String(n).padStart(2, '0')}`, 62, 250, 26, SK.ink, 0.85);
+  const longest = st.lines.reduce((a, l) => l.length > a.length ? l : a, ''), size = fitInk(longest, 950, 210), lh = size*0.98;
+  const y0 = st.grid ? 520 : 960 - (st.lines.length - 1)*lh/2, tins = st.lines.map((_, k) => sb(0.4 + k*0.8));
+  inkHead(st.lines, size, 62, y0, lh, tins, st.lines.map((_, k) => st.red.includes(k) ? SK.red : SK.ink));
+  const tm = tins[tins.length - 1] + sb(1);
+  if (st.hand){ const y = y0 + st.hand.l*lh; handWrite([st.hand.s], size*0.85, 62, y, 0, SK.ink, tins[st.hand.l], 0.5, 'left', -0.03);
+    stroke([[50, y - size*0.3], [560, y - size*0.36], [900, y - size*0.28]], eio(seg(T, tm, tm + 0.3)), 14); }
+  if (st.mark && st.mark.t !== 'strikeHand'){
+    const y = y0 + st.mark.l*lh; ctx.save(); ctx.font = INKF(size); const w = ctx.measureText(st.lines[st.mark.l]).width; ctx.restore();
+    if (st.mark.t === 'under'){ stroke([[62, y + 26], [62 + w*0.55, y + 18], [62 + w, y + 24]], eio(seg(T, tm, tm + 0.35)), 11); stroke([[80, y + 48], [62 + w*0.6, y + 42], [62 + w - 20, y + 46]], eio(seg(T, tm + 0.2, tm + 0.5)), 7, SK.ink); }
+    if (st.mark.t === 'strike') stroke([[50, y - size*0.32], [62 + w*0.5, y - size*0.38], [80 + w, y - size*0.3]], eio(seg(T, tm, tm + 0.3)), 14, SK.ink);
+    if (st.mark.t === 'ring') stroke(ring(62 + w/2, y - size*0.33, Math.max(w/2.1, size*0.7)*0.5, n*7).map(([x, yy]) => [62 + w/2 + (x - 62 - w/2)*2.0, yy]), eio(seg(T, tm, tm + 0.4)), 10);
+  }
+  if (st.grid){ // 100 near-identical variants, one gets circled
+    for (let k = 0; k < 100; k++){ const cx = 112 + (k % 10)*95, cy = 1000 + Math.floor(k/10)*72, a = eo(seg(T, sb(2.6) + k*0.012, sb(2.6) + k*0.012 + 0.2)); if (a <= 0) continue;
+      ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = k === 57 ? SK.red : SK.ink; ctx.beginPath(); ctx.arc(cx, cy, 13 + rnd(k)*4, 0, TAU); ctx.fill(); ctx.restore(); }
+    const kx = 112 + 7*95, ky = 1000 + 5*72; stroke(ring(kx, ky, 34, 5), eio(seg(T, sb(6), sb(6.4))), 9);
+    handWrite(['die eine.'], 96, 600, 1800, 0, SK.red, sb(6.4), 0.4, 'left', -0.05);
+  }
+  return true;
+}; }
+
 function lofiSk(end){ return add => {
   const BEAT = SB, BAR = 4*SB, swing = BEAT*0.09, late = 0.018;
   const CH = [[220, 261.63, 329.63, 392], [174.61, 220, 261.63, 329.63], [146.83, 174.61, 220, 261.63], [164.81, 196, 246.94, 293.66]], ROOT = [55, 43.65, 73.42, 41.2];
@@ -220,4 +320,7 @@ const VARIANTS = [
   { slug:'sichtbar',    name:'Selbst dran', dur:Math.round(sb(29.5)*10)/10, end:sb(26), draw:vSicht,   sound:lofiSk(sb(26)), hits:[] },
   { slug:'salli',       name:'Salli',       dur:Math.round(sb(23.5)*10)/10, end:sb(20), draw:vSalli,   sound:lofiSk(sb(20)), hits:[] },
   { slug:'monsteridee', name:'Monsteridee', dur:Math.round(sb(25.5)*10)/10, end:sb(22), draw:vMonster, sound:lofiSk(sb(22)), hits:[] },
+  { slug:'die-idee',    name:'Die Idee.',   dur:Math.round(sb(25.5)*10)/10, end:sb(22), draw:vDieIdee, sound:lofiSk(sb(22)), hits:[] },
+  { slug:'idee-direction-system', name:'Idee → System', dur:Math.round(sb(19.5)*10)/10, end:sb(16), draw:vTriad, sound:lofiSk(sb(16)), hits:[] },
+  ...STMTS.map((st, k) => ({ slug:st.slug, name:st.name, dur:Math.round(sb(13.5)*10)/10, end:sb(10), draw:vStmt(st, k + 1), sound:lofiSk(sb(10)), hits:[] })),
 ];

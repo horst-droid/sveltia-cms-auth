@@ -75,6 +75,6 @@ build('website-showreel', ['web-scenes.js', 'common-media.js'], 'HORST Website S
   'Deine Website als Geschichte in 16 Takten: Schwarzwald, HORST sagt Salli, die ehrliche Einordnung, die Monsteridee, 16 Referenzen auf dem Beat, ein Logo entsteht im Zeitraffer, Logos und Filme in Bewegung, Markenidentitäten, Abspann. Jeder Schnitt sitzt auf dem Beat.',
   'studio-horst-showreel', 'Material aus deinem Website-Ordner: Hero-Slider, Schwarzwald-Hintergrund, Kundenlogos, Logoanimationen, Filme und das HORST-Video.')
 build('skizzenbuch-reels', ['font-agilo.js', 'font-barlow.js', 'sketch-scenes.js', 'common-media.js'], 'HORST Skizzenbuch Reels', 'Instagram-Reel im Skizzenbuch-Look von Studio HORST',
-  'Instagram Reels · 1080 × 1920 · Lookstudie 01 · drei Beispiele', 'Aus dem Skizzenbuch<span>.</span>',
-  'Der Look aus deiner Lookstudie 01 als Reihe: Riso-Bilder auf gerissenem Papier, Klebeband, Schnittmarken, Druckschrift-Headlines und rote Marker-Notizen. Drei Beispiele: „Jetzt bin ich selbst dran.“, „Salli.“ und „Was ist eine Monsteridee?“',
+  'Instagram Reels · 1080 × 1920 · Lookstudie 01 · Sichtbarkeit + Route „Die Idee bleibt“', 'Aus dem Skizzenbuch<span>.</span>',
+  'Der Look aus deiner Lookstudie 01 als Reihe: Riso-Bilder auf gerissenem Papier, Klebeband, Schnittmarken, Druckschrift-Headlines und rote Marker-Notizen. Drei Beispiele („Jetzt bin ich selbst dran.“, „Salli.“, „Was ist eine Monsteridee?“) und die Route „Die Idee bleibt“: das Positions-Reel, Idee → Direction → System und acht Statements.',
   'studio-horst-skizzenbuch', 'Bilder aus Sichtbarkeits-Moodboard, Lookstudie und Monsterbad, im Riso-Verfahren neu gerastert.')
