@@ -5,8 +5,8 @@ const SB = 60/90, sb = n => n*SB;                                  // 90 BPM
 const SK = { paper:'#ECE5D8', ink:'#1C181B', red:'#FF4255', tape:'rgba(233,223,201,.82)' };
 const INKF = s => `700 ${s}px HorstRansom, "Arial Black", sans-serif`; // Felix: headlines in his Ransom
 const MONO = s => `500 ${s}px "SF Mono", Menlo, Consolas, monospace`;
-const HANDF = s => `${s}px Agilo, "Comic Sans MS", cursive`;
-[['Agilo', AGILO_URL], ['Barlow', BARLOW_URL]].forEach(([n, u]) => { try { const f = new FontFace(n, `url(${u})`, n === 'Barlow' ? { weight:'900' } : {}); document.fonts.add(f); f.load().then(() => { dirty = true; }).catch(() => {}); } catch(e){} });
+const HANDF = s => `${Math.round(s*1.3)}px HorstHand, "Comic Sans MS", cursive`;
+[['HorstHand', HAND_URL], ['Barlow', BARLOW_URL]].forEach(([n, u]) => { try { const f = new FontFace(n, `url(${u})`, n === 'Barlow' ? { weight:'900' } : {}); document.fonts.add(f); f.load().then(() => { dirty = true; }).catch(() => {}); } catch(e){} });
 
 const noiseTile = (alpha, density, seed) => { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'), d = g.createImageData(256, 256);
   for (let i = 0; i < d.data.length; i += 4){ const r = rnd(i*0.013 + seed); d.data[i] = d.data[i+1] = d.data[i+2] = r*255; d.data[i+3] = r < density ? alpha : 0; } g.putImageData(d, 0, 0); return c; };
@@ -185,7 +185,7 @@ function vMonster(){
     handWrite(['MONSTER'], 190, 540, 700, 0, SK.red, sb(2.9), 0.45, 'center', -0.06);
     const s3 = fitInk('IDEE', 700, 330); inkHead(['IDEE'], s3, 540, 1230, 0, [sb(3.8)], [SK.ink], 'center');
     inkHead(['?'], 260, 540, 1500, 0, [sb(4.6)], [SK.ink], 'center');
-    handWrite(['Die Idee gibt die Richtung vor.'], 80, 540, 1680, 0, SK.red, sb(5.4), 0.7, 'center', -0.03);
+    handWrite(['Die Idee gibt die Richtung vor.'], 60, 540, 1680, 0, SK.red, sb(5.4), 0.7, 'center', -0.03);
     return true;
   }
   if (b < 14){

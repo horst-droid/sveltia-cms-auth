@@ -138,8 +138,8 @@ function vE06(){
 
 // Ideen überall — storyboard hooks C01–C08 (horst-storyboards/assets/hooks.png) as a sketchbook story, cuts on the beat (90 BPM)
 const HB = 60/90, hb = n => n*HB;
-const HAND = s => `${s}px Agilo, "Comic Sans MS", cursive`;
-try { const ff = new FontFace('Agilo', `url(${AGILO_URL})`); document.fonts.add(ff); ff.load().then(() => { dirty = true; }).catch(() => {}); } catch(e){}
+const HAND = s => `${Math.round(s*1.3)}px HorstHand, "Comic Sans MS", cursive`;
+try { const ff = new FontFace('HorstHand', `url(${HAND_URL})`); document.fonts.add(ff); ff.load().then(() => { dirty = true; }).catch(() => {}); } catch(e){}
 const GRAPHITE = "#2A2328", SKETCH_BG = "#EFEAE1", MARKER = "#E23A48";
 const HOOK = [ // label, marker target inside the panel (0..1), label above or below the card
   { l:['hier.'], x:0.33, y:0.47, up:true }, { l:['hier.'], x:0.5, y:0.66, up:false }, { l:['hier.'], x:0.55, y:0.76, up:true },
