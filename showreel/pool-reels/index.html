@@ -382,6 +382,7 @@ function loadOne(k){
       const v = document.createElement('video');
       v.muted = true; v.playsInline = true; v.preload = 'auto';
       v.addEventListener('loadeddata', done, { once:true }); v.addEventListener('error', done, { once:true });
+      v.addEventListener('seeked', () => { dirty = true; }); // paused scrubbing: redraw once the frame is decoded
       v.src = `media/${k}.${VEXT}`; M[k] = v;
     } else { const i = new Image(); i.onload = done; i.onerror = done; i.src = `media/${k}`; M[k] = i; }
   });
@@ -440,6 +441,7 @@ function syncVideos(){
 }
 let cur = Math.max(0, VARIANTS.findIndex(v => '#' + v.slug === location.hash));
 function soundFor(add){
+  if (VARIANTS[cur].sound) return VARIANTS[cur].sound(add);
   const v = VARIANTS[cur], roots = [55, 43.65, 65.41, 49];
   [0.05, 0.2].forEach((t, i) => add(t, (d,w) => tone(d, w, 'square', 392*Math.pow(1.26, i), 0.05, 0.08, 0.003, 2000)));
   for (let tb = 0.5; tb < v.end - 0.4; tb += 0.5){

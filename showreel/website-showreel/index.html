@@ -1,4 +1,4 @@
-<title>HORST Ideenatlas Reels</title>
+<title>HORST Website Showreel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Montserrat:wght@600&display=swap">
@@ -53,15 +53,15 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
 </style>
 
 <div class="layout">
-  <div class="stage" id="stage" role="img" aria-label="Instagram-Reel nach einer Karte aus dem Ideenatlas von Studio HORST">
+  <div class="stage" id="stage" role="img" aria-label="Showreel von Studio HORST mit Referenzen von der Website">
     <canvas id="cv" width="1080" height="1920"></canvas>
   </div>
 
   <div class="side">
     <header>
-      <p class="eyebrow">Instagram Reels · 1080 × 1920 · Karten A12, A04, C14 + E06-Endkarte</p>
-      <h1>Ideenatlas<span>.</span></h1>
-      <p class="lede">Drei Karten aus deinem Ideenatlas, umgesetzt ohne Dreh: A12 „Eine Idee. Viele Auftritte.“ mit echten EVOMOTIV-Anwendungen, A04 „Kirchzarten hast vergessen“ mit HORST und C14 „Zettelberge“. Dazu die Endkarte für E06 „Mein schwierigster Kunde“ zum Anhängen in CapCut.</p>
+      <p class="eyebrow">Showreel · 1080 × 1920 · 42,7 Sekunden · 90 BPM Laid-back Hip-Hop</p>
+      <h1>Showreel<span>.</span></h1>
+      <p class="lede">Deine Website als Geschichte in 16 Takten: Schwarzwald, HORST sagt Salli, die ehrliche Einordnung, die Monsteridee, 16 Referenzen auf dem Beat, ein Logo entsteht im Zeitraffer, Logos und Filme in Bewegung, Markenidentitäten, Abspann. Jeder Schnitt sitzt auf dem Beat.</p>
     </header>
 
     <div class="bar">
@@ -81,7 +81,7 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
       <p id="status" aria-live="polite"></p>
     </section>
 
-    <p class="note">Karten-IDs wie im Ideenatlas vom 19.09.2026. <kbd>Leertaste</kbd> Play/Pause · <kbd>←</kbd> <kbd>→</kbd> ±1 s · Klick aufs Reel pausiert.</p>
+    <p class="note">Material aus deinem Website-Ordner: Hero-Slider, Schwarzwald-Hintergrund, Kundenlogos, Logoanimationen, Filme und das HORST-Video. <kbd>Leertaste</kbd> Play/Pause · <kbd>←</kbd> <kbd>→</kbd> ±1 s · Klick aufs Reel pausiert.</p>
   </div>
 </div>
 
@@ -212,64 +212,30 @@ function hudBase(c, right){
   ctx.globalAlpha = 1;  ctx.fillRect(62, H - 86, (W - 124)*(T/DUR), 3);
   ctx.restore();
 }
-// ---------- Ideenatlas: A12, A04, C14 and the E06 end card (cards from content-pool/04-horst-felix/chatgpt-ideenatlas) ----------
-const MEDIA = ['v-evo', 'v-monster', 'evo-a.jpg', 'evo-b.jpg', 'evo-c.jpg', 'evo-screens.jpg', 'evo-web.jpg'];
+// ---------- Website-Showreel: the studio-horst.de story in 12 bars at 90 BPM, every cut on the beat ----------
+// Material from VON-THATEN/website: hero-slider (references), forest background (clean layer of fog-cover-the-forest.psd), client logos, HORST video
+const BPM = 90, BEAT = 60/BPM, BAR = 4*BEAT, bt = n => n*BEAT;
+const REFS = Array.from({ length:16 }, (_, i) => `r${String(i + 1).padStart(2, '0')}.jpg`);
+const LOGOS = Array.from({ length:15 }, (_, i) => `l${String(i + 1).padStart(2, '0')}.png`);
+const CLIPS = [{ k:'v-jacob', name:'JACOB Messtechnik' }, { k:'v-gh', name:'green hornets' }, { k:'v-riva', name:'Riva' }, { k:'v-goth', name:'GOTH' }];
+const FILMS = [{ k:'v-evofilm', name:'FILM · EVOMOTIV', at:0.4 }, { k:'v-wett', name:'FILM · WETTERAUER IMMOBILIEN', at:0.2 }];
+const MEDIA = ['wald.jpg', 'v-monster', 'v-prozess', ...CLIPS.map(c => c.k), ...FILMS.map(f => f.k), ...REFS, ...LOGOS];
+const LEIST = ['Branding & Markenauftritt', 'Logo & Markenzeichen', 'Visuelle Systeme', 'Kampagnen & Leitmotive'];
+const LEIST_BIG = ['BRANDING', 'LOGOS', 'SYSTEME', 'KAMPAGNEN'];
 
-// A12 — Eine Idee. Viele Auftritte. One sign (EVOMOTIV) carried through real applications
-const DECK = [
-  { k:'evo-a.jpg',       label:'Auf Papier.' },
-  { k:'evo-b.jpg',       label:'Im Alltag.' },
-  { k:'evo-c.jpg',       label:'In der Zeitung.' },
-  { k:'evo-screens.jpg', label:'In der Präsentation.' },
-  { k:'evo-web.jpg',     label:'Und auf dem Bildschirm.' },
-];
-const A12 = { logo:3.0, step:1.15 };
-A12.deckEnd = A12.logo + DECK.length*A12.step;
-function vA12(){
-  if (T < A12.logo){
-    bg(C.white);
-    const el = M['v-evo']; if (ready(el)) drawContain(el, 90, 520, 900, 1125);
-    lines(['Eine gute Idee …'], F(800, 92), C.dark, 540, 460, 0, 0.2, 0, 'center');
-    lines(['erkennt man.'], F(800, 92), C.red, 540, 570, 0, 1.2, 0, 'center');
-    const wp = eio(seg(T, 2.7, 3.0)); if (wp > 0){ ctx.fillStyle = C.dark; ctx.fillRect(0, H*(1 - wp), W, H*wp); }
-    return true;
-  }
-  if (T < A12.deckEnd){
-    bg(C.dark); sig(C.white, 99);
-    const n = Math.min(DECK.length - 1, Math.floor((T - A12.logo)/A12.step));
-    for (let i = 0; i <= n; i++){
-      const t0 = A12.logo + i*A12.step, p = eo(seg(T, t0, t0 + 0.45)), el = M[DECK[i].k];
-      const depth = n - i, rot = (rnd(i*7 + 3) - .5)*0.12 + (1 - p)*0.35*(i % 2 ? 1 : -1);
-      const cw = 900 - depth*30, ch = 1000 - depth*34, cx = 540 + (rnd(i*5) - .5)*40, cy = lerp(1900 + ch/2, 860 - depth*26, p);
-      ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
-      ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 50; ctx.shadowOffsetY = 20;
-      ctx.fillStyle = C.white; rrect(ctx, -cw/2 - 14, -ch/2 - 14, cw + 28, ch + 28, 10); ctx.fill(); ctx.shadowColor = 'transparent';
-      ctx.beginPath(); ctx.rect(-cw/2, -ch/2, cw, ch); ctx.clip();
-      if (ready(el)) drawCover(el, -cw/2, -ch/2, cw, ch);
-      if (depth > 0){ ctx.fillStyle = `rgba(32,28,37,${Math.min(0.6, depth*0.25)})`; ctx.fillRect(-cw/2, -ch/2, cw, ch); }
-      ctx.restore();
-    }
-    const t0 = A12.logo + n*A12.step;
-    pill(DECK[n].label, 540, 1480, n === DECK.length - 1 ? C.red : C.white, n === DECK.length - 1 ? C.white : C.dark, eo(seg(T, t0 + 0.25, t0 + 0.5)));
-    return;
-  }
-  if (T < 11.6){
-    bg(C.dark); sig(C.white, A12.deckEnd);
-    lines(['Ich entwickle', 'die Idee dahinter.'], F(800, 96), C.white, 62, 760, 110, A12.deckEnd + 0.1, 0.2);
-    lines(['Und gestalte,', 'was daraus wird.'], F(800, 96), C.red, 62, 1040, 110, A12.deckEnd + 0.8, 0.2);
-    ctx.save(); ls(ctx, 4); text('BEISPIEL: EVOMOTIV · AUS MEINER ZEIT BEI JUNG & HUNGRIG', 62, 1400, LAB(22), C.white, 'left', 0.55*eo(seg(T, A12.deckEnd + 1.2, A12.deckEnd + 1.5)), 4); ctx.restore();
-    return;
-  }
-  endcard(11.6);
+function wald(cx, cy, zoom, dark){
+  const el = M['wald.jpg']; bg(C.dark); if (!ready(el)) return;
+  const [iw, ih] = dims(el), s = Math.max(W/iw, H/ih)*zoom, dw = iw*s, dh = ih*s;
+  ctx.drawImage(el, clamp(W/2 - cx*dw, W - dw, 0), clamp(H/2 - cy*dh, H - dh, 0), dw, dh);
+  if (dark){ ctx.fillStyle = `rgba(32,28,37,${dark})`; ctx.fillRect(0, 0, W, H); }
 }
-
-// A04 — Kirchzarten hast vergessen
-const CITIES = [
-  { pre:'Große Ideen kommen aus', name:'BERLIN.',   geo:'52,52° N · 13,40° E', t:0.2, b:C.dark,  fg:C.white },
-  { pre:'Aus',                    name:'LONDON.',   geo:'51,51° N · 0,13° W',  t:1.8, b:C.light, fg:C.dark },
-  { pre:'Aus',                    name:'NEW YORK.', geo:'40,71° N · 74,01° W', t:3.2, b:C.dark,  fg:C.white },
-];
-const A04 = { cut:4.7, bubble:5.4, end:9.4 };
+function monster(at){
+  bg('#2B2621'); const el = M['v-monster']; if (!ready(el)) return;
+  const [iw, ih] = dims(el), h = 1240, w = iw*h/ih, x = (W - w)/2, y = 640;
+  ctx.drawImage(el, x, y, w, h);
+  const g = ctx.createLinearGradient(0, y - 1, 0, y + 220); g.addColorStop(0, 'rgba(43,38,33,1)'); g.addColorStop(1, 'rgba(43,38,33,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, y - 1, W, 221);
+}
 function bubble(lines_, cx, y, p){
   if (p <= 0) return;
   const f = F(800, 72), lh = 84; ctx.save(); ctx.font = f; const w = Math.max(...lines_.map(s => ctx.measureText(s).width)) + 100; ctx.restore();
@@ -280,82 +246,194 @@ function bubble(lines_, cx, y, p){
   lines_.forEach((s_, i) => text(s_, cx, y + 92 + i*lh, f, i === lines_.length - 1 ? C.red : C.dark, 'center', 1, -2));
   ctx.restore();
 }
-function vA04(){
-  if (T < A04.cut){
-    const i = T < CITIES[1].t ? 0 : T < CITIES[2].t ? 1 : 2, c = CITIES[i];
-    bg(c.b); sig(c.fg, 99);
-    ctx.save(); ctx.strokeStyle = c.fg; ctx.globalAlpha = 0.08; ctx.lineWidth = 2;
-    for (let k = 0; k < 9; k++){ const x = 62 + k*119.5; ctx.beginPath(); ctx.moveTo(x, 200); ctx.lineTo(x, H - 140); ctx.stroke(); }
-    ctx.restore();
-    lines([c.pre], F(700, 64), c.fg, 540, 780, 0, c.t, 0, 'center');
-    slamWord(c.name, fitDisp(c.name, 940, 300), 'center', 1020, c.fg, c.t + 0.2, 0.05, 5 + i*20);
-    ctx.save(); ls(ctx, 5); text(c.geo, 540, 1150, LAB(30), C.red, 'center', eo(seg(T, c.t + 0.5, c.t + 0.75)), 5); ctx.restore();
-    return c.b === C.light;
-  }
-  if (T < A04.end){
-    bg('#2B2621');
-    const el = M['v-monster'];
-    if (ready(el)){
-      const [iw, ih] = dims(el), h = 1240, w = iw*h/ih, x = (W - w)/2, y = 640;
-      ctx.drawImage(el, x, y, w, h);
-      const fade = (y0, y1, a0, a1) => { const g = ctx.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, a0); g.addColorStop(1, a1); ctx.fillStyle = g; ctx.fillRect(0, y0, W, y1 - y0); };
-      fade(y - 1, y + 220, 'rgba(43,38,33,1)', 'rgba(43,38,33,0)');
-    }
-    bubble(['Kirchzarten', 'hast vergessen.'], 540, 300, seg(T, A04.bubble, A04.bubble + 0.35));
-    pill('47,96° N · 7,95° E', 540, 1560, C.red, C.white, eo(seg(T, A04.bubble + 1.0, A04.bubble + 1.3)));
-    const fl = 1 - seg(T, A04.cut, A04.cut + 0.2); if (fl > 0){ ctx.fillStyle = `rgba(255,66,85,${fl})`; ctx.fillRect(0, 0, W, H); }
-    return;
-  }
-  endcard(A04.end, 'Monsterideen®.', 'Aus Kirchzarten.');
-}
-
-// C14 — Zettelberge: many ideas, one stays
-const NOTES = ['Maskottchen?', 'Mehr Rot!', 'Kampagne im Wald', 'Logo in Bewegung', 'Neuer Claim?', 'Plakat 18/1', 'Dose mit Gesicht', 'Nur Typo?', 'Film mit Kuh', 'Riso-Look', 'Kleinstes Fest der Welt', 'Alles neu?', 'Website zuerst', 'Ein Wort. Groß.', 'Stempel?', 'Hörner dran', 'Zine!', 'Mehr Weißraum', 'Tour durchs Dorf', 'Sticker'];
-const PAPER = ['#FFF4BF', '#FFFFFF', '#FDE2E5', '#E6EEF9', '#F2F0EA'];
-const KEEP = { label:'Die Idee, die bleibt.', t:4.2 };
-function note(x, y, w, h, rot, s, label, color, ring){
-  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(s, s);
-  ctx.shadowColor = 'rgba(32,28,37,.25)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 8;
-  ctx.fillStyle = color; ctx.fillRect(-w/2, -h/2, w, h); ctx.shadowColor = 'transparent';
-  if (ring){ ctx.strokeStyle = C.red; ctx.lineWidth = 10; ctx.strokeRect(-w/2 + 5, -h/2 + 5, w - 10, h - 10); }
-  const f = F(800, 38); layoutWords(label, f, w - 50, 46, -w/2 + 26, -h/2 + 70).forEach(o => text(o.w, o.x, o.y, f, ring ? C.red : C.dark, 'left', 1, -1));
+// kinetic line: words snap up out of a mask on tIn, leave upwards on tOut
+function kline(str, font, x, y, color, tIn, tOut, accent = []){
+  ctx.save(); ctx.font = font; ls(ctx, -2); const size = parseInt(font.match(/(\d+)px/)[1]);
+  ctx.beginPath(); ctx.rect(0, y - size*1.0, W, size*1.3); ctx.clip();
+  let x0 = x; const sp = ctx.measureText(' ').width;
+  str.split(' ').forEach((w, j) => {
+    const pin = eo(seg(T, tIn + j*0.04, tIn + j*0.04 + 0.22)), pout = tOut == null ? 0 : ein(seg(T, tOut + j*0.02, tOut + j*0.02 + 0.16));
+    ctx.fillStyle = accent.includes(j) ? C.red : color;
+    ctx.fillText(w, x0, y + (1 - pin)*size*1.2 - pout*size*1.2);
+    x0 += ctx.measureText(w).width + sp;
+  });
   ctx.restore();
 }
-function vC14(){
-  if (T >= 9.8){ endcard(9.8); return; }
-  bg(C.light); sig(C.dark);
-  const sweep = seg(T, 5.6, 6.6);
-  NOTES.forEach((s, i) => {
-    const t0 = 0.6 + i*0.17, p = seg(T, t0, t0 + 0.3); if (p <= 0) return;
-    const x = 160 + rnd(i*3.3)*760, y = 700 + rnd(i*7.1)*900, rot = (rnd(i*1.9) - .5)*0.5;
-    const out = eio(clamp((sweep - (i % 5)*0.06)/0.7, 0, 1)), dir = rnd(i*2.7) < .5 ? -1 : 1;
-    note(x + dir*out*1300, y - out*200, 300, 230, rot + dir*out*0.8, lerp(1.5, 1, eback(p)), s, PAPER[i % PAPER.length], false);
-  });
-  const kp = seg(T, KEEP.t, KEEP.t + 0.3);
-  if (kp > 0){ const g = eio(seg(T, 6.0, 6.9));
-    note(lerp(560, 540, g), lerp(1150, 1080, g), 300, 230, lerp(-0.12, 0, g), lerp(1.5, 1, eback(kp))*lerp(1, 2.1, g), KEEP.label, C.white, T > 6.2); }
-  if (T < 4.4) lines(['Ideen habe ich viele.'], F(800, 84), C.dark, 62, 560, 0, 0.2, 0);
-  else if (T < 7.2){ const f = F(800, 62); wordsIn(layoutWords('Meine Arbeit ist, mit dir die eine zu finden, die deine Marke weiterbringt.', f, 950, 74, 62, 500), f, C.dark, 4.5, 0.08, [5, 6]); }
-  else { const size = fitDisp('DIE BEHALTEN WIR.', 950, 150); slamWord('DIE BEHALTEN WIR.', size, 'center', 1640, C.red, 7.3, 0.04, 17); }
-  return true;
+function marquee(word, y, size, speed, alpha, outline){
+  ctx.save(); ctx.font = DISP(size); const w = ctx.measureText(word + '  ').width; let x = -((T*speed) % w + w) % w - w*0.0;
+  ctx.globalAlpha = alpha; ctx.fillStyle = C.white; ctx.strokeStyle = C.white; ctx.lineWidth = 3;
+  for (; x < W; x += w) outline ? ctx.strokeText(word, x, y) : ctx.fillText(word, x, y);
+  ctx.restore();
+}
+const punch = (n0, n1, k = 0.04) => { // tiny zoom kick on every snare (beats 2 and 4) inside [n0, n1)
+  let z = 1; for (let n = n0 + 1; n < n1; n += 2) z += k*(1 - eo(seg(T, bt(n), bt(n) + 0.25)))*(T >= bt(n) ? 1 : 0); return z;
+};
+
+function vWeb(){
+  const b = T/BEAT;
+  // bar 1 · Irgendwo im Schwarzwald
+  if (b < 4){
+    wald(lerp(0.30, 0.42, T/BAR), 0.5, lerp(1.12, 1.05, T/BAR), 0.25);
+    kline('Irgendwo im', F(800, 96), 62, 820, C.white, bt(0.5), null);
+    kline('Schwarzwald …', F(800, 96), 62, 930, C.white, bt(1.5), null);
+    ctx.save(); ls(ctx, 5); text('47,96° N · 7,95° E · KIRCHZARTEN', 62, 1020, LAB(26), C.red, 'left', eo(seg(T, bt(2.5), bt(3))), 5); ctx.restore();
+    return;
+  }
+  // bar 2 · drop: Salli, ich bin HORST
+  if (b < 8){
+    monster(0);
+    const size = fitDisp('SALLI.', 700, 230);
+    if (b < 6) slamWord('SALLI.', size, 'center', 470, C.white, bt(4), 0.05, 3);
+    else { const s2 = fitDisp('ICH BIN', 700, 170); slamWord('ICH BIN', s2, 'center', 330, C.white, bt(6), 0.04, 13); slamWord('HORST.', s2*1.15, 'center', 330 + s2*1.15, C.red, bt(6.5), 0.05, 23); }
+    const fl = 1 - seg(T, bt(4), bt(4) + 0.15); if (fl > 0){ ctx.fillStyle = `rgba(255,66,85,${fl})`; ctx.fillRect(0, 0, W, H); }
+    return;
+  }
+  // bar 3 · die ehrliche Einordnung (website copy)
+  if (b < 12){
+    wald(lerp(0.62, 0.7, (T - bt(8))/BAR), 0.62, 1.45*punch(8, 12, 0.03), 0.62);
+    const f = F(800, 100), Q = [['Wo steht deine', 'Marke heute?'], ['Was hält', 'sie zurück?'], ['Was soll sich', 'verändern?']];
+    Q.forEach((q, i) => { const tIn = bt(8 + i), tOut = bt(9 + i) - 0.12; if (T < tIn - 0.05 || T > tOut + 0.3) return;
+      kline(q[0], f, 62, 840, C.white, tIn, tOut); kline(q[1], f, 62, 956, C.white, tIn + 0.06, tOut, [q[1].split(' ').length - 1]); });
+    if (b >= 11){ const p = eback(seg(T, bt(11), bt(11) + 0.3)); ctx.save(); ctx.translate(540, 960); ctx.scale(p, p); text('?', 0, 160, DISP(520), C.red, 'center', 1, 0); ctx.restore(); }
+    return;
+  }
+  // bar 4 · Monsteridee
+  if (b < 16){
+    bg(C.red);
+    kline('Daraus entsteht die', F(700, 70), 62, 700, C.dark, bt(12), null);
+    const size = fitDisp('MONSTER-', 960, 260), z = punch(12, 16, 0.05);
+    ctx.save(); ctx.translate(540, 960); ctx.scale(z, z); ctx.translate(-540, -960);
+    slamWord('MONSTER-', size, 62, 940, C.white, bt(13), 0.05, 7);
+    slamWord('IDEE.', size, 62, 940 + size*1.02, C.dark, bt(14), 0.06, 27);
+    ctx.restore();
+    ctx.save(); ls(ctx, 5); text('UND AUS IHR ALLES WEITERE.', 62, 1500, LAB(28), C.white, 'left', eo(seg(T, bt(15), bt(15.5))), 5); ctx.restore();
+    return;
+  }
+  // bars 5–8 · Referenzen: one per beat, Leistungen marquee behind
+  if (b < 32){
+    const n = Math.floor(b - 16), t0 = bt(16 + n), k = Math.floor(n/4);
+    wald(0.2 + n*0.04, 0.35 + (n % 4)*0.08, 1.6, 0.78);
+    marquee(LEIST_BIG[k], 470, 260, 260, 0.14, true);
+    marquee(LEIST_BIG[k], 1560, 260, -200, 0.1, false);
+    const el = M[REFS[n]], dir = n % 2 ? 1 : -1, p = eo(seg(T, t0, t0 + 0.14)), z = lerp(1.0, 1.04, seg(T, t0, t0 + BEAT));
+    const cw = 980*z, ch = 612*z, rot = dir*0.025;
+    ctx.save(); ctx.translate(540 + (1 - p)*dir*-900, 960); ctx.rotate(rot*(0.5 + 0.5*p));
+    ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 60; ctx.shadowOffsetY = 24;
+    ctx.fillStyle = C.white; ctx.fillRect(-cw/2 - 10, -ch/2 - 10, cw + 20, ch + 20); ctx.shadowColor = 'transparent';
+    if (ready(el)) drawCover(el, -cw/2, -ch/2, cw, ch);
+    ctx.restore();
+    if (n % 4 === 0 || n % 4 === 1 || n % 4 === 2 || n % 4 === 3){
+      kline(LEIST[k], F(800, 58), 62, 1380, C.white, bt(16 + k*4), bt(20 + k*4) - 0.1);
+    }
+    ctx.save(); ls(ctx, 5); text(`REFERENZ ${String(n + 1).padStart(2, '0')} / 16`, 62, 1440, LAB(24), C.red, 'left', 1, 5); ctx.restore();
+    return;
+  }
+  // bar 9 · Prozess: screen recording, green hornets logo in 12× time-lapse
+  if (b < 36){
+    wald(0.5, 0.3, 1.5, 0.8);
+    kline('Vom ersten Punkt', F(800, 92), 62, 560, C.white, bt(32), null);
+    kline('zum Zeichen.', F(800, 92), 62, 668, C.white, bt(32.5), null, [1]);
+    const el = M['v-prozess'], w = 1000, h = 646, x = 40, y = 820, p = eo(seg(T, bt(32), bt(32) + 0.3));
+    ctx.save(); ctx.translate(0, (1 - p)*300); ctx.globalAlpha = p;
+    ctx.fillStyle = '#111014'; rrect(ctx, x - 18, y - 18, w + 36, h + 36, 22); ctx.fill();
+    if (ready(el)) drawCover(el, x, y, w, h);
+    ctx.fillStyle = '#111014'; ctx.fillRect(470, y + h + 18, 140, 60); rrect(ctx, 380, y + h + 74, 320, 16, 8); ctx.fill();
+    ctx.restore();
+    ctx.save(); ls(ctx, 5); text('BILDSCHIRMAUFNAHME · GREEN HORNETS · 12× SCHNELLER', 540, 1640, LAB(22), C.red, 'center', eo(seg(T, bt(33), bt(33.5))), 5); ctx.restore();
+    return;
+  }
+  // bars 10–11 · Logos in Bewegung: one animation every two beats
+  if (b < 44){
+    const i = Math.floor((b - 36)/2), c = CLIPS[i], t0 = bt(36 + i*2);
+    bg(C.white); const el = M[c.k]; if (ready(el)) drawContain(el, 0, 285, W, 1350);
+    ctx.save(); ls(ctx, 6); text('LOGOS IN BEWEGUNG', 540, 1690, LAB(26), C.red, 'center', 1, 6); ctx.restore();
+    kline(c.name, F(800, 62), 540 - (() => { ctx.save(); ctx.font = F(800, 62); ls(ctx, -2); const w = ctx.measureText(c.name).width; ctx.restore(); return w/2; })(), 1772, C.dark, t0 + 0.1, null);
+    const wp = eio(seg(T, t0, t0 + 0.16)); if (wp < 1){ ctx.fillStyle = C.red; ctx.fillRect(0, 0, W, H*(1 - wp)); }
+    return true;
+  }
+  // bar 12 · Film: EVOMOTIV and Wetterauer, two beats each
+  if (b < 48){
+    const i = b < 46 ? 0 : 1, f = FILMS[i], t0 = bt(44 + i*2);
+    wald(0.3 + i*0.3, 0.5, 1.4, 0.82);
+    kline('Marken, die sich bewegen.', F(800, 70), 62, 330, C.white, bt(44), null, [3]);
+    const el = M[f.k], z = lerp(1.06, 1.0, eo(seg(T, t0, t0 + 2*BEAT)));
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 420, W, W); ctx.clip(); if (ready(el)) drawCover(el, 0, 420, W, W, z); ctx.restore();
+    ctx.save(); ls(ctx, 5); text(f.name, 62, 1590, LAB(26), C.red, 'left', 1, 5); ctx.restore();
+    const wp = eio(seg(T, t0, t0 + 0.16)); if (wp < 1){ ctx.fillStyle = C.red; ctx.fillRect(W*wp, 420, W*(1 - wp), W); }
+    return;
+  }
+  // bar 13 · breakdown: Werkzeuge vs. Idee
+  if (b < 52){
+    wald(lerp(0.55, 0.45, (T - bt(48))/BAR), 0.45, lerp(1.25, 1.35, (T - bt(48))/BAR), 0.55);
+    const f = F(800, 96);
+    kline('Die Werkzeuge', f, 62, 760, C.white, bt(48), bt(50) - 0.15);
+    kline('sind zweitrangig.', f, 62, 870, C.white, bt(48.5), bt(50) - 0.15);
+    kline('Entscheidend ist', f, 62, 760, C.white, bt(50), null);
+    kline('die Idee dahinter.', f, 62, 870, C.white, bt(50.5), null, [1]);
+    ctx.save(); ls(ctx, 5); text('ANALOG · DIGITAL · KI', 62, 960, LAB(26), C.red, 'left', eo(seg(T, bt(51), bt(51.5))), 5); ctx.restore();
+    return;
+  }
+  // bar 14 · Markenidentitäten: logos pop on 16ths
+  if (b < 56){
+    bg(C.dark); sig(C.white, 99);
+    ctx.save(); ls(ctx, 6); text('AUSGEWÄHLTE MARKENIDENTITÄTEN', 540, 520, LAB(28), C.red, 'center', eo(seg(T, bt(52), bt(52.5))), 6); ctx.restore();
+    LOGOS.forEach((k, i) => {
+      const t0 = bt(52) + i*BEAT/4, p = eback(seg(T, t0, t0 + 0.2)); if (p <= 0) return;
+      const el = M[k], c = i % 3, r = Math.floor(i/3), cx = 220 + c*320, cy = 700 + r*190;
+      if (!ready(el)) return; ctx.save(); ctx.translate(cx, cy); ctx.scale(p, p); drawContain(el, -130, -70, 260, 140); ctx.restore();
+    });
+    return;
+  }
+  // bar 15 · HORST asks
+  if (b < 60){
+    monster(0);
+    bubble(b < 58 ? ['Und', 'deine Marke?'] : ['Lass uns', 'drüber reden.'], 540, 300, seg(T, bt(b < 58 ? 56 : 58), bt(b < 58 ? 56 : 58) + 0.3));
+    pill('Monsterideen® für mutige Marken.', 540, 1560, C.red, C.white, eo(seg(T, bt(59), bt(59.5))));
+    return;
+  }
+  // bar 16 · Abspann
+  endcard(bt(60));
+  ctx.save(); ls(ctx, 4); text('HAUPTSTR. 24 · 79199 KIRCHZARTEN', 540, 1650, LAB(26), C.white, 'center', 0.7*eo(seg(T, bt(62), bt(62.5))), 4); ctx.restore();
 }
 
-// E06 — end card to append to "Mein schwierigster Kunde" (Atlas S. 4: „Studio HORST. Jetzt auch mit Gesicht.“)
-function vE06(){
-  bg(C.dark);
-  drawSignet(540, 700, 300, C.white, seg(T, 0, 0.7));
-  lines(['Studio HORST.'], F(800, 86), C.white, 540, 1060, 0, 0.55, 0, 'center');
-  lines(['Jetzt auch mit Gesicht.'], F(800, 86), C.red, 540, 1180, 0, 0.85, 0, 'center');
-  pill('studio-horst.de', 540, 1320, C.white, C.dark, eo(seg(T, 1.3, 1.6)));
+// laid-back boom-bap: swung hats, late snare, Rhodes-ish chords, vinyl crackle
+function hiphop(add){
+  const swing = BEAT*0.09, late = 0.018;
+  const CH = [[220, 261.63, 329.63, 392, 493.88], [174.61, 220, 261.63, 329.63], [146.83, 174.61, 220, 261.63, 329.63], [164.81, 196, 246.94, 293.66]];
+  const ROOT = [55, 43.65, 73.42, 41.2];
+  const snare = (d, w) => { noise(d, w, 'bandpass', 1900, 0.7, 0.42, 0.2); tone(d, w, 'triangle', 190, 0.28, 0.09); };
+  const BRK = 12, LAST = 15;
+  for (let bar = 0; bar < 16; bar++){
+    const t0 = bar*BAR, c = CH[bar % 4], drums = bar >= 1 && bar !== BRK && bar !== LAST, lp = bar === 0 ? 520 : bar === BRK ? 900 : 1500;
+    c.forEach(f => { add(t0, (d,w) => tone(d, w, 'triangle', f, 0.055, BAR*0.95, 0.03, lp)); add(t0, (d,w) => tone(d, w, 'sine', f*2, 0.02, BAR*0.6, 0.03)); });
+    if (bar !== 0) c.slice(1).forEach(f => add(t0 + bt(2.5), (d,w) => tone(d, w, 'triangle', f, 0.035, 0.35, 0.01, lp)));
+    if (bar >= 1 && bar !== BRK){ add(t0, (d,w) => tone(d, w, 'triangle', ROOT[bar % 4], 0.5, 0.9, 0.01, 280)); add(t0 + bt(2.25), (d,w) => tone(d, w, 'triangle', ROOT[bar % 4], 0.38, 0.5, 0.01, 280)); }
+    if (drums){
+      [0, 1.75, 2.25].forEach(x => add(t0 + bt(x), (d,w) => kick(d, w, x ? 0.75 : 1.0)));
+      [1, 3].forEach(x => add(t0 + bt(x) + late, snare));
+    }
+    if (bar >= 1 && bar !== LAST) for (let e = 0; e < 8; e++){
+      const tt = t0 + bt(e/2) + (e % 2 ? swing : 0); add(tt, (d,w) => noise(d, w, 'highpass', 8500, 0.7, e % 2 ? 0.07 : 0.12, bar === BRK ? 0.03 : 0.04));
+    }
+    if (bar >= 4 && bar <= 11 && bar % 2) add(t0 + bt(3.5) + swing, (d,w) => noise(d, w, 'highpass', 7000, 0.6, 0.09, 0.28));
+  }
+  add(bt(15), (d,w) => riser(d, w, BEAT, 0.22));
+  add(bt(60), (d,w) => kick(d, w, 1.1)); add(bt(60), (d,w) => crash(d, w));
+  [36, 38, 40, 42, 44, 46].forEach(n => add(bt(n), (d,w) => noise(d, w, 'bandpass', 2600, 1.1, 0.22, 0.05)));
+  for (let i = 0; i < 260; i++){ const tt = rnd(i*4.7)*16*BAR; add(tt, (d,w) => noise(d, w, 'highpass', 2500 + rnd(i)*3000, 0.5, 0.02 + rnd(i*2.3)*0.06, 0.008)); }
 }
 
 const VARIANTS = [
-  { slug:'a12-eine-idee', name:'A12 Eine Idee', dur:14, end:11.6, draw:vA12, hits:[1.2, ...DECK.map((_, i) => A12.logo + i*A12.step), A12.deckEnd + 0.8],
-    video:() => T < A12.logo ? { k:'v-evo', at:0.4 + T } : null },
-  { slug:'a04-kirchzarten', name:'A04 Kirchzarten', dur:12, end:A04.end, draw:vA04, hits:[0.4, 2.0, 3.4, A04.cut, A04.bubble],
-    video:() => T >= A04.cut && T < A04.end ? { k:'v-monster', at:0.6 + (T - A04.cut) } : { pre:{ k:'v-monster', at:0.6 } } },
-  { slug:'c14-zettelberge', name:'C14 Zettel', dur:12, end:9.8, draw:vC14, hits:[KEEP.t, 5.6, 6.2, 7.3] },
-  { slug:'e06-endkarte', name:'E06 Endkarte', dur:3.5, end:0.85, draw:vE06, hits:[0.55] },
+  { slug:'showreel', name:'Showreel', dur:Math.round(16*BAR*100)/100, end:bt(60), draw:vWeb, sound:hiphop, hits:[],
+    video:() => { const b = T/BEAT;
+      if (b >= 4 && b < 8) return { k:'v-monster', at:0.6 + (T - bt(4)) };
+      if (b >= 32 && b < 36) return { k:'v-prozess', at:T - bt(32) };
+      if (b >= 36 && b < 44){ const i = Math.floor((b - 36)/2); return { k:CLIPS[i].k, at:1.3 + (T - bt(36 + i*2)) }; }
+      if (b >= 44 && b < 48){ const i = b < 46 ? 0 : 1; return { k:FILMS[i].k, at:FILMS[i].at + (T - bt(44 + i*2)) }; }
+      if (b >= 56 && b < 60) return { k:'v-monster', at:2.6 + (T - bt(56)) };
+      if (b < 32) return { pre:{ k:'v-prozess', at:0 } };
+      if (b < 44){ const i = Math.min(3, Math.floor((b - 36)/2) + 1); return { pre:{ k:b < 36 ? CLIPS[0].k : CLIPS[i].k, at:1.3 } }; }
+      return { pre:{ k:'v-monster', at:2.6 } }; } },
 ];
 
 // ---------- shared for variant reels with media: loading, drawing, end card, sound, render ----------
@@ -584,7 +662,7 @@ exportBtn.addEventListener('click', async () => {
     const ext = MIME.includes('mp4') ? 'mp4' : 'webm';
     const blob = new Blob(chunks, { type:MIME.split(';')[0] });
     statusEl.textContent = `Aufnahme fertig (${(blob.size/1048576).toFixed(1)} MB). Bitte das Speichern bestätigen.`;
-    try { await dl.save({ filename:`studio-horst-atlas-${VARIANTS[cur].slug}.${ext}`, data:blob });
+    try { await dl.save({ filename:`studio-horst-showreel-${VARIANTS[cur].slug}.${ext}`, data:blob });
       statusEl.textContent = ext === 'mp4' ? 'Gespeichert. Die MP4 kann direkt zu Instagram.' : 'Gespeichert als WebM. Für Instagram vorher in MP4 umwandeln, oder in Safari bzw. aktuellem Chrome erneut aufnehmen.';
     } catch(e){ statusEl.textContent = e && e.code === 'declined' ? 'Speichern abgebrochen.' : `Speichern hat nicht geklappt (${e && e.code || 'unbekannt'}).`; }
   };

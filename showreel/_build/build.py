@@ -70,3 +70,7 @@ build('ideenatlas-reels', ['atlas-scenes.js', 'common-media.js'], 'HORST Ideenat
   'Instagram Reels · 1080 × 1920 · Karten A12, A04, C14 + E06-Endkarte', 'Ideenatlas<span>.</span>',
   'Drei Karten aus deinem Ideenatlas, umgesetzt ohne Dreh: A12 „Eine Idee. Viele Auftritte.“ mit echten EVOMOTIV-Anwendungen, A04 „Kirchzarten hast vergessen“ mit HORST und C14 „Zettelberge“. Dazu die Endkarte für E06 „Mein schwierigster Kunde“ zum Anhängen in CapCut.',
   'studio-horst-atlas', 'Karten-IDs wie im Ideenatlas vom 19.09.2026.')
+build('website-showreel', ['web-scenes.js', 'common-media.js'], 'HORST Website Showreel', 'Showreel von Studio HORST mit Referenzen von der Website',
+  'Showreel · 1080 × 1920 · 42,7 Sekunden · 90 BPM Laid-back Hip-Hop', 'Showreel<span>.</span>',
+  'Deine Website als Geschichte in 16 Takten: Schwarzwald, HORST sagt Salli, die ehrliche Einordnung, die Monsteridee, 16 Referenzen auf dem Beat, ein Logo entsteht im Zeitraffer, Logos und Filme in Bewegung, Markenidentitäten, Abspann. Jeder Schnitt sitzt auf dem Beat.',
+  'studio-horst-showreel', 'Material aus deinem Website-Ordner: Hero-Slider, Schwarzwald-Hintergrund, Kundenlogos, Logoanimationen, Filme und das HORST-Video.')

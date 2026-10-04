@@ -229,6 +229,7 @@ function loadOne(k){
       const v = document.createElement('video');
       v.muted = true; v.playsInline = true; v.preload = 'auto';
       v.addEventListener('loadeddata', done, { once:true }); v.addEventListener('error', done, { once:true });
+      v.addEventListener('seeked', () => { dirty = true; }); // paused scrubbing: redraw once the frame is decoded
       v.src = `media/${k}.${VEXT}`; M[k] = v;
     } else { const i = new Image(); i.onload = done; i.onerror = done; i.src = `media/${k}`; M[k] = i; }
   });
