@@ -275,7 +275,7 @@ function s2(){
   if (fl > 0){ ctx.fillStyle = `rgba(255,66,85,${0.45*fl})`; ctx.fillRect(0, 0, W, H); }
   const size = fitDisp('DAS IST HORST.', 960, 140);
   slamWord('DAS IST HORST.', size, 'center', 330, C.white, DONE, 0.045, 4, C.red);
-  const msg = 'Salli! Ich bin das Monster hinter euren Monsterideen®.';
+  const msg = 'Salli! Ich bin das Monster hinter euren Monsterideen.';
   const pp = seg(T, DONE + 0.9, DONE + 1.25); if (pp > 0){
     const sc = clamp(eback(pp), 0, 1.2), f = F(800, 62), lines = wrapLines(msg, f, 820);
     const bw = 920, bh = 70 + lines.length*74, bx = (W - bw)/2, by = 1440;
@@ -300,7 +300,7 @@ function s3(){
     if (wp > 0 && wp < 1){ ctx.fillStyle = C.dark; ctx.fillRect(x0 + lw*wp, y0 - 20, 26, lh + 40); }
   }
   const a = eo(seg(T, 14.0, 14.35));
-  text('Monsterideen® für', 540, 1110 + (1-a)*24, F(700, 76), C.white, 'center', a, -2);
+  text('Monsterideen für', 540, 1110 + (1-a)*24, F(700, 76), C.white, 'center', a, -2);
   text('mutige Marken.', 540, 1200 + (1-a)*24, F(700, 76), C.white, 'center', a, -2);
   const pa = eo(seg(T, 14.3, 14.65));
   if (pa > 0){
@@ -322,7 +322,7 @@ function render(t){
   ctx.textBaseline = 'alphabetic';
   FN[idx]();
   ctx.save(); ctx.fillStyle = C.white; ctx.font = LAB(24); ls(ctx, 5);
-  if (T >= DONE){ ctx.globalAlpha = seg(T, DONE, DONE + 0.3); ctx.textAlign = 'left'; ctx.fillText('STUDIO HORST', 62, 130); ctx.textAlign = 'right'; ctx.fillText('MONSTERIDEEN®', W - 62, 130); ctx.globalAlpha = 1; }
+  if (T >= DONE){ ctx.globalAlpha = seg(T, DONE, DONE + 0.3); ctx.textAlign = 'left'; ctx.fillText('STUDIO HORST', 62, 130); ctx.textAlign = 'right'; ctx.fillText('MONSTERIDEEN', W - 62, 130); ctx.globalAlpha = 1; }
   ctx.globalAlpha = .3; ctx.fillRect(62, H - 86, W - 124, 3); ctx.globalAlpha = 1; ctx.fillRect(62, H - 86, (W - 124)*(T/DUR), 3);
   ctx.restore();
   return idx;

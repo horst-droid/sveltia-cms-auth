@@ -408,7 +408,7 @@ function sig(color, t0 = 0){ drawSignet(540, 300, 120, color, seg(T, t0, t0 + 0.
 function lines(arr, font, color, x, y, lh, tIn, step, align = 'left'){
   arr.forEach((s, i) => { const a = eo(seg(T, tIn + i*step, tIn + i*step + 0.3)); text(s, x, y + i*lh + (1 - a)*30, font, color, align, a, -2); });
 }
-function endcard(t0, l1 = 'Monsterideen® für', l2 = 'mutige Marken.'){
+function endcard(t0, l1 = 'Monsterideen für', l2 = 'mutige Marken.'){
   bg(C.dark);
   const lg = M.logo;
   if (ready(lg)){

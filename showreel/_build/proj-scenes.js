@@ -80,7 +80,7 @@ function videoFull(k){
   bg(C.white); const el = M[k];
   if (ready(el)) drawContain(el, 0, 285, W, 1350);
 }
-function endcard(t0, l1 = 'Monsterideen® für', l2 = 'mutige Marken.'){
+function endcard(t0, l1 = 'Monsterideen für', l2 = 'mutige Marken.'){
   bg(C.dark);
   const lg = M.logo;
   if (ready(lg)){

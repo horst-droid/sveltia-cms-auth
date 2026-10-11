@@ -174,7 +174,7 @@ function vWeb(){
   if (b < 60){
     monster(0);
     bubble(b < 58 ? ['Und', 'deine Marke?'] : ['Lass uns', 'drüber reden.'], 540, 300, seg(T, bt(b < 58 ? 56 : 58), bt(b < 58 ? 56 : 58) + 0.3));
-    pill('Monsterideen® für mutige Marken.', 540, 1560, C.red, C.white, eo(seg(T, bt(59), bt(59.5))));
+    pill('Monsterideen für mutige Marken.', 540, 1560, C.red, C.white, eo(seg(T, bt(59), bt(59.5))));
     return;
   }
   // bar 16 · Abspann

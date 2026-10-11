@@ -103,7 +103,7 @@ function note(c, rx, ry, r, label, lx, ly, t0, seed, size = 92){ // ring + arrow
   stroke(sh, eio(seg(T, t0 + 0.15, t0 + 0.42)), 8); stroke(hd, eio(seg(T, t0 + 0.4, t0 + 0.5)), 8);
   handWrite([label], size, lx, ly, 0, SK.red, t0 + 0.05, 0.35, 'center', -0.05);
 }
-function paperEnd(t0, head = ['MONSTERIDEEN®', 'FÜR MUTIGE', 'MARKEN']){
+function paperEnd(t0, head = ['MONSTERIDEEN', 'FÜR MUTIGE', 'MARKEN']){
   paperBg();
   drawSignet(540, 640, 220, SK.ink, seg(T, t0, t0 + 0.7));
   const hs = fitAll(head, 900, 150); inkHead(head, hs, 540, 960, hs*0.98, head.map((_, k) => t0 + 0.4 + k*0.2), head.map((_, k) => k === head.length - 1 && head.length > 3 ? SK.red : SK.ink), 'center', true);
@@ -176,7 +176,7 @@ function vMonster(){
   const b = T/SB;
   if (b >= 22){ paperEnd(sb(22)); return true; }
   paperBg();
-  monoLabel('LOOKSTUDIE / MONSTERIDEEN®', 62, 250, 26, SK.ink, 0.85);
+  monoLabel('LOOKSTUDIE / MONSTERIDEEN', 62, 250, 26, SK.ink, 0.85);
   if (b < 7){
     const s = fitInk('WAS IST EINE', 940, 190);
     inkHead(['WAS IST EINE'], s, 540, 560, 0, [sb(0.2)], [SK.ink], 'center');

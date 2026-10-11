@@ -93,7 +93,7 @@ function vA04(){
     const fl = 1 - seg(T, A04.cut, A04.cut + 0.2); if (fl > 0){ ctx.fillStyle = `rgba(255,66,85,${fl})`; ctx.fillRect(0, 0, W, H); }
     return;
   }
-  endcard(A04.end, 'Monsterideen®.', 'Aus Kirchzarten.');
+  endcard(A04.end, 'Monsterideen.', 'Aus Kirchzarten.');
 }
 
 // C14 — Zettelberge: many ideas, one stays

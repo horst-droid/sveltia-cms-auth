@@ -6,11 +6,11 @@ Stand 2026-10-03 (abends: Statement- und Projekt-Reels ergänzt, gebaut in einer
 
 | Ordner | Live-Artifact | Inhalt |
 | --- | --- | --- |
-| `horst-reel-2026/` | https://claude.ai/artifact/AThPAEWv9VrRHEsVs2KtuE | Showreel 15 s: MONSTERIDEEN®-Intro, „Viele Marken sehen ordentlich aus…“, THE IDEA IS THE KEY, 7 Projekte (Bilder + 3 Videos), Stempel „20 · seit 2004“, Kontakt |
+| `horst-reel-2026/` | https://claude.ai/artifact/AThPAEWv9VrRHEsVs2KtuE | Showreel 15 s: MONSTERIDEEN-Intro, „Viele Marken sehen ordentlich aus…“, THE IDEA IS THE KEY, 7 Projekte (Bilder + 3 Videos), Stempel „20 · seit 2004“, Kontakt |
 | `monster-reel/` | https://claude.ai/artifact/AX6MGsa4jgF16Y86eBdibA | 13,5 s: Monster HORST (Website-Video als Boomerang) stellt sich in Sprechblasen vor, stürzt auf die Kamera zu, Zähne fressen den Screen („MAMPF!“), innen roter Abspann |
 | `referenzen-reel/` | https://claude.ai/artifact/EtaTQa1e4KBB9iHNkX1u1i | 15 s: horst.-Logo (SVG) fest in der Mitte, darunter 15 Kundenlogos im Takt, immer schneller, dann Logo-Wand, Kontakt |
 | `wer-ist-das-reel/` | https://claude.ai/artifact/UFgQUXeKKwbNcQ8roeqbzr | 15,5 s: HORST setzt sich auf einem Bild Stück für Stück zusammen (weiche Flecken: Fell am Arm, Kette, Ohren, Hörner, Schnauzer, Augen), kein Text bis er ganz da ist, dann „DAS IST HORST.“ + Ansage-Sprechblase, roter Abspann |
-| `claim-reel/` | https://claude.ai/artifact/BcbxvXYo3LotABEsURVVLM | 15 s: Signet baut sich auf, kinetische Typo: „Monsterideen® für mutige Marken. Ich entwickle kraftvolle Ideen für MARKEN, PRODUKTE UND KAMPAGNEN – und übersetze sie gemeinsam mit meinen Kunden in SICHTBARE AUFTRITTE.“ |
+| `claim-reel/` | https://claude.ai/artifact/BcbxvXYo3LotABEsURVVLM | 15 s: Signet baut sich auf, kinetische Typo: „Monsterideen für mutige Marken. Ich entwickle kraftvolle Ideen für MARKEN, PRODUKTE UND KAMPAGNEN – und übersetze sie gemeinsam mit meinen Kunden in SICHTBARE AUFTRITTE.“ |
 | `statement-reels/` | https://claude.ai/artifact/V9LKvxFRu8wSWSYx2rZ9nQ | 6 Haltungs-Reels à 12 s, umschaltbar (Chips oder `#slug`): **Sichtbarkeit** (Spotlight findet „Substanz“ → SICHTBAR WACHSEN), **Bekanntheit** (30 gleiche Kacheln, eine wird rot → CHARAKTER), **Mut** (laut, durchgestrichen → „Mut heißt klar sein.“ → „ordentlich“ gestrichen), **Design** (Konstruktionsraster, Signet mit Maßen), **Kreativität** (Gekritzel wird Linie → VERSTEHEN, EINORDNEN, ZUSPITZEN → THE IDEA IS THE KEY), **KI** (Variantenrauschen → „Aber nur Menschen haben Ideen.“ → KI ALS WERKZEUG / IDEE ALS SCHLÜSSEL). Texte aus `content-pool/01-ideen-haltung/statements/statements.docx` und `ki .docx` |
 | `projekt-reels/` | https://claude.ai/artifact/XLGnxRnLX9YcirURJrjEdR | **Showreel** 15 s (5 MARKEN. 5 MONSTERIDEEN. → 5 Logoanimationen à 2 s → Abspann) + je 12 s **EVOMOTIV, JACOB, green hornets, Riva, Goth**: Name + Unterzeile → Logoanimation → „Im Einsatz“-Bilder (bzw. „Ein Zeichen, das bleibt.“ ohne Bilder) → „Deine Marke als Nächstes?“ |
 | `pool-reels/` | https://claude.ai/artifact/71uuWXkXdbpHAfCuoZsG4f | 8 Reels aus dem Content-Pool: **20 Thaten** (15 s, Jahreszähler 2003→2024 mit 12 Stationen aus `20 Thaten.docx`, 2006–2018 als „mit Jung & Hungrig“ markiert), **Irrtum 1–5** (je 10 s, Marken-Irrtümer aus `Free Guide.docx`, Säule 02 Wissen & Hilfe), **Checkliste** („Deine Marke verliert Aufmerksamkeit, wenn …“), **Finde Felix** (Monsterbad als Wimmelbild, Ideenatlas D01) |
@@ -29,7 +29,7 @@ Stand 2026-10-03 (abends: Statement- und Projekt-Reels ergänzt, gebaut in einer
 - Logo „horst. Design und Kreativstudio“: `assets/logo/horst-rz-02.svg` (Original von Felix, Fill `#1d1d1b`, für Weiß im Code umgefärbt)
 - Signet „h im Quadrat“: `assets/logo/horst-rz-solo.svg` (viewBox 184.7 × 183.3; im Code als Geometrie nachgebaut, damit es sich Balken für Balken aufbauen kann)
 - Stempel „20 · Thatendrang und Heldenthaten · seit 2004“: `assets/logo/horst-rz-stempel-1.png`
-- Claim: „Monsterideen® für mutige Marken.“ · Gruß: „Salli!“ · Leitsatz: „THE IDEA IS THE KEY.“
+- Claim: „Monsterideen für mutige Marken.“ · Gruß: „Salli!“ · Leitsatz: „THE IDEA IS THE KEY.“
 - Kontakt: Felix Thatenhorst, Hauptstr. 24, 79199 Kirchzarten, salli@studio-horst.de, 07661 90 95 259, studio-horst.de
 - Ton der Texte: direkt, ich-Form, Schwarzwald, „Monsteridee“ als Leitidee eines Projekts
 
@@ -50,6 +50,7 @@ Stand 2026-10-03 (abends: Statement- und Projekt-Reels ergänzt, gebaut in einer
 - Testen lokal: `python3 -m http.server` im Reel-Ordner, Playwright scrubbt per `#scrub` und screenshottet `#cv`. Achtung: Playwright-Chromium kann kein H.264 → für Tests eine VP9-WebM-Kopie verwenden. Ohne `<meta charset>` zeigt der lokale Test Umlaute falsch (nur lokal).
 
 ## Offene Ideen
+- „Monsterideen“ immer ohne ® – nicht eingetragen (Felix, 11.10.2026).
 - Route „Die Idee bleibt“: keine Studienzahlen (Figma/Canva 2026) in Reels, solange nicht selbst geprüft – Herstellerstudien. Maschinenraum-Reel wird stärker mit echten Screenshots vom HORST-Cockpit (Datenschutz: Kundennamen schwärzen).
 - Content-Pool-Hinweise: In `91-texte-archiv/HORST One.docx` steht ein von ChatGPT erfundenes Kundenzitat („Jochen W.“) – nicht verwenden. Adresse dort „Hauptstraße 42“ ist veraltet – laut studio-horst.de gilt Hauptstr. 24. Stempel „20 · seit 2004“ für 2026 prüfen.
 - Nächste Kandidaten aus dem Pool: Einzelgeschichten pro Jahr aus „20 Thaten“ (z. B. „Kleinstes Oktoberfest der Welt – nix verdient, aber geile Aktion“), Ritter-Standbild (`chatgpt-ideenatlas/figuren/spricht-folge-01/03-ritter.png`) mit Atlas-B02-Text, „Über mich“ als Karussell, Projekt-Karussells 4:5 nach `Instagram-Plan-Studio-HORST.docx`.

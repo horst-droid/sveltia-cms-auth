@@ -12,7 +12,7 @@ function lines(arr, font, color, x, y, lh, tIn, step, align = 'left'){
   arr.forEach((s, i) => { const a = eo(seg(T, tIn + i*step, tIn + i*step + 0.3)); text(s, x, y + i*lh + (1 - a)*30, font, color, align, a, -2); });
 }
 // shared end card: red curtain lifts, logo wipes in, claim, URL
-function endcard(t0, l1 = 'Monsterideen® für', l2 = 'mutige Marken.'){
+function endcard(t0, l1 = 'Monsterideen für', l2 = 'mutige Marken.'){
   bg(C.dark);
   const lg = M.logo;
   if (ready(lg)){

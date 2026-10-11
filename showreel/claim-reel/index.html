@@ -60,7 +60,7 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
   <div class="side">
     <header>
       <p class="eyebrow">Instagram Reel · 1080 × 1920 · 15 Sekunden · 120 BPM</p>
-      <h1>Monsterideen<span>®</span> für mutige Marken.</h1>
+      <h1>Monsterideen für mutige Marken.</h1>
       <p class="lede">Euer Claim und euer Versprechen als Typo-Reel: Das Signet baut sich auf, dann folgen „Ich entwickle kraftvolle Ideen für Marken, Produkte und Kampagnen – und übersetze sie gemeinsam mit meinen Kunden in sichtbare Auftritte.“</p>
     </header>
 
@@ -224,7 +224,7 @@ function hudBase(c, right){
   ctx.globalAlpha = 1;  ctx.fillRect(62, H - 86, (W - 124)*(T/DUR), 3);
   ctx.restore();
 }
-// ---------- Claim: "Monsterideen® für mutige Marken." + the studio's promise ----------
+// ---------- Claim: "Monsterideen für mutige Marken." + the studio's promise ----------
 const mediaP = Promise.race([loadImg('logo', svgURL(SVG_LOGO_W)), new Promise(r => setTimeout(r, 8000))]).then(() => { dirty = true; });
 const BIG = [
   { s:'MARKEN,',   t:7.0, bg:C.red,   fg:C.white },
@@ -248,7 +248,6 @@ function s2(){
   slamWord('MONSTER-', size, 60, y1, C.white, 2.5, 0.07, 1);
   const w2 = slamWord('IDEEN', size, 60, y2, C.white, 2.5 + 8*0.07, 0.07, 20);
   const ra = eo(seg(T, 3.4, 3.6));
-  if (ra > 0){ ctx.save(); ctx.globalAlpha = ra; ctx.fillStyle = C.red; ctx.font = F(800, size*0.42); ctx.fillText('®', 60 + w2 + 12, y2 - size*0.5); ctx.restore(); }
   const a = eo(seg(T, 3.6, 3.95));
   text('für mutige Marken.', 64, y2 + 150 + (1-a)*30, F(700, 78), C.white, 'left', a, -2);
 }
@@ -287,7 +286,7 @@ function s5(){
     if (wp > 0 && wp < 1){ ctx.fillStyle = C.red; ctx.fillRect(x0 + lw*wp, y0 - 20, 26, lh + 40); }
   }
   const a = eo(seg(T, 13.5, 13.85));
-  text('Monsterideen® für', 540, 1110 + (1-a)*24, F(700, 76), C.white, 'center', a, -2);
+  text('Monsterideen für', 540, 1110 + (1-a)*24, F(700, 76), C.white, 'center', a, -2);
   text('mutige Marken.', 540, 1200 + (1-a)*24, F(700, 76), C.white, 'center', a, -2);
   pill('studio-horst.de', 540, 1360, C.red, C.white, eo(seg(T, 13.8, 14.15)));
   ctx.save(); ls(ctx, 4); text('SALLI@STUDIO-HORST.DE', 540, 1590, LAB(30), C.white, 'center', eo(seg(T, 14.05, 14.35))*0.9, 4); ctx.restore();
@@ -300,7 +299,7 @@ function render(t){
   ctx.textBaseline = 'alphabetic';
   FN[idx]();
   const light = T >= 7.5 && T < 8.0;
-  hudBase(light ? C.dark : C.white, 'MONSTERIDEEN®');
+  hudBase(light ? C.dark : C.white, 'MONSTERIDEEN');
   return idx;
 }
 
