@@ -12,6 +12,8 @@ Stand 2026-10-03. Alles hier wurde in einer Claude-Code-Session gebaut. Diese Da
 | `wer-ist-das-reel/` | https://claude.ai/artifact/UFgQUXeKKwbNcQ8roeqbzr | 15,5 s: HORST setzt sich auf einem Bild Stück für Stück zusammen (weiche Flecken: Fell am Arm, Kette, Ohren, Hörner, Schnauzer, Augen), kein Text bis er ganz da ist, dann „DAS IST HORST.“ + Ansage-Sprechblase, roter Abspann |
 | `claim-reel/` | https://claude.ai/artifact/BcbxvXYo3LotABEsURVVLM | 15 s: Signet baut sich auf, kinetische Typo: „Monsterideen® für mutige Marken. Ich entwickle kraftvolle Ideen für MARKEN, PRODUKTE UND KAMPAGNEN – und übersetze sie gemeinsam mit meinen Kunden in SICHTBARE AUFTRITTE.“ |
 
+**`motion-lab/`**: HORST Motion Lab, acht live laufende Animationstechniken (Signet-Aufbau, Geometrie-Raster, Decode-Typo, Partikel-Signet, 3D-Signet, Logo-Glitch, Ideen-Monster, Pixel-Logo) mit Prompt, Graph-Editor und Timeline. Bausteine zum Wiederverwenden in neuen Reels.
+
 Ältere Versuche (nicht mehr im Branding, nur Referenz): `studio-horst-reel-9x16.html`, `studio-horst-reel-16x9.html`, `claude-motion-reel.html`.
 
 ## Marke Studio HORST
