@@ -60,7 +60,7 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px}
   <div class="side">
     <header>
       <p class="eyebrow">Instagram Reel · 1080 × 1920 · 15 Sekunden · 120 BPM</p>
-      <h1>Monsterideen<span>®</span> in 15&nbsp;Sekunden.</h1>
+      <h1>Monsterideen in 15&nbsp;Sekunden.</h1>
       <p class="lede">Das Showreel von Studio HORST mit Arbeiten, Farben, Schrift und Texten von studio-horst.de. Jedes Bild wird live gerechnet, der Beat wird dazu synthetisiert.</p>
     </header>
 
@@ -241,7 +241,6 @@ function s1(){
   slamWord('MONSTER-', size, 60, y1, C.white, 0.12, 0.07, 1);
   const w2 = slamWord('IDEEN', size, 60, y2, C.white, 0.12 + 8*0.07, 0.07, 20);
   const ra = eo(seg(T, 1.0, 1.2));
-  if (ra > 0){ ctx.save(); ctx.globalAlpha = ra; ctx.fillStyle = C.red; ctx.font = F(800, size*0.42); ctx.fillText('®', 60 + w2 + 12, y2 - size*0.5); ctx.restore(); }
   const a = eo(seg(T, 1.2, 1.55));
   ctx.save(); ls(ctx, -1.5);
   text('für mutige Marken.', 64, y2 + 150 + (1-a)*30, F(600, 72), C.white, 'left', a, -1.5);
@@ -331,7 +330,7 @@ function s5(){
     ctx.drawImage(lg, 70, 760 - lh/2, lw, lh); ctx.restore();
   }
   const a = eo(seg(T, 13.4, 13.75)), y = 760 + lh/2 + 140;
-  text('Monsterideen® für', 70, y + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
+  text('Monsterideen für', 70, y + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
   text('mutige Marken.', 70, y + 92 + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
   const pa = eo(seg(T, 13.75, 14.1));
   if (pa > 0){

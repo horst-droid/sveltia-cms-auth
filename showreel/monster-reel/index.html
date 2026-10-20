@@ -279,7 +279,7 @@ function s3(){
     ctx.save(); ctx.beginPath(); ctx.rect(70, 760 - lh/2, lw*rv, lh); ctx.clip(); ctx.drawImage(lg, 70, 760 - lh/2, lw, lh); ctx.restore();
   }
   const a = eo(seg(T, 11.35, 11.7)), y = 760 + lh/2 + 140;
-  text('Monsterideen® für', 70, y + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
+  text('Monsterideen für', 70, y + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
   text('mutige Marken.', 70, y + 92 + (1-a)*24, F(700, 78), C.white, 'left', a, -2);
   const pa = eo(seg(T, 11.7, 12.05));
   if (pa > 0){
@@ -297,7 +297,7 @@ const sceneIdx = t => { let i = 0; SCENES.forEach((s, k) => { if (t >= s.t) i = 
 function hud(idx){
   ctx.save(); ctx.fillStyle = C.white; ctx.font = LAB(24); ls(ctx, 5);
   ctx.textAlign = 'left';  ctx.fillText('STUDIO HORST', 62, 130);
-  ctx.textAlign = 'right'; ctx.fillText('MONSTERIDEEN®', W - 62, 130);
+  ctx.textAlign = 'right'; ctx.fillText('MONSTERIDEEN', W - 62, 130);
   ctx.globalAlpha = .3; ctx.fillRect(62, H - 86, W - 124, 3);
   ctx.globalAlpha = 1;  ctx.fillRect(62, H - 86, (W - 124)*(T/DUR), 3);
   ctx.restore();
