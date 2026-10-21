@@ -4,9 +4,11 @@
 Usage:
   python3 runway.py <bild.jpg|png> "<prompt>" [--ratio 720:1280] [--seconds 5] [--out clip.mp4]
 
-Needs:
-  - RUNWAY_API_KEY in the environment (Network secret of the cloud environment, never in chat)
-  - network access to api.dev.runwayml.com
+Needs ONE of:
+  - a Network secret on the cloud environment for host api.dev.runwayml.com
+    (Secret type Bearer, header Authorization, prefix Bearer, value = Runway key);
+    the agent proxy then adds the key to every request, this script never sees it
+  - or RUNWAY_API_KEY as an environment variable (local use)
 
 Writes the finished MP4 to --out (default: runway-<timestamp>.mp4).
 """
@@ -17,16 +19,18 @@ VERSION = "2024-11-06"
 
 
 def req(method, path, body=None):
+    headers = {"X-Runway-Version": VERSION, "Content-Type": "application/json"}
     key = os.environ.get("RUNWAY_API_KEY")
-    if not key:
-        sys.exit("RUNWAY_API_KEY fehlt. Als Network secret der Umgebung anlegen, dann neue Session.")
+    if key:  # local use; in the cloud the Network secret (agent proxy) supplies the header
+        headers["Authorization"] = f"Bearer {key}"
     data = json.dumps(body).encode() if body is not None else None
-    r = urllib.request.Request(API + path, data=data, method=method, headers={
-        "Authorization": f"Bearer {key}", "X-Runway-Version": VERSION, "Content-Type": "application/json"})
+    r = urllib.request.Request(API + path, data=data, method=method, headers=headers)
     try:
         with urllib.request.urlopen(r, timeout=60) as resp:
             return json.loads(resp.read().decode())
     except urllib.error.HTTPError as e:
+        if e.code in (401, 403):
+            sys.exit(f"Runway {e.code}: kein Key angekommen. Network secret für api.dev.runwayml.com in der Umgebung anlegen, dann neue Session.")
         sys.exit(f"Runway {e.code}: {e.read().decode()[:500]}")
 
 
