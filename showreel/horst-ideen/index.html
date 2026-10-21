@@ -534,42 +534,46 @@ function audio7(add){
 }
 
 // =====================================================================
-// REEL 8 · MONSTERIDEEN MIT BLING BLING.
+// REEL 8 · MONSTERIDEEN MIT BLING BLING.  (the real chain, cut out of the still)
 // =====================================================================
-const CH_N = 22, CH_L = 46, PIV = { x:540, y:130 };
-function chainAngle(t){ const drop = seg(t, 0.2, 1.0); return (1 - drop)*0.9 + Math.sin(t*2.4)*0.42*Math.exp(-Math.max(0, t - 1)*0.12)*drop + Math.sin(t*0.9)*0.06; }
-function gold(x0, y0, x1, y1){ const g = ctx.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, '#7A5312'); g.addColorStop(0.35, '#F6D772'); g.addColorStop(0.5, '#FFF4C2'); g.addColorStop(0.65, '#E0B23C'); g.addColorStop(1, '#8A5E14'); return g; }
+const CH_L = [[488,362],[505,400],[528,432],[552,458],[580,478],[612,492],[640,500]], CH_R = [[790,352],[776,392],[757,426],[735,452],[712,472],[688,488],[655,500]], CH_Q = [[571,512],[752,512],[752,585],[571,585]];
+const chainCut = document.createElement('canvas'); chainCut.width = 360; chainCut.height = 270; const chainLit = document.createElement('canvas'); chainLit.width = 360; chainLit.height = 270; let chainReady = false;   // crop 470..830 × 330..600
+function buildChain(){
+  if (chainReady || !ok(M.still)) return; const c = chainCut.getContext('2d'); c.translate(-470, -330);
+  c.lineCap = 'round'; c.lineJoin = 'round'; c.lineWidth = 30; c.strokeStyle = '#000';
+  [CH_L, CH_R].forEach(P => { c.beginPath(); P.forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); c.stroke(); });
+  c.beginPath(); CH_Q.forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); c.closePath(); c.fill();
+  c.globalCompositeOperation = 'source-in'; c.drawImage(M.still, 0, 0); chainReady = true;
+}
+const PIV8 = { x:540, y:330 }, CH_SC = 2.6;   // chain hangs from a pivot above its two ends; ends are at crop (18,32) and (320,22)
+function chainAngle(t){ const drop = seg(t, 0.2, 1.0); return (1 - drop)*0.75 + Math.sin(t*2.6)*0.38*Math.exp(-Math.max(0, t - 1)*0.14)*drop + Math.sin(t*0.8)*0.05; }
 function reel8(){
   ctx.fillStyle = C.dark; ctx.fillRect(0, 0, W, H);
   if (T >= 11.6){ endCard(11.6); return; }
-  const g = ctx.createRadialGradient(540, 700, 50, 540, 700, 1200); g.addColorStop(0, '#3A2E2A'); g.addColorStop(1, '#17141B'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  const a0 = chainAngle(T);
-  // chain: a hanging catenary-ish arc of links from the pivot, swinging like a pendulum
-  let x = PIV.x, y = PIV.y; const pts = [];
-  for (let i = 0; i < CH_N; i++){ const ang = Math.PI/2 + a0*(1 - i/CH_N*0.35); x += Math.cos(ang)*CH_L; y += Math.sin(ang)*CH_L; pts.push([x, y, ang]); }
-  ctx.lineWidth = 22; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  pts.forEach(([px, py, ang], i) => {
-    ctx.save(); ctx.translate(px, py); ctx.rotate(ang + (i % 2 ? Math.PI/2 : 0)); ctx.strokeStyle = gold(-30, -30, 30, 30);
-    ctx.beginPath(); ctx.ellipse(0, 0, 30, 18, 0, 0, TAU); ctx.stroke(); ctx.restore();
-  });
-  // pendant
-  const [lx, ly, lang] = pts[pts.length - 1];
-  ctx.save(); ctx.translate(lx, ly + 20); ctx.rotate(lang - Math.PI/2);
-  ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(-240 + 16, -20 + 22, 480, 180);
-  ctx.fillStyle = gold(-240, -20, 240, 160); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-240, -20, 480, 180, 28) : ctx.rect(-240, -20, 480, 180); ctx.fill();
-  ctx.strokeStyle = '#6E4A0F'; ctx.lineWidth = 8; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-216, 4, 432, 132, 18) : ctx.rect(-216, 4, 432, 132); ctx.stroke();
-  ctx.font = DISP(118); ctx.fillStyle = '#5A3A0A'; ctx.textAlign = 'center'; ctx.fillText('HORST', 0, 112); ctx.fillStyle = '#FFF1BE'; ctx.fillText('HORST', -4, 106); ctx.restore();
-  // sparkles
-  for (let i = 0; i < 14; i++){
-    const period = 1.6 + rnd(i)*1.2, lt = (T + rnd(i + 3)*period) % period, p = Math.sin(clamp(lt/0.5, 0, 1)*Math.PI); if (p <= 0) continue;
-    const k = Math.floor(rnd(i + 7)*CH_N), [sx, sy] = i < 9 ? pts[k] : [lx + (rnd(i + 2) - .5)*440, ly + 60 + (rnd(i + 5) - .5)*150];
-    const r = (14 + rnd(i + 1)*26)*p; ctx.save(); ctx.translate(sx + (rnd(i + 4) - .5)*30, sy + (rnd(i + 6) - .5)*30); ctx.rotate(lt*2); ctx.fillStyle = '#FFFFFF';
-    ctx.beginPath(); for (let q = 0; q < 8; q++){ const rr = q % 2 ? r*0.22 : r, an = q/8*TAU; ctx.lineTo(Math.cos(an)*rr, Math.sin(an)*rr); } ctx.closePath(); ctx.fill(); ctx.restore();
+  const g = ctx.createRadialGradient(540, 760, 50, 540, 760, 1200); g.addColorStop(0, '#3A2E2A'); g.addColorStop(1, '#17141B'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  buildChain(); if (!chainReady) return;
+  const ang = chainAngle(T), zoom = 1 + 0.9*eio(seg(T, 7.4, 9.4));          // macro push-in on the pendant at the end
+  const pend = { x: (660 - 470)*CH_SC, y: (548 - 330)*CH_SC };               // pendant center in hung-chain space
+  ctx.save();
+  ctx.translate(540, 1000); ctx.scale(zoom, zoom); ctx.translate(-540, -1000);  // zoom around the resting pendant
+  ctx.translate(PIV8.x, PIV8.y); ctx.rotate(ang); ctx.translate(-180*CH_SC, -10*CH_SC);
+  // a glint sweeps along the chain (applied on a copy, so only the metal lights up)
+  const lc = chainLit.getContext('2d'); lc.globalCompositeOperation = 'source-over'; lc.clearRect(0, 0, 360, 270); lc.drawImage(chainCut, 0, 0);
+  lc.globalCompositeOperation = 'source-atop'; const gl = (T*0.45) % 1, lg = lc.createLinearGradient(gl*520 - 200, 0, gl*520 - 40, 150);
+  lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(0.5, 'rgba(255,250,220,.6)'); lg.addColorStop(1, 'rgba(255,255,255,0)'); lc.fillStyle = lg; lc.fillRect(0, 0, 360, 270);
+  ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 40; ctx.shadowOffsetY = 30; ctx.drawImage(chainLit, 0, 0, 360*CH_SC, 270*CH_SC); ctx.restore();
+  ctx.restore();
+  for (let i = 0; i < 12; i++){
+    const period = 1.5 + rnd(i)*1.3, lt = (T + rnd(i + 3)*period) % period, p = Math.sin(clamp(lt/0.45, 0, 1)*Math.PI); if (p <= 0) continue;
+    const P = i % 2 ? CH_L : CH_R, k = Math.floor(rnd(i + 7)*P.length), q = i < 8 ? P[k] : [660 + (rnd(i + 2) - .5)*160, 548 + (rnd(i + 5) - .5)*60];
+    const lx = (q[0] - 470)*CH_SC - 180*CH_SC, ly = (q[1] - 330)*CH_SC - 10*CH_SC, sx = PIV8.x + Math.cos(ang)*lx - Math.sin(ang)*ly, sy = PIV8.y + Math.sin(ang)*lx + Math.cos(ang)*ly;
+    const zx = 540 + (sx - 540)*zoom, zy = 1000 + (sy - 1000)*zoom, r = (12 + rnd(i + 1)*22)*p*zoom;
+    ctx.save(); ctx.translate(zx, zy); ctx.rotate(lt*2); ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); for (let s = 0; s < 8; s++){ const rr = s % 2 ? r*0.22 : r, an = s/8*TAU; ctx.lineTo(Math.cos(an)*rr, Math.sin(an)*rr); } ctx.closePath(); ctx.fill(); ctx.restore();
   }
-  const a = eo(seg(T, 2.2, 2.6));
+  const a = eo(seg(T, 2.2, 2.6))*(1 - seg(T, 7.4, 7.8));
   ctx.save(); ls(ctx, 5); text('MONSTERIDEEN', 540, 1500, LAB(30), '#F6D772', 'center', a, 5); ctx.restore();
-  if (T >= 3.0){ slamWord('MIT BLING', fitDisp('MIT BLING', 900, 150), 'center', 1640, C.white, 3.0, 0.05, 4); slamWord('BLING.', fitDisp('BLING.', 900, 150), 'center', 1790, '#F6D772', 3.4, 0.06, 11); }
-  const a2 = eo(seg(T, 7.0, 7.4)); text('Ideen, die man sieht.', 540, 1400 + (1-a2)*20, F(700, 54), C.white, 'center', a2, -1.5);
+  if (T >= 3.0 && T < 7.8){ ctx.save(); ctx.globalAlpha = 1 - seg(T, 7.4, 7.8); slamWord('MIT BLING', fitDisp('MIT BLING', 900, 150), 'center', 1640, C.white, 3.0, 0.05, 4); slamWord('BLING.', fitDisp('BLING.', 900, 150), 'center', 1790, '#F6D772', 3.4, 0.06, 11); ctx.restore(); }
+  const a2 = eo(seg(T, 9.4, 9.8)); text('Echt. Wie die Ideen.', 540, 1700 + (1-a2)*20, F(700, 60), C.white, 'center', a2, -1.5);
 }
 function audio8(add){
   add(0.2, (d,w) => noise(d, w, 'highpass', 3500, 0.5, 0.35, 0.6, 0.4, 9000));
@@ -693,7 +697,7 @@ const REELS = [
   { id:'blabla',    name:'Ohne Blabla',         tech:'Schwarzes Loch',  dur:13, render:reel7, audio:audio7, hud:'KLARTEXT', hudColor:() => C.dark, file:'horst-blabla', still:7.2,
     desc:'70 Marketing-Floskeln füllen den Screen: Synergien, ganzheitlich, Touchpoints, blabla. Dann öffnet sich ein <b>schwarzes Loch</b> und saugt alles weg. Übrig: Kreative Designlösungen.' },
   { id:'bling',     name:'Bling Bling',         tech:'Goldkette',       dur:13, render:reel8, audio:audio8, hud:'BLING', hudColor:() => C.white, file:'horst-bling', still:4.5,
-    desc:'Eine <b>Goldkette schwingt</b> wie ein Pendel ins Bild, Glied für Glied, mit HORST-Anhänger und Funkeln. „Monsterideen mit Bling Bling.“' },
+    desc:'<b>HORSTs echte Goldkette</b>, aus dem Video freigestellt, schwingt als Pendel ins Bild, mit Funkeln und einem Glanz, der über die Glieder läuft. Am Ende fährt die Kamera auf den Anhänger.' },
   { id:'angst',     name:'Keine Angst',         tech:'Taschenlampe',    dur:13, render:reel9, audio:audio9, hud:'MONSTER', hudColor:() => C.white, file:'horst-keine-angst', still:6.4,
     desc:'Augen gehen im Dunkeln auf, immer mehr, alle schauen zur <b>Taschenlampe</b>, die sucht. Licht an: HORST grinst. „Hab keine Angst vor Monsterideen.“' },
   { id:'lieferei',  name:'Ideenlieferei',       tech:'Paket + Konfetti', dur:13, render:reel10, audio:audio10, hud:'LIEFERUNG', hudColor:() => C.dark, file:'horst-ideenlieferei', still:4.6,
