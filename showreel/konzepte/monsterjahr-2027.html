@@ -1,0 +1,313 @@
+<title>Monsterjahr 2027</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a numbered concept paper. Each concept is a card with the same five slots (Idee, Aussage, Posts, Animation, Umsetzung S/M/L). Brand: HORST red, paper, dark. */
+:root{
+  --bg:#F8F7F8; --fg:#201C25; --muted:#6F717A; --card:#FFFFFF; --line:rgba(32,28,37,.14); --red:#FF4255; --soft:#FFE9EC; --code:#F1EFF2;
+  --display:"Inter",system-ui,sans-serif; --mono:"SF Mono",Menlo,Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17141B;--fg:#F8F7F8;--muted:#A6A3AD;--card:#201C25;--line:rgba(248,247,248,.14);--soft:#3A1F26;--code:#2A2630;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17141B;--fg:#F8F7F8;--muted:#A6A3AD;--card:#201C25;--line:rgba(248,247,248,.14);--soft:#3A1F26;--code:#2A2630;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 Inter,system-ui,sans-serif;padding-block:28px 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;display:grid;gap:40px}
+.eyebrow{margin:0 0 10px;font:600 12px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+h1{margin:0;font:800 clamp(40px,8vw,72px)/.95 var(--display);letter-spacing:-.035em;text-wrap:balance}
+h1 span{color:var(--red)}
+.lede{margin:14px 0 0;color:var(--muted);max-width:62ch;font-size:16px}
+h2{margin:0 0 14px;font:800 26px/1.15 var(--display);letter-spacing:-.025em;text-wrap:balance}
+h2 small{display:block;font:600 12px var(--mono);letter-spacing:.12em;color:var(--red);text-transform:uppercase;margin-bottom:8px}
+h3{margin:0 0 6px;font:700 15px var(--display)}
+p{margin:0 0 10px}
+ul{margin:0;padding-left:18px}
+li{margin:4px 0}
+.claim{background:var(--fg);color:var(--bg);border-radius:14px;padding:26px 28px;display:grid;gap:10px}
+.claim b{font:800 clamp(26px,5vw,40px)/1.05 var(--display);letter-spacing:-.03em}
+.claim p{color:inherit;opacity:.8;margin:0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.tile small{display:block;font:600 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.concept{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.concept header{padding:20px 22px 14px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:baseline}
+.concept .n{font:800 36px/1 var(--display);color:var(--red);letter-spacing:-.03em;grid-row:span 2}
+.concept header h2{margin:0;font-size:24px}
+.concept header .one{color:var(--muted);margin:0}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--line)}
+.slot{background:var(--card);padding:16px 22px}
+.slot small{display:block;font:600 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
+.slot ul{padding-left:16px}
+.quote{font-weight:700;background:var(--soft);border-radius:8px;padding:8px 10px;display:inline-block;margin:2px 0}
+.sml{display:grid;gap:8px}
+.sml div{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start}
+.sml b{font:700 12px var(--mono);background:var(--fg);color:var(--bg);border-radius:6px;text-align:center;padding:3px 0}
+.why{padding:14px 22px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+.why b{color:var(--fg)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+td:first-child{font:600 13px var(--mono);white-space:nowrap;color:var(--red)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.posts{display:grid;gap:10px}
+.post{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:grid;grid-template-columns:auto 1fr;gap:12px}
+.post .k{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:3px;white-space:nowrap}
+.post b{display:block}
+.post span{color:var(--muted);font-size:14px}
+.rule{height:1px;background:var(--line)}
+@media (max-width:520px){.concept header{grid-template-columns:1fr}.concept .n{grid-row:auto}.post{grid-template-columns:1fr}}
+</style>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Studio HORST · Konzeptpapier · Jahresstart 2027</p>
+  <h1>Monsterjahr 2027<span>.</span></h1>
+  <p class="lede">Fünf Kampagnenkonzepte für Januar 2027, jedes mit Kernaussage, Postformaten, Animationen und drei Umsetzungsstufen. Dazu Strategie, Kalender und die Frage, woran wir „viral“ messen. Gebaut auf dem, was schon da ist: HORST, die Reel-Engines, die Studio-Haltung.</p>
+</header>
+
+<section>
+  <h2><small>Leitidee</small>Ein Jahr, ein Satz, ein Monster</h2>
+  <div class="claim">
+    <b>2027 wird ein Monsterjahr. Keine Vorsätze. Ideen.</b>
+    <p>Alle Konzepte zahlen auf diesen Satz ein. Er ist frech genug für Instagram, ernst genug für LinkedIn, und er gehört nur HORST. Januar ist der Monat, in dem alle über Vorsätze reden. Wir reden über das Gegenteil: Marken brauchen keine Vorsätze, sie brauchen eine Idee, die trägt.</p>
+  </div>
+  <div class="grid" style="margin-top:12px">
+    <div class="tile"><small>Was viral heißt (für ein Studio)</small>Nicht Millionen Views. Geteilt werden von Leuten, die Marken besitzen oder beraten: Unternehmer, Marketingleute, Agenturen in Freiburg und Südbaden. Ziel ist die Anfrage, nicht der Like.</div>
+    <div class="tile"><small>Die drei Hebel</small>1. Wiedererkennung („Das kenne ich!“), 2. Haltung mit Humor (HORST darf sagen, was Felix nur denkt), 3. Mitmachen (Leute liefern den Inhalt, HORST antwortet).</div>
+    <div class="tile"><small>Der Ton</small>Zwei Stimmen, ein Studio: HORST ist laut, bunt, Schwarzwald. Felix ist ruhig, präzise, Studio-Stil. Instagram bekommt mehr HORST, LinkedIn mehr Felix. Beide tragen denselben Satz.</div>
+  </div>
+</section>
+
+<!-- ============ KONZEPT 1 ============ -->
+<article class="concept">
+  <header><div class="n">01</div><h2>Keine Vorsätze. Ideen.</h2><p class="one">Die Anti-Vorsätze-Kampagne. 14 Tage, 14 Marken-Vorsätze, jeder durchgestrichen und durch eine Idee ersetzt.</p></header>
+  <div class="slots">
+    <div class="slot"><small>Kernaussagen</small>
+      <span class="quote">„Vorsätze hält niemand. Ideen schon.“</span><br>
+      <span class="quote">„2027: Wir werden sichtbarer.“ → durchgestrichen → „2027: Wir haben eine Monsteridee.“</span><br>
+      <span class="quote">„Dein Logo braucht keinen Vorsatz. Es braucht einen Grund.“</span>
+    </div>
+    <div class="slot"><small>Posts &amp; Serie</small>
+      <ul>
+        <li>1.–14. Januar täglich ein Reel (10 s): ein typischer Marken-Vorsatz erscheint als Liste, der rote Stempel streicht ihn, HORST setzt die Idee darunter.</li>
+        <li>Vorsätze aus dem echten Leben: „Mehr posten“, „Endlich das Logo erneuern“, „Diesmal wirklich Social Media“, „Website bis März“, „Weniger Stockfotos“.</li>
+        <li>Story jeden Tag: Umfrage „Welchen Vorsatz hat deine Marke?“ Antworten werden am Folgetag zum Reel.</li>
+        <li>Carousel zum Abschluss (15. Januar): „14 Vorsätze, 14 Ideen“ als Sammelposter, auch als LinkedIn-PDF.</li>
+      </ul>
+    </div>
+    <div class="slot"><small>Animation</small>
+      <ul>
+        <li>Stempel-Engine aus dem Heldentaten-Set: Vorsatz knallt rein, Stempel „GESTRICHEN“ darüber, Idee schiebt sich aus dem Masken-Schlitz (Studio-Reveal).</li>
+        <li>HORST-Clip A08 (Gähnen → wach) als Opener der Serie, A05 (der Idee-Moment) als Loop am Ende jedes Reels.</li>
+        <li>Zähler „Vorsatz 03/14“ oben rechts, damit die Serie als Serie erkannt wird.</li>
+      </ul>
+    </div>
+    <div class="slot"><small>Umsetzung</small>
+      <div class="sml">
+        <div><b>S</b><span>Nur Canvas-Reels aus der Engine, 14 Stück in einem Tag gebaut, Stories mit Standard-Umfragesticker.</span></div>
+        <div><b>M</b><span>Dazu HORST-Runway-Clips als Opener und Abschluss, Felix spricht ein Voiceover (ein Satz pro Reel).</span></div>
+        <div><b>L</b><span>Echte Unternehmer aus der Region sagen ihren Vorsatz in die Kamera (5 Leute, ein Drehtag), HORST streicht ihn. Mit Tag und Teilen durch die Beteiligten.</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="why"><b>Warum das teilbar ist:</b> Jeder erkennt seinen eigenen Vorsatz. Die Umfrage macht die Zuschauer zu Autoren. Und der Termin passt: Die erste Januarwoche ist die einzige Woche, in der „Vorsätze“ ein Massenthema ist.</div>
+</article>
+
+<!-- ============ KONZEPT 2 ============ -->
+<article class="concept">
+  <header><div class="n">02</div><h2>Raus damit. Der Marken-Detox.</h2><p class="one">Sieben Dinge, die 2027 aus deiner Marke verschwinden müssen. Der Einheitsbrei bekommt Namen.</p></header>
+  <div class="slots">
+    <div class="slot"><small>Kernaussagen</small>
+      <span class="quote">„Schluss mit Einheitsbrei. Für immer.“</span><br>
+      <span class="quote">„Wenn deine Werbung auch für den Nachbarn passen würde, ist es keine.“</span><br>
+      <span class="quote">„KI macht aus allen dasselbe. Wir machen aus dir dich.“</span>
+    </div>
+    <div class="slot"><small>Posts &amp; Serie</small>
+      <ul>
+        <li>7 Reels, je ein „Raus damit“: der Handshake-Stockfoto, „Wir sind ein junges dynamisches Team“, das Logo mit Swoosh, der lila KI-Verlauf, die Werbung mit Gratis-Font, das Stockfoto-Büro, der Slogan mit „Leidenschaft“.</li>
+        <li>Format: der graue Brei läuft über (Hooks-Set), ein Gegenstand taucht auf, HORST fischt ihn raus und wirft ihn weg.</li>
+        <li>Mitmach-Post: „Welchen Einheitsbrei siehst du täglich? Schick ein Foto.“ Die besten Einsendungen werden Folge 8–10 (anonymisiert, kein Bashing echter Firmen).</li>
+        <li>LinkedIn-Version: Felix schreibt pro Folge drei Sätze, sachlich, mit dem Reel als Video.</li>
+      </ul>
+    </div>
+    <div class="slot"><small>Animation</small>
+      <ul>
+        <li>Brei-Engine (überlaufender Brei, Hooks Reel 9) als Serienrahmen. Der Gegenstand ist jeweils ein kleines Vektor-Icon, das im Brei schwimmt.</li>
+        <li>Runway-Clip E01 (HORST rührt im Brei) als Opener, dann Schnitt in die Canvas-Szene.</li>
+        <li>Abschluss jeder Folge: Brei kippt um, saubere Fläche, ein Wort in Ransom: „RAUS.“</li>
+      </ul>
+    </div>
+    <div class="slot"><small>Umsetzung</small>
+      <div class="sml">
+        <div><b>S</b><span>7 Canvas-Reels, Icons aus dem eigenen Bestand, kein Dreh.</span></div>
+        <div><b>M</b><span>Runway-Opener, dazu eine Website-Seite „Detox“ mit Checkliste zum Download gegen E-Mail-Adresse.</span></div>
+        <div><b>L</b><span>„Detox-Sprechstunde“: 10 kostenlose 20-Minuten-Gespräche im Januar, Anmeldung über das Reel. Jede Beratung ist ein Lead.</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="why"><b>Warum das teilbar ist:</b> Es ist eine Liste, es ist leicht böse, und jeder hat einen Kollegen, dem er Folge 3 schicken will. Die Haltung gegen KI-Einheitsbrei ist 2027 ein Nerv, den ein Studio aus dem Schwarzwald glaubwürdiger trifft als eine Berliner Agentur.</div>
+</article>
+
+<!-- ============ KONZEPT 3 ============ -->
+<article class="concept">
+  <header><div class="n">03</div><h2>Sag einfach Horst. Die Challenge.</h2><p class="one">Du schickst deine langweiligste Anzeige, HORST antwortet in fünf Sekunden. Das Publikum liefert den Inhalt.</p></header>
+  <div class="slots">
+    <div class="slot"><small>Kernaussagen</small>
+      <span class="quote">„Langweilig? Sag einfach Horst.“</span><br>
+      <span class="quote">„Fünf Sekunden reichen, um es besser zu machen. Meistens.“</span><br>
+      <span class="quote">„Monsterideen. Frei Haus.“</span>
+    </div>
+    <div class="slot"><small>Posts &amp; Serie</small>
+      <ul>
+        <li>Start-Reel am 8. Januar: HORST erklärt die Regel. Einsendung per DM oder Kommentar, auch eigene Anzeigen.</li>
+        <li>Antwort-Reels (5 s, Loop): links das Original als Standbild, rechts HORSTs Version, animiert. Drei pro Woche, vier Wochen lang.</li>
+        <li>Wichtig: nur mit Erlaubnis der Einsender, und nur eigene Werbemittel der Einsender. Keine fremden Marken verspotten.</li>
+        <li>Abschluss: Abstimmung über die beste Verwandlung, Gewinner bekommt die Idee ausgearbeitet (Druckdatei).</li>
+      </ul>
+    </div>
+    <div class="slot"><small>Animation</small>
+      <ul>
+        <li>Split-Screen mit Wischkante aus dem Studio-Set (Arbeiten-Galerie): Original links, dann wischt HORSTs Version rüber.</li>
+        <li>Runway-Clip A07 („Du!“ mit Fingerzeig) als Start-Reel, A02 (Winken) als Dankeschön an jeden Einsender in der Story.</li>
+        <li>Alle Antworten im selben Rahmen: roter Stempel „HORST WAR DA“ unten rechts.</li>
+      </ul>
+    </div>
+    <div class="slot"><small>Umsetzung</small>
+      <div class="sml">
+        <div><b>S</b><span>Typo-Verwandlungen nur mit der Engine: neue Headline, neue Farbe, Ransom-Schrift. 20 Minuten pro Antwort.</span></div>
+        <div><b>M</b><span>Felix skizziert pro Antwort eine echte Layout-Idee, die Engine animiert sie. Eine Stunde pro Antwort.</span></div>
+        <div><b>L</b><span>Kooperation mit einem regionalen Medium (z. B. Freiburger Stadtmagazin): die beste Verwandlung wird dort abgedruckt.</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="why"><b>Warum das teilbar ist:</b> Jeder Einsender teilt seine eigene Folge. Das ist die günstigste Reichweite, die es gibt. Und jede Antwort ist zugleich eine Arbeitsprobe, ohne dass es nach Werbung aussieht.</div>
+</article>
+
+<!-- ============ KONZEPT 4 ============ -->
+<article class="concept">
+  <header><div class="n">04</div><h2>Wintermärchen aus dem Schwarzwald</h2><p class="one">Die emotionale Linie: HORST im Schnee, im Hawaiihemd, mitten in der Heimat. Lokalstolz ist der schnellste Weg zur Reichweite in Südbaden.</p></header>
+  <div class="slots">
+    <div class="slot"><small>Kernaussagen</small>
+      <span class="quote">„Kirchzarten. Hawaiihemd. Monsterideen.“</span><br>
+      <span class="quote">„Man muss nicht nach Berlin, um bunt zu sein.“</span><br>
+      <span class="quote">„Hier oben entstehen die Ideen. Da unten werden sie gebraucht.“</span>
+    </div>
+    <div class="slot"><small>Posts &amp; Serie</small>
+      <ul>
+        <li>Drei Folgen à 15 s, wie die „Schluss mit Langeweile“-Serie: verschneite Idylle, dann HORST. Folge 1 Nebelwald, Folge 2 Skilift, Folge 3 Kuckucksuhr um Mitternacht (Neujahr).</li>
+        <li>Neujahrs-Post am 1. Januar, 0:00 Uhr: die Kuckucksuhr schlägt, HORST kommt raus. „2027 wird ein Monsterjahr.“</li>
+        <li>Lokale Hashtags und Orte taggen (Kirchzarten, Dreisamtal, Feldberg, Freiburg). Lokalmedien bekommen die Folgen vorab.</li>
+        <li>Making-of in der Story: wie ein Monster in den Schwarzwald kommt (Runway-Workflow zeigen, ehrlich, kurz).</li>
+      </ul>
+    </div>
+    <div class="slot"><small>Animation</small>
+      <ul>
+        <li>Langeweile-Engine (Ken Burns auf echtem Foto, Nebel, Ambience-Sound) mit Winterbildern. Felix fotografiert drei Motive im Dezember.</li>
+        <li>Runway-Clips B01–B04 und E03 (Hawaiihemd im Schnee). Jump-Scare bleibt der Höhepunkt.</li>
+        <li>Neujahr: Kuckucksuhr als Canvas-Animation (Zeiger, Türchen, HORST-Kopf springt raus), Schlag 12 als Sound.</li>
+      </ul>
+    </div>
+    <div class="slot"><small>Umsetzung</small>
+      <div class="sml">
+        <div><b>S</b><span>Bestehende Serie mit drei neuen Winterfotos neu bauen. Ein Nachmittag.</span></div>
+        <div><b>M</b><span>Runway-Clips für HORST im echten Schnee, Felix spricht die Pointen badisch ein.</span></div>
+        <div><b>L</b><span>Lebensgroßer HORST-Aufsteller an einem echten Ort (Bahnhof Kirchzarten, Feldberg), Leute machen Selfies, Foto-Spot mit QR zur Website.</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="why"><b>Warum das teilbar ist:</b> Regionale Inhalte werden in Südbaden überdurchschnittlich geteilt, besonders mit Schnee und Humor. Der Aufsteller (L) erzeugt Fotos von Fremden, das ist Reichweite, die man nicht kaufen kann.</div>
+</article>
+
+<!-- ============ KONZEPT 5 ============ -->
+<article class="concept">
+  <header><div class="n">05</div><h2>Der Thatenbericht 2026</h2><p class="one">Der Jahresbericht eines Monsters. Echte Zahlen, ernst gestaltet, mit einem Augenzwinkern. Für LinkedIn und für Kunden.</p></header>
+  <div class="slots">
+    <div class="slot"><small>Kernaussagen</small>
+      <span class="quote">„23 Jahre. Und noch kein einziger Vorsatz.“</span><br>
+      <span class="quote">„Thatendrang und Heldenthaten. Der Bericht.“</span><br>
+      <span class="quote">„Was 2026 war. Was 2027 wird.“</span>
+    </div>
+    <div class="slot"><small>Posts &amp; Serie</small>
+      <ul>
+        <li>Ein Reel im Studio-Stil (kinetische Typo, Zähler): Projekte, Logos, Kaffee, verworfene Ideen, längste Nacht, schönster Kundensatz. Zahlen liefert Felix.</li>
+        <li>Carousel mit 8 Seiten als „Bericht“: Deckblatt, Kennzahlen, drei Projekte des Jahres, ein Scheitern (ehrlich), Ausblick 2027.</li>
+        <li>LinkedIn-Artikel von Felix als Langfassung, mit dem Stempel „seit 2004“.</li>
+        <li>Gedruckte Mini-Ausgabe (A6, 8 Seiten) als Neujahrsgruß an Kunden. Dasselbe Design, Post zeigt den Druck.</li>
+      </ul>
+    </div>
+    <div class="slot"><small>Animation</small>
+      <ul>
+        <li>Studio-Set „Haltung“ als Basis: Zahlen laufen hoch (tabular-nums), Zeilen aus dem Masken-Schlitz, Maßlinien.</li>
+        <li>Stempel-Slam aus dem Heldentaten-Set für „seit 2004“.</li>
+        <li>Runway-Clip D01 (Schwarzweiß-Portrait, Kopf dreht zur Kamera) als Titelmoment.</li>
+      </ul>
+    </div>
+    <div class="slot"><small>Umsetzung</small>
+      <div class="sml">
+        <div><b>S</b><span>Reel und Carousel aus der Engine, Zahlen aus dem Kopf.</span></div>
+        <div><b>M</b><span>Dazu LinkedIn-Artikel und Druck für die Top-20-Kunden.</span></div>
+        <div><b>L</b><span>Thatenbericht als jährliches Format etablieren, mit Landingpage und Archiv. Jedes Jahr ein Grund für einen Post, der nach Substanz aussieht.</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="why"><b>Warum das teilbar ist:</b> Auf LinkedIn werden ehrliche Zahlen und ein eingestandenes Scheitern mehr geteilt als jede Erfolgsmeldung. Und der gedruckte Bericht landet auf Schreibtischen von Leuten, die Aufträge vergeben.</div>
+</article>
+
+<!-- ============ STRATEGIE ============ -->
+<section>
+  <h2><small>Strategie</small>Wie die fünf zusammenspielen</h2>
+  <div class="grid">
+    <div class="tile"><small>Empfehlung</small><b>01 als Rückgrat</b> (täglich, 14 Tage), <b>04</b> als emotionaler Auftakt an Neujahr, <b>05</b> als LinkedIn-Anker in Woche 2, <b>03</b> ab Woche 2 als Mitmach-Motor, <b>02</b> im Februar als zweite Welle. Nicht alles gleichzeitig.</div>
+    <div class="tile"><small>Kanäle</small>Instagram Reels als Hauptbühne (HORST). LinkedIn mit Felix als Absender (Studio-Stil, Thatenbericht, Detox-Sätze). Stories täglich für Umfragen und Making-of. Website: eine Seite „2027“ als Sammelstelle.</div>
+    <div class="tile"><small>Rhythmus</small>Dezember 27–31: Countdown-Stories „Noch 5 Tage bis Monsterjahr“. Januar: 4 Reels pro Woche, Story täglich, 1 LinkedIn-Post pro Woche. Februar: Detox-Welle, 2 Reels pro Woche.</div>
+    <div class="tile"><small>Hook-Regel</small>Erste Sekunde entscheidet: Stempel-Knall, Jump-Scare oder ein Satz, der widerspricht („Vorsätze hält niemand“). Kein Logo in den ersten drei Sekunden, das Logo kommt in der Endkarte.</div>
+    <div class="tile"><small>Was wir messen</small>Reihenfolge: Shares und Saves vor Likes. Neue Follower aus der Region. Anfragen über Website und DM mit dem Wort „Monsteridee“. Ziel Januar: 3 qualifizierte Anfragen.</div>
+    <div class="tile"><small>Was wir lassen</small>Keine fremden Marken verspotten. Keine erfundenen Kundenzitate. Kein ® bei Monsterideen. Keine KI-Clips ohne Hinweis im Making-of, wenn jemand fragt.</div>
+  </div>
+</section>
+
+<section>
+  <h2><small>Kalender</small>Januar 2027 auf einen Blick</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Datum</th><th>Was</th><th>Konzept</th><th>Format</th></tr></thead>
+    <tbody>
+      <tr><td>27.–31.12.</td><td>Countdown „Noch 5 Tage bis Monsterjahr“, HORST zählt runter</td><td>Auftakt</td><td>Stories, 1 Teaser-Reel</td></tr>
+      <tr><td>01.01. 0:00</td><td>Kuckucksuhr schlägt, HORST kommt raus: „2027 wird ein Monsterjahr.“</td><td>04</td><td>Reel 15 s</td></tr>
+      <tr><td>02.–15.01.</td><td>Täglich ein Vorsatz, gestrichen, ersetzt</td><td>01</td><td>Reel 10 s + Story-Umfrage</td></tr>
+      <tr><td>03. / 06. / 10.01.</td><td>Wintermärchen Folge 1–3</td><td>04</td><td>Reel 15 s</td></tr>
+      <tr><td>08.01.</td><td>Challenge-Start „Sag einfach Horst“</td><td>03</td><td>Reel + DM-Aufruf</td></tr>
+      <tr><td>12.01.</td><td>Thatenbericht 2026</td><td>05</td><td>Reel + Carousel + LinkedIn-Artikel</td></tr>
+      <tr><td>13.–31.01.</td><td>Challenge-Antworten, 3 pro Woche</td><td>03</td><td>Loop 5 s</td></tr>
+      <tr><td>15.01.</td><td>„14 Vorsätze, 14 Ideen“ Sammelposter</td><td>01</td><td>Carousel + LinkedIn-PDF</td></tr>
+      <tr><td>Februar</td><td>Marken-Detox, 7 Folgen + Einsendungen</td><td>02</td><td>Reel 12 s, 2 pro Woche</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><small>Beispiele</small>Zehn Posts, wie sie aussehen könnten</h2>
+  <div class="posts">
+    <div class="post"><span class="k">01 · Reel</span><div><b>„Vorsatz Nr. 1: Mehr posten.“ Stempel. „Idee Nr. 1: Etwas zu sagen haben.“</b><span>Caption: Vorsätze hält niemand. Ideen schon. Welchen Vorsatz hat deine Marke? Schreib ihn in die Kommentare, HORST streicht ihn.</span></div></div>
+    <div class="post"><span class="k">01 · Reel</span><div><b>„Vorsatz Nr. 6: Endlich das Logo erneuern.“ Stempel. „Idee Nr. 6: Erst wissen, wofür es steht.“</b><span>Caption: Ein Logo ist kein Vorsatz. Es ist eine Entscheidung.</span></div></div>
+    <div class="post"><span class="k">04 · Reel</span><div><b>Nebel, Tannen, Stille. Dann HORST im Hawaiihemd, bis zu den Knien im Schnee.</b><span>Caption: Kirchzarten, minus 4 Grad, 28 Grad Hemd. Man muss nicht nach Berlin, um bunt zu sein.</span></div></div>
+    <div class="post"><span class="k">04 · Reel</span><div><b>Kuckucksuhr, Schlag zwölf, HORST statt Kuckuck.</b><span>Caption: 2027 wird ein Monsterjahr. Keine Vorsätze. Ideen. Frohes Neues aus dem Schwarzwald.</span></div></div>
+    <div class="post"><span class="k">03 · Reel</span><div><b>HORST zeigt in die Kamera: „Du. Ja, du. Schick mir deine langweiligste Anzeige.“</b><span>Caption: Fünf Sekunden reichen, um es besser zu machen. Meistens. Einsenden per DM, Antwort kommt als Reel.</span></div></div>
+    <div class="post"><span class="k">03 · Loop</span><div><b>Links: „Wir sind für Sie da.“ Rechts: „Wir sind da. Für dich. Seit 1987.“</b><span>Caption: Verwandlung Nr. 4, eingesendet von einem Handwerksbetrieb aus dem Dreisamtal. Danke fürs Vertrauen.</span></div></div>
+    <div class="post"><span class="k">05 · Carousel</span><div><b>Thatenbericht 2026: 31 Projekte, 9 Logos, 1 Scheitern, 412 verworfene Ideen, 1.106 Kaffee.</b><span>Caption: 23 Jahre. Und noch kein einziger Vorsatz. Der ganze Bericht im Artikel.</span></div></div>
+    <div class="post"><span class="k">05 · LinkedIn</span><div><b>„Was 2026 nicht geklappt hat.“ Ein ehrlicher Absatz über ein Projekt, das wir abgebrochen haben.</b><span>Caption: Thatendrang heißt auch: aufhören, wenn es nicht trägt.</span></div></div>
+    <div class="post"><span class="k">02 · Reel</span><div><b>Grauer Brei, ein Handshake-Stockfoto treibt oben. HORST fischt es raus. „RAUS.“</b><span>Caption: Raus damit, Folge 1: der Handshake. Niemand hat je so die Hand geschüttelt.</span></div></div>
+    <div class="post"><span class="k">02 · Reel</span><div><b>Brei, ein lila Verlauf blubbert hoch. „RAUS.“</b><span>Caption: Raus damit, Folge 4: der KI-Verlauf. Wenn deine Marke aussieht wie alle, ist sie keine.</span></div></div>
+  </div>
+</section>
+
+<section>
+  <h2><small>Nächste Schritte</small>Was jetzt zu tun wäre</h2>
+  <ul>
+    <li><b>Entscheiden:</b> Welche zwei Konzepte werden gebaut, welche Stufe (S/M/L)? Empfehlung: 01 in M, 04 in M, 05 in S.</li>
+    <li><b>Dezember:</b> Winterfotos für 04 (drei Motive), Runway-Clips A05, A07, A08, B03, E03, Zahlen für den Thatenbericht sammeln.</li>
+    <li><b>Bauen:</b> Reel-Engines liegen bereit (Stempel, Brei, Langeweile, Studio-Typo). Die Vorsätze-Serie lässt sich in einem Tag als Set rendern, sobald die 14 Sätze stehen.</li>
+    <li><b>Freigaben:</b> Teilnahmeregel für die Challenge (nur eigene Werbemittel, Einverständnis per DM), Datenschutz für die Detox-Checkliste.</li>
+  </ul>
+</section>
+
+<div class="rule"></div>
+<p style="color:var(--muted);font-size:13px">Studio HORST · Felix Thatenhorst · Kirchzarten im Schwarzwald · Monsterideen für mutige Marken · seit 2004</p>
+</div>
