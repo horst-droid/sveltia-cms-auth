@@ -1,0 +1,141 @@
+<title>HORST Clip-Liste</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one column of numbered prompt cards grouped by reel family; a sticky settings strip on top. Brand: HORST red on paper, dark on dark. */
+:root{
+  --bg:#F8F7F8; --fg:#201C25; --muted:#6F717A; --card:#FFFFFF; --line:rgba(32,28,37,.14); --red:#FF4255; --code:#F1EFF2;
+  --display:"Inter",system-ui,sans-serif; --mono:"SF Mono",Menlo,Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17141B;--fg:#F8F7F8;--muted:#A6A3AD;--card:#201C25;--line:rgba(248,247,248,.14);--code:#2A2630;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17141B;--fg:#F8F7F8;--muted:#A6A3AD;--card:#201C25;--line:rgba(248,247,248,.14);--code:#2A2630;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 Inter,system-ui,sans-serif;padding-block:28px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;display:grid;gap:28px}
+.eyebrow{margin:0 0 8px;font:600 12px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+h1{margin:0;font:800 clamp(34px,7vw,56px)/1 var(--display);letter-spacing:-.03em;text-wrap:balance}
+h1 span{color:var(--red)}
+.lede{margin:12px 0 0;color:var(--muted);max-width:60ch}
+.settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.settings div{background:var(--card);padding:12px 14px}
+.settings small{display:block;font:600 11px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.settings b{font-weight:700}
+h2{margin:0;font:800 22px/1.2 var(--display);letter-spacing:-.02em;display:flex;align-items:baseline;gap:10px}
+h2 small{font:600 12px var(--mono);letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.group{display:grid;gap:12px}
+.group p.note{margin:0;color:var(--muted);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px}
+.card .n{font:700 13px var(--mono);color:var(--red);padding-top:3px}
+.card .t{font-weight:700}
+.card .use{color:var(--muted);font-size:13px;grid-column:2}
+.card .p{grid-column:2;display:flex;gap:8px;align-items:flex-start;margin-top:6px}
+.card code{flex:1 1 auto;min-width:0;display:block;background:var(--code);border-radius:8px;padding:10px 12px;font:13px/1.45 var(--mono);white-space:pre-wrap;word-break:break-word;user-select:all}
+button{flex:0 0 auto;font:600 13px Inter,system-ui,sans-serif;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer;min-height:36px}
+button:hover{border-color:var(--fg)}
+button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+button.done{background:var(--red);color:#fff;border-color:var(--red)}
+.tips{border-left:3px solid var(--red);padding:4px 0 4px 16px;color:var(--muted)}
+.tips li{margin:4px 0}
+@media (max-width:480px){.card{grid-template-columns:1fr}.card .use,.card .p{grid-column:1}}
+</style>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Studio HORST · Runway · ohne API</p>
+    <h1>21 Clips für HORST<span>.</span></h1>
+    <p class="lede">Prompts zum Kopieren für app.runwayml.com. Startbild ist immer das HORST-Standbild aus dem Chat, bei den Wald-Szenen das Nebelfoto. Fertige MP4s einfach in den Chat ziehen, der Rest (Schnitt, Typo, Logo, Sound) passiert hier.</p>
+  </header>
+
+  <section class="settings" aria-label="Einstellungen bei Runway">
+    <div><small>Modus</small><b>Image to Video</b></div>
+    <div><small>Modell</small><b>Gen-4 Turbo</b></div>
+    <div><small>Format</small><b>9:16 (720 × 1280)</b></div>
+    <div><small>Dauer</small><b>5 s</b> (Story-Szenen 10 s)</div>
+  </section>
+
+  <section class="group" id="basis">
+    <h2>A · Grundposen <small>für viele Reels</small></h2>
+    <p class="note">Startbild: HORST-Standbild. Diese Clips lassen sich in fast jedes Set schneiden.</p>
+    <div id="cards-a"></div>
+  </section>
+  <section class="group" id="story">
+    <h2>B · Schwarzwald &amp; Story <small>Schluss mit Langeweile</small></h2>
+    <p class="note">Startbild: das Nebelfoto <b>wald.jpg</b> für die Landschaft, das HORST-Standbild für die Erschreck-Momente. 10 Sekunden wählen.</p>
+    <div id="cards-b"></div>
+  </section>
+  <section class="group" id="retro">
+    <h2>C · Retro <small>VHS, Amikarre, Arcade</small></h2>
+    <div id="cards-c"></div>
+  </section>
+  <section class="group" id="studio">
+    <h2>D · Studio-Stil <small>ernst, ruhig</small></h2>
+    <div id="cards-d"></div>
+  </section>
+  <section class="group" id="ideen">
+    <h2>E · Einzelideen <small>Einheitsbrei, Bling, Hawaiihemd</small></h2>
+    <div id="cards-e"></div>
+  </section>
+
+  <section>
+    <h2>Tipps</h2>
+    <ul class="tips">
+      <li>Immer dieselbe Beschreibung von HORST am Anfang lassen, dann bleibt er über alle Clips gleich.</li>
+      <li>„static camera“ macht die Clips leicht schneidbar. Für Bewegung „slow push in“ ergänzen.</li>
+      <li>Kein Text im Bild erzeugen lassen, der kommt sauber aus den Reels.</li>
+      <li>Gefällt ein Clip nicht: gleicher Prompt, „Re-generate“. Zwei Versuche pro Idee reichen meistens.</li>
+      <li>Dateien beim Download so benennen wie die Nummer hier, zum Beispiel <b>A03-sonnenbrille.mp4</b>.</li>
+    </ul>
+  </section>
+</div>
+<script>
+(() => {
+  const H = 'the furry brown monster with a mustache, small horns, a gold chain and a colorful hawaiian shirt';
+  const G = {
+    a: [
+      ['Kiste & Konfetti', 'Ideenlieferei, Welcome', `${H} opens a cardboard box, confetti bursts out, he looks surprised then grins, static camera, studio lighting`],
+      ['Winken & Zwinkern', 'Salli, Geh zum Felix', `${H} waves at the camera and winks, subtle head movement, static camera, studio lighting`],
+      ['Sonnenbrille', 'Bling, Retro', `${H} puts on sunglasses and nods slowly, confident, static camera, studio lighting`],
+      ['Daumen hoch', 'Bock auf machen', `${H} gives a big thumbs up and laughs, static camera, studio lighting`],
+      ['Die Idee', 'Monsteridee', `${H} scratches his chin thinking, looks up, then his eyes widen with a sudden idea and he smiles, static camera, studio lighting`],
+      ['Lachen', 'Humor-Reels', `${H} throws his head back laughing heartily, then looks back at the camera, static camera, studio lighting`],
+      ['Du!', 'Sag einfach Horst', `${H} points his finger straight at the camera and raises an eyebrow, static camera, studio lighting`],
+      ['Gähnen', 'Schluss mit Langeweile', `${H} yawns bored, then suddenly perks up wide awake and grins, static camera, studio lighting`],
+      ['Von unten', 'Was für ein Horst', `${H} slowly rises into the frame from below, peeks at the camera, then ducks back down, static camera`],
+      ['Aus dem Dunkel', 'Wer ist das', `${H} steps forward out of darkness into a single spotlight, dramatic, static camera`],
+    ],
+    b: [
+      ['Nebelwald', 'Idylle', `fog drifts slowly through a dark pine forest in the black forest, calm, no people, slow push in, cinematic`],
+      ['Bach', 'Idylle', `a small creek flows over mossy stones in a pine forest, soft morning light, slow pan, cinematic`],
+      ['Erschrecken', 'Jump scare', `${H} suddenly pops into the frame from the right side very close to the camera, grinning wide, forest background`],
+      ['Hinter dem Baum', 'Das Reh', `${H} leans out from behind a tree trunk in a foggy forest and waves, then hides again, static camera`],
+    ],
+    c: [
+      ['VHS 80er', 'VHS 1984', `${H} in a 1980s television studio, waves to the camera, old camcorder footage, VHS artifacts, soft colors, static camera`],
+      ['Amikarre', 'Cruise', `${H} driving a red 1980s american convertible along a palm tree road at sunset, wind in his fur, side view, cinematic`],
+      ['Arcade', 'Arcade', `${H} playing an arcade cabinet in a neon lit 80s arcade, pressing buttons excitedly, then cheering, static camera`],
+    ],
+    d: [
+      ['Portrait', 'Studio Portrait', `black and white portrait, ${H} slowly turns his head toward the camera and holds a calm look, studio light, static camera`],
+      ['Skizzenbuch', 'Arbeiten', `${H} drawing in a sketchbook with a pencil, concentrated, looks up briefly at the camera and nods, soft daylight, static camera`],
+      ['Am Schreibtisch', 'Studio', `${H} sitting at a desk in a bright design studio, looks up from a monitor, leans back and smiles, static camera`],
+    ],
+    e: [
+      ['Einheitsbrei', 'KI-Einheitsbrei', `${H} stirring a huge pot of grey porridge with a wooden spoon, bored expression, the porridge starts to overflow, static camera`],
+      ['Kette', 'Bling Bling', `extreme close up of the gold chain with the HORST pendant swinging slowly, light glints on the metal, dark background, static camera`],
+      ['Hawaiihemd im Schnee', 'Heimat & bunt', `${H} standing in a snowy black forest clearing in his hawaiian shirt, shivers once, then grins proudly, static camera`],
+    ],
+  };
+  const fallback = code => { const r = document.createRange(); r.selectNodeContents(code); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+  for (const [k, items] of Object.entries(G)){
+    const host = document.getElementById('cards-' + k); const key = k.toUpperCase();
+    items.forEach(([t, use, p], i) => {
+      const n = key + String(i + 1).padStart(2, '0');
+      const card = document.createElement('article'); card.className = 'card';
+      card.innerHTML = `<div class="n">${n}</div><div class="t"></div><div class="use"></div><div class="p"><code></code><button type="button" id="copy-${n}">Kopieren</button></div>`;
+      card.querySelector('.t').textContent = t; card.querySelector('.use').textContent = 'Für: ' + use; const code = card.querySelector('code'); code.textContent = p;
+      const btn = card.querySelector('button');
+      btn.addEventListener('click', async () => { try { await navigator.clipboard.writeText(p); } catch(e){ fallback(code); } btn.textContent = 'Kopiert'; btn.classList.add('done'); setTimeout(() => { btn.textContent = 'Kopieren'; btn.classList.remove('done'); }, 1600); });
+      host.appendChild(card);
+    });
+    host.style.display = 'grid'; host.style.gap = '12px';
+  }
+})();
+</script>
