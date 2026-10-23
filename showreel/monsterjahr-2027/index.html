@@ -204,7 +204,7 @@ function endQuiet(t0, claim = true){
   const lg = M.logoW; if (ok(lg)){ const lw = 620, lh = lw*lg.naturalHeight/lg.naturalWidth, a = expo(seg(T, t0 + 0.7, t0 + 1.4)); ctx.save(); ctx.globalAlpha = a; ctx.drawImage(lg, 540 - lw/2, 830 - lh/2 + (1 - a)*20, lw, lh); ctx.restore(); }
   rule(62, 1100, 1018, t0 + 1.0, 0.8, 'rgba(248,247,248,.35)', 1);
   mono(claim ? 'MONSTERJAHR 2027' : 'STUDIO HORST', 62, 1160, 24, '#A6A3AD', t0 + 1.3, 'left', 5); mono('KIRCHZARTEN', 1018, 1160, 24, '#A6A3AD', t0 + 1.3, 'right', 5);
-  reveal('Keine Vorsätze. Ideen.', 62, 1300, HEAD(56), C.light, t0 + 1.5, 0.8, null, 'left', -2);
+  reveal('KEINE VORSÄTZE. IDEEN.', 62, 1310, DISP(fitDisp('KEINE VORSÄTZE. IDEEN.', 940, 72)), C.light, t0 + 1.5, 0.8, null, 'left', 0);
   mono('STUDIO-HORST.DE', 62, 1370, 24, '#A6A3AD', t0 + 1.8, 'left', 4);
 }
 function grid(a, cols = 12, t0 = 0, stagger = 0.04){ ctx.save(); const cw = (W - 124)/cols; for (let i = 0; i <= cols; i++){ const p = expo(seg(T, t0 + i*stagger, t0 + i*stagger + 0.7)); if (p <= 0) continue; ctx.fillStyle = `rgba(32,28,37,${a})`; ctx.fillRect(62 + i*cw, 0, 1, H*p); } ctx.restore(); }
@@ -258,8 +258,8 @@ function reel0(){
   if (T >= MID && T < MID + 0.3){ const k = (1 - seg(T, MID, MID + 0.3))*14; ctx.setTransform(1, 0, 0, 1, (rnd(Math.floor(T*60)) - .5)*k, (rnd(Math.floor(T*60) + 7) - .5)*k); }
   if (T < MID) mono('31.12.2026 · 23:59', 540, 300, 28, '#A6A3AD', 0.4, 'center', 6);
   if (T >= MID){ reveal('KUCKUCK.', 540, 290, DISP(150), C.light, MID + 0.1, 0.5, 6.6, 'center', 0); }
-  if (T >= 6.8){ reveal('2027 wird ein', 540, 230, HEAD(88), C.light, 6.8, 0.9, null, 'center', -3); reveal('Monsterjahr.', 540, 330, HEAD(88), C.red, 6.95, 0.9, null, 'center', -3); }
-  if (T >= 9.0){ reveal('Keine Vorsätze. Ideen.', 540, 1760, HEAD(52), C.light, 9.0, 0.8, null, 'center', -2); }
+  if (T >= 6.8){ reveal('2027 WIRD EIN', 540, 230, DISP(fitDisp('2027 WIRD EIN', 940, 110)), C.light, 6.8, 0.9, null, 'center', 0); reveal('MONSTERJAHR.', 540, 345, DISP(fitDisp('MONSTERJAHR.', 940, 120)), C.red, 6.95, 0.9, null, 'center', 0); }
+  if (T >= 9.0){ reveal('KEINE VORSÄTZE. IDEEN.', 540, 1770, DISP(fitDisp('KEINE VORSÄTZE. IDEEN.', 940, 64)), C.light, 9.0, 0.8, null, 'center', 0); }
   grain(0.03);
 }
 function audio0(add){
@@ -297,29 +297,31 @@ const N = VORSAETZE.length;
 function wrapLines(s, maxW, font){ ctx.save(); ctx.font = font; const out = []; let line = ''; s.split(' ').forEach(w => { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > maxW && line){ out.push(line); line = w; } else line = t; }); if (line) out.push(line); ctx.restore(); return out; }
 const V_STAMP = 2.6, V_IDEA = 4.2, V_HEAD = 6.3, V_END = 8.0;
 function vorsatz(i){
-  const [v, idee] = VORSAETZE[i], nn = String(i + 1).padStart(2, '0');
+  const v = VORSAETZE[i][0].toUpperCase(), idee = VORSAETZE[i][1].toUpperCase(), nn = String(i + 1).padStart(2, '0');
   if (T >= V_END){ endQuiet(V_END); return; }
   ctx.fillStyle = C.light; ctx.fillRect(0, 0, W, H);
   grid(0.07, 12, 0.05, 0.03);
   mono(`VORSATZ ${nn} / ${N}`, 62, 300, 26, C.dark, 0.2, 'left', 5); mono('MONSTERJAHR 2027', 1018, 300, 24, '#6F717A', 0.3, 'right', 5);
   rule(62, 330, 1018, 0.3, 0.9, C.dark, 2);
   // the resolution, as if written on a list: checkbox + lines
-  const f = HEAD(96), lines = wrapLines(v, 900, f);
+  const fsz = fitD(v, 880, 120), f = DISP(fsz), lines = wrapLines(v, 880, f);
   ctx.save(); ctx.strokeStyle = C.dark; ctx.lineWidth = 4; ctx.globalAlpha = expo(seg(T, 0.5, 0.9)); ctx.strokeRect(62, 520, 56, 56); ctx.restore();
-  lines.forEach((l, k) => reveal(l, 150, 600 + k*110, f, C.dark, 0.6 + k*0.1, 0.9, null, 'left', -3));
+  lines.forEach((l, k) => reveal(l, 150, 600 + k*fsz*1.12, f, C.dark, 0.6 + k*0.1, 0.9, null, 'left', 0));
   // strike-through draws, then the stamp slams
-  const sp = expo(seg(T, V_STAMP - 0.25, V_STAMP + 0.15)); if (sp > 0){ ctx.strokeStyle = C.red; ctx.lineWidth = 14; ctx.lineCap = 'round'; lines.forEach((l, k) => { ctx.save(); ctx.font = f; const w = ctx.measureText(l).width; ctx.beginPath(); ctx.moveTo(140, 568 + k*110); ctx.lineTo(140 + (w + 30)*sp, 562 + k*110); ctx.stroke(); ctx.restore(); }); }
-  stampSlam(640, 640 + (lines.length - 1)*55, -0.12, ['GESTRICHEN'], V_STAMP, 1.35);
+  const sp = expo(seg(T, V_STAMP - 0.25, V_STAMP + 0.15)); if (sp > 0){ ctx.strokeStyle = C.red; ctx.lineWidth = 14; ctx.lineCap = 'round'; lines.forEach((l, k) => { ctx.save(); ctx.font = f; const w = ctx.measureText(l).width; ctx.beginPath(); ctx.moveTo(140, 600 - fsz*0.32 + k*fsz*1.12); ctx.lineTo(140 + (w + 30)*sp, 594 - fsz*0.32 + k*fsz*1.12); ctx.stroke(); ctx.restore(); }); }
+  stampSlam(640, 640 + (lines.length - 1)*fsz*0.56, -0.12, ['GESTRICHEN'], V_STAMP, 1.35);
   // the idea
   mono(`IDEE ${nn} / ${N}`, 62, 1000, 26, C.red, V_IDEA - 0.2, 'left', 5);
   rule(62, 1030, 1018, V_IDEA - 0.1, 0.8, C.red, 2);
-  const fs = fitHead(idee, 920, 96), fi = HEAD(fs), il = wrapLines(idee, 920, fi);
-  il.forEach((l, k) => reveal(l, 62, 1140 + k*fs*1.12, fi, C.red, V_IDEA + k*0.1, 0.9, null, 'left', -3));
+  const fs = fitD(idee, 940, 116), fi = DISP(fs), il = wrapLines(idee, 940, fi);
+  il.forEach((l, k) => reveal(l, 62, 1150 + k*fs*1.12, fi, C.red, V_IDEA + k*0.1, 0.9, null, 'left', 0));
   // HORST nods in from the corner
   if (T >= V_HEAD){ const p = eback(seg(T, V_HEAD, V_HEAD + 0.5)); drawHead(900, 1640, 320*p, Math.sin((T - V_HEAD)*6)*0.08*Math.exp(-(T - V_HEAD))); }
-  reveal('Keine Vorsätze. Ideen.', 62, 1700, HEAD(48), C.dark, V_HEAD + 0.3, 0.8, null, 'left', -2);
+  reveal('KEINE VORSÄTZE. IDEEN.', 62, 1710, DISP(fitDisp('KEINE VORSÄTZE. IDEEN.', 640, 56)), C.dark, V_HEAD + 0.3, 0.8, null, 'left', 0);
   grain(0.035);
 }
+
+function fitD(s, maxW, maxS, maxLines = 2){ for (let size = maxS; size > 40; size -= 4){ if (wrapLines(s, maxW, DISP(size)).length <= maxLines) return size; } return 40; }
 function fitHead(s, maxW, maxS){ ctx.save(); ctx.font = HEAD(100); ctx.textAlign = 'left'; ls(ctx, -3); const lines = wrapLines(s, maxW*100/maxS, HEAD(100)); ctx.restore(); return lines.length <= 2 ? maxS : Math.max(64, maxS*2/lines.length); }
 function audioV(add){
   pulse(add, 0, V_END - 0.2, 0.75);
